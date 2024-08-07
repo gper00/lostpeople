@@ -1,0 +1,47 @@
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8 p-0">
+                <h1 class="h3 mb-3">Home</h1>
+                <% if (successMessage.length) { %>
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert"
+                >
+                    <%= successMessage %>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <% } else if(errorMessage.length) {%>
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                >
+                    <%= errorMessage %>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8 p-0">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="m-0">
+                            Selamat datang, <%= authUser.fullname %>!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

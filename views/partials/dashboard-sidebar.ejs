@@ -1,0 +1,54 @@
+<nav id="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/dashboard">
+            <span class="align-middle">Dashboard</span>
+        </a>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-header">Pages</li>
+
+            <li class="sidebar-item <%= pageActive === 'home' ? 'active' : '' %>">
+                <a class="sidebar-link" href="/dashboard">
+                    <i class="align-middle" data-feather="home"></i>
+                    <span class="align-middle">Home</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item <%= pageActive === 'post' ? 'active' : '' %>">
+                <a class="sidebar-link" href="/dashboard/posts">
+                    <i class="align-middle" data-feather="file-text"></i>
+                    <span class="align-middle">Posts</span>
+                </a>
+            </li>
+
+            <% if (authUser.role === 'super-admin') { %>
+            <li class="sidebar-item <%= pageActive === 'user' ? 'active' : '' %>">
+                <a class="sidebar-link" href="/dashboard/users">
+                    <i class="align-middle" data-feather="users"></i>
+                    <span class="align-middle">Users</span>
+                </a>
+            </li>
+            <% } %>
+
+            <!-- <li class="sidebar-item">
+                <a class="sidebar-link" href="/dashboard/inbox">
+                    <i class="align-middle" data-feather="inbox"></i>
+                    <span class="align-middle">Inbox</span>
+                </a>
+            </li> -->
+
+            <!-- Logout -->
+            <li class="sidebar-item">
+                <a
+                    href="#"
+                    class="sidebar-link"
+                    data-bs-toggle="modal"
+                    data-bs-target="#logoutAction"
+                >
+                    <i class="align-middle" data-feather="log-out"></i>
+                    <span class="align-middle">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,270 @@
+<!-- Page content-->
+<div class="container-md col-lg-9 col-xxl-8 my-4">
+    <div class="row">
+        <!-- Side widget 1 -->
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="position-sticky" style="top: 4.7rem">
+                <h6>Categories</h6>
+                <nav class="nav flex-column category-nav">
+                    <% postCategories.forEach(item => { %>
+                    <a
+                        class="nav-link small-3 text-body-secondary rounded-4 py-1 <%= category === item.toLowerCase() ? 'active' : '' %>"
+                        href="?<%= categoryUrl %>category=<%= item.toLowerCase() %>"
+                        ><%= capitalizeEachWord(item) %></a
+                    >
+                    <% }) %>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-lg-7 px-lg-3">
+            <main>
+                <!-- Search -->
+                <div class="search">
+                    <h6 class="mb-2"><i class="bi bi-search"></i> Search</h6>
+                    <form>
+                        <% if (tag) { %>
+                        <input type="hidden" name="tag" value="<%= tag %>" />
+                        <% } %> <% if (order) { %>
+                        <input
+                            type="hidden"
+                            name="order"
+                            value="<%= order %>"
+                        />
+                        <% } %> <% if (category) { %>
+                        <input
+                            type="hidden"
+                            name="category"
+                            value="<%= category %>"
+                        />
+                        <% } %>
+                        <input
+                            class="form-control"
+                            type="text"
+                            placeholder="keyword..."
+                            name="search"
+                            value="<%= search %>"
+                        />
+                        <% if (search) { %>
+                        <div class="small mt-2 ps-1">Found: <%= count %></div>
+                        <% } %>
+                    </form>
+                </div>
+
+                <div class="mt-5">
+                    <div
+                        class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3"
+                    >
+                        <h4 class="fs-5 fw-bold m-0">
+                            <%= category ? capitalizeEachWord(category) : 'All'
+                            %> Posts
+                        </h4>
+                        <div class="d-flex">
+                            <div class="dropdown me-2 d-lg-none">
+                                <button
+                                    class="dropdown-toggle border-0 bg-light text-body-secondary small"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <%= category ? capitalizeEachWord(category)
+                                    : 'All' %>
+                                </button>
+                                <ul
+                                    class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0 p-1"
+                                >
+                                    <% postCategories.forEach(item => { %>
+                                    <li>
+                                        <a
+                                            class="dropdown-item text-body-secondary small py-1 <%= category === item.toLowerCase() ? 'active' : '' %>"
+                                            href="?<%= categoryUrl %>category=<%= item.toLowerCase() %>"
+                                            ><%= capitalizeEachWord(item) %></a
+                                        >
+                                    </li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button
+                                    class="dropdown-toggle border-0 bg-light text-body-secondary small"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <%= order === 'asc' ? 'Oldest' : 'Latest' %>
+                                </button>
+                                <ul
+                                    class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0 p-1"
+                                >
+                                    <li>
+                                        <a
+                                            class="dropdown-item text-body-secondary small py-1 <%= order === 'asc' ? '' : 'active' %>"
+                                            href="?<%= orderUrl %>order=desc"
+                                            >Latest</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item text-body-secondary small py-1 <%= order === 'asc' ? 'active' : '' %>"
+                                            href="?<%= orderUrl %>order=asc"
+                                            >Oldest</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts -->
+                    <% if (posts.length) { %> <% posts.forEach(post => { %>
+                    <div class="card rounded-4 border-0 mb-4 post">
+                        <a
+                            href="/posts/<%= post.slug %>"
+                            class="text-body-secondary text-decoration-none"
+                        >
+                            <% if (post.thumbnail) { %>
+                            <img
+                                src="/uploads/posts/<%= post.thumbnail %>"
+                                class="card-img-top rounded-top-4"
+                                alt="<%= post.title %>"
+                            />
+                            <% } %>
+                            <div class="card-body px-3 px-md-4 pt-4 pb-3">
+                                <h5 class="card-title fw-semibold large-3 mb-2">
+                                    <%= post.title %>
+                                </h5>
+                                <div class="small-7 mb-2">
+                                    <%=
+                                    post.createdAt.toLocaleDateString('en-EN', {
+                                    month: 'short', day: 'numeric'}) %> <% if
+                                    (post.category) { %>
+                                    <span class="fw-bold mx-1"
+                                        >&centerdot;</span
+                                    >
+                                    <%= capitalizeEachWord(post.category) %> <%
+                                    } %>
+                                </div>
+                                <p class="card-text small text-dark mb-0">
+                                    <%= post.excerpt %>
+                                </p>
+                                <% if (post.tags.length) { %>
+                                <p class="card-text mt-3 mb-0">
+                                    <% post.tags.forEach(tag => { %>
+                                    <span
+                                        class="badge bg-body-secondary text-body-secondary rounded-4 px-3 py-2 my-1"
+                                        >#<%= tag %></span
+                                    >
+                                    <% }) %>
+                                </p>
+                                <% } %>
+                            </div>
+                        </a>
+                    </div>
+                    <% }) %> <% } else {%>
+                    <div class="mt-5 text-center">No post found :(</div>
+                    <% }%>
+
+                    <!-- Pagination -->
+                    <% if (prevPage || nextPage) { %>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mt-5">
+                            <li class="page-item">
+                                <a
+                                    class="page-link small rounded-start-4 text-body-secondary px-4 py-2 <%= prevPage ? '' : 'disabled' %>"
+                                    href="?<%= pageUrl %>page=<%= prevPage %>"
+                                    >Previous</a
+                                >
+                            </li>
+                            <!-- <li class="page-item"><a class="page-link small active" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link small" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link small" href="#">3</a></li> -->
+                            <li class="page-item">
+                                <a
+                                    class="page-link small rounded-end-4 text-body-secondary px-4 py-2 <%= nextPage ? '' : 'disabled' %>"
+                                    href="?<%= pageUrl %>page=<%= nextPage %>"
+                                    >Next</a
+                                >
+                            </li>
+                        </ul>
+                    </nav>
+                    <% } %>
+                </div>
+            </main>
+        </div>
+
+        <!-- Side widget 2-->
+        <div class="col-lg-3">
+            <div class="position-sticky" style="top: 4.7rem">
+                <!-- Profile -->
+                <h6 class="mt-5 mt-lg-0">Profile</h6>
+                <div class="widget bg-white text-center rounded-4 px-3 py-4">
+                    <img
+                        src="/assets/img/author.jpg"
+                        alt="devchamploo"
+                        class="rounded-circle img-thumbnail mb-3 gper-img"
+                    />
+                    <h6 class="">Umam Alfarizi</h6>
+                    <p class="small m-0 px-4 px-md-5 px-lg-3">
+                        An oridinary student who is still trying to love study
+                    </p>
+                </div>
+
+                <!-- Contact -->
+                <h6 class="mt-5">Contact</h6>
+                <div class="widget bg-white rounded-4 small pt-2 pb-1 px-2">
+                    <div class="d-flex">
+                        <a
+                            href="mailto:alfariziuchiha@gmail.com"
+                            class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
+                            target="_blank"
+                        >
+                            <i class="bi bi-envelope"></i>
+                            <span class="ms-2">G-mail</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a
+                            href="https://github.com/devChampl00"
+                            class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
+                            target="_blank"
+                        >
+                            <i class="bi bi-github"></i>
+                            <span class="ms-2">Github</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a
+                            href="https://id.linkedin.com/in/umam-alfarizi"
+                            class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
+                            target="_blank"
+                        >
+                            <i class="bi bi-linkedin"></i>
+                            <span class="ms-2">Linked-in</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a
+                            href="https://facebook.com/gper00"
+                            class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
+                            target="_blank"
+                        >
+                            <i class="bi bi-facebook"></i>
+                            <span class="ms-2">Facebook</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a
+                            href="https://instagram.com/gper00"
+                            class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
+                            target="_blank"
+                        >
+                            <i class="bi bi-instagram"></i>
+                            <span class="ms-2">Instagram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

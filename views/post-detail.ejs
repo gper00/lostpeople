@@ -1,0 +1,269 @@
+<!-- Page content-->
+<div class="container-md col-lg-10 col-xxl-9 my-4">
+    <div class="row justify-content-center">
+        <!-- Side widget 1 -->
+        <div class="col-lg-1 d-none d-lg-block share pe-0">
+            <div class="position-sticky" style="top: 4.7rem">
+                <div class="text-end large-3 mb-2">
+                    <a
+                        class="share-link twitter-lg text-body-secondary p-2"
+                        href="#"
+                        target="_blank"
+                        ><i class="bi bi-twitter"></i
+                    ></a>
+                </div>
+                <div class="text-end large-3 mb-2">
+                    <a
+                        class="share-link linkedin-lg text-body-secondary p-2"
+                        href="#"
+                        target="_blank"
+                        ><i class="bi bi-linkedin"></i
+                    ></a>
+                </div>
+                <div class="text-end large-3 mb-2">
+                    <a
+                        class="share-link facebook-lg text-body-secondary p-2"
+                        href="#"
+                        target="_blank"
+                        ><i class="bi bi-facebook"></i
+                    ></a>
+                </div>
+                <div class="text-end large-3 mb-2">
+                    <a
+                        class="share-link whatsapp-lg text-body-secondary p-2"
+                        href="#"
+                        target="_blank"
+                        ><i class="bi bi-whatsapp"></i
+                    ></a>
+                </div>
+                <div class="text-end large-3 mb-2">
+                    <a
+                        class="share-link telegram-lg text-body-secondary p-2"
+                        href="#"
+                        target="_blank"
+                        ><i class="bi bi-telegram"></i
+                    ></a>
+                </div>
+                <div class="text-end large-3 mt-3">
+                    <a
+                        class="share-link text-body-secondary p-2 d-none toTop"
+                        href="#top"
+                        ><i class="bi bi-arrow-up-circle"></i
+                    ></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-lg-7">
+            <main>
+                <article class="rounded-4 bg-white p-3 py-lg-4 px-lg-5">
+                    <header>
+                        <h1 class="post-title fs-3 fw-bold mt-3 pe-5">
+                            <%= post.title %>
+                        </h1>
+                        <div class="d-flex align-items-center mt-4">
+                            <div class="flex-shrink-0">
+                                <img
+                                    <% if (post.userId.image) { %>
+                                    src="<%= `/uploads/users/${post.userId.image}`%>"
+                                    alt="<%= post.userId.fullname %>"
+                                    <% } else { %>
+                                    src="/assets/img/user-default.jpg" alt=""
+                                    <% } %>
+                                    class="rounded-circle author-post-thumbnail"
+                                />
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="fw-semibold m-0 medium">
+                                    <%= post.userId.fullname %>
+                                </h6>
+                                <p class="small-8 m-0">
+                                    <%=
+                                    post.createdAt.toLocaleDateString('en-EN', {
+                                    month: 'short', day: 'numeric'})
+                                    %>
+
+                                    <%if
+                                    (post.category) { %>
+                                    <span class="fw-bold mx-1"
+                                        >&centerdot;</span
+                                    >
+                                    <a
+                                        href="/posts/?category=<%= post.category.toLowerCase() %>"
+                                        class="text-decoration-none text-body-secondary"
+                                    >
+                                        <%= capitalizeEachWord(post.category)%>
+                                    </a>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+                    <% if (post.thumbnail) { %>
+                    <figure class="mt-5">
+                        <img
+                            class="img-fluid rounded-4 post-thumbnail"
+                            src="/uploads/posts/<%= post.thumbnail %>"
+                            alt="<%= post.thumbnail %>"
+                        />
+                    </figure>
+                    <% } %>
+                    <section class="mt-5 medium text-dark">
+                        <%- post.content %>
+                    </section>
+                    <% if (post.tags.length) { %>
+                    <section class="mt-5 tags medium mb-lg-2">
+                        <i class="bi bi-tags"></i>
+                        <span class="me-2">Tags:</span>
+                        <% post.tags.forEach(tag => { %>
+                        <a
+                            href="/?tag=<%= tag %>"
+                            class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
+                            >#<%= tag %>
+                        </a>
+                        <% }) %>
+                    </section>
+                    <% } %>
+                </article>
+
+                <!-- Share -->
+                <section class="d-lg-none mt-5 mb-5">
+                    <div class="text-center pb-4">Share to :</div>
+                    <div class="text-center">
+                        <span
+                            class="bg-white px-2 py-3 fs-5 rounded-4 text-body-secondary border"
+                        >
+                            <a
+                                class="share-link facebook-sm text-body-secondary p-2 mx-2"
+                                href="#"
+                                ><i class="bi bi-facebook"></i
+                            ></a>
+                            <a
+                                class="share-link linkedin-sm text-body-secondary p-2 mx-2"
+                                href="#"
+                                ><i class="bi bi-linkedin"></i
+                            ></a>
+                            <a
+                                class="share-link twitter-sm text-body-secondary p-2 mx-2"
+                                href="#"
+                                ><i class="bi bi-twitter"></i
+                            ></a>
+                            <a
+                                class="share-link telegram-sm text-body-secondary p-2 mx-2"
+                                href="#"
+                                ><i class="bi bi-telegram"></i
+                            ></a>
+                            <a
+                                class="share-link whatsapp-sm text-body-secondary p-2 mx-2"
+                                href="#"
+                                ><i class="bi bi-whatsapp"></i
+                            ></a>
+                        </span>
+                    </div>
+                </section>
+
+                <!-- Pagination -->
+                <!-- <div class="row mt-5">
+                    <nav aria-label="Page navigation">
+                        <div class="text-center mb-2">Go to :</div>
+                        <ul
+                            class="pagination justify-content-center align-items-center"
+                        >
+                            <li class="page-item">
+                                <a
+                                    class="page-link rounded-start-4 shadow-sm text-body-secondary px-4 py-2"
+                                    href="#"
+                                    >Prev post</a
+                                >
+                            </li>
+                            <li class="page-item">
+                                <a
+                                    class="page-link rounded-end-4 shadow-sm text-body-secondary px-4 py-2"
+                                    href="#"
+                                    >Next post</a
+                                >
+                            </li>
+                        </ul>
+                    </nav>
+                </div> -->
+            </main>
+        </div>
+
+        <!-- tes -->
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+
+<script>
+    const toTop = document.querySelector('.toTop')
+    window.onscroll = () => {
+        if (window.pageYOffset > 456) {
+            toTop.classList.remove('d-none')
+        } else {
+            toTop.classList.add('d-none')
+        }
+    }
+
+    document
+        .querySelector('.facebook-lg')
+        .setAttribute(
+            'href',
+            `https://www.facebook.com/sharer/sharer.php?u=${document.URL}/?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=user-share`
+        )
+    document
+        .querySelector('.twitter-lg')
+        .setAttribute(
+            'href',
+            `https://twitter.com/intent/tweet?text=Judul%20Postingan ${document.URL}`
+        )
+    document
+        .querySelector('.linkedin-lg')
+        .setAttribute(
+            'href',
+            `http://www.linkedin.com/shareArticle?mini=true&amp;url=${document.URL}&amp;title=Judul%20Postingan`
+        )
+    document
+        .querySelector('.telegram-lg')
+        .setAttribute(
+            'href',
+            `https://t.me/share/url?url=${document.URL}&text=Judul%20Postingan`
+        )
+    document
+        .querySelector('.whatsapp-lg')
+        .setAttribute(
+            'href',
+            `https://api.whatsapp.com/send/?text=${document.URL}&type=custom_url&app_absent=0`
+        )
+
+    document
+        .querySelector('.facebook-sm')
+        .setAttribute(
+            'href',
+            `https://www.facebook.com/sharer/sharer.php?u=${document.URL}/?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=user-share`
+        )
+    document
+        .querySelector('.twitter-sm')
+        .setAttribute(
+            'href',
+            `https://twitter.com/intent/tweet?text=Judul%20Postingan ${document.URL}`
+        )
+    document
+        .querySelector('.linkedin-sm')
+        .setAttribute(
+            'href',
+            `http://www.linkedin.com/shareArticle?mini=true&amp;url=${document.URL}&amp;title=Judul%20Postingan`
+        )
+    document
+        .querySelector('.telegram-sm')
+        .setAttribute(
+            'href',
+            `https://t.me/share/url?url=${document.URL}&text=Judul%20Postingan`
+        )
+    document
+        .querySelector('.whatsapp-sm')
+        .setAttribute(
+            'href',
+            `https://api.whatsapp.com/send/?text=${document.URL}&type=custom_url&app_absent=0`
+        )
+</script>

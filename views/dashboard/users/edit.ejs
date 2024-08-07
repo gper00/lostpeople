@@ -1,0 +1,501 @@
+<!-- Delete image form -->
+<% if (user.image) { %>
+<form
+    action="/dashboard/users/<%= user._id %>/remove-image?_method=PATCH&_csrf=<%= csrfToken %>"
+    id="removeImageForm"
+    method="POST"
+    style="display: none"
+></form>
+<% } %>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-xl-6 p-0">
+                <form
+                    action="/dashboard/users/<%= user.id %>?_method=PATCH&_csrf=<%=csrfToken%>"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    autocomplete="off"
+                >
+                    <h1 class="h3 mb-3"><%= authUser.role === 'super-admin' && user.role !== authUser.role  ? 'Edit user' : 'Update profile' %></h1>
+                    <input
+                        type="hidden"
+                        name="password"
+                        value="<%= user.password %>"
+                    />
+                    <input
+                        type="hidden"
+                        name="repassword"
+                        value="<%= user.password %>"
+                    />
+                    <!-- Fullname -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label for="fullname" class="mb-2">
+                            Fullname<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control <%= errors && errors.fullname ? 'is-invalid' : '' %>"
+                            id="fullname"
+                            name="fullname"
+                            value="<%= userData.fullname ?? user.fullname %>"
+                            required
+                        />
+                        <% if (errors && errors.fullname) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.fullname.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Email -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label for="email" class="mb-2">
+                            Email<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            class="form-control <%= errors && errors.email ? 'is-invalid' : '' %>"
+                            id="email"
+                            name="email"
+                            value="<%= userData.email ?? user.email %>"
+                            required
+                        />
+                        <% if (errors && errors.email) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.email.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Email -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label for="username" class="mb-2">
+                            Username<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control <%= errors && errors.username ? 'is-invalid' : '' %>"
+                            id="username"
+                            name="username"
+                            value="<%= userData.username ?? user.username %>"
+                            required
+                        />
+                        <% if (errors && errors.username) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.username.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Password -->
+                    <div
+                        class="form-group d-flex justify-content-between align-items-center bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label>Password</label>
+                        <a
+                            href="#"
+                            class="btn text-primary"
+                            id="changePasswordBtn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#changePassword"
+                        >
+                            <span class="align-middle">Change</span>
+                            <i class="align-middle" data-feather="edit-3"></i>
+                        </a>
+                    </div>
+
+                    <!-- Image -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label class="mb-2" for="image"> image </label>
+                        <input
+                            type="file"
+                            class="form-control <%= errors && errors.image ? 'is-invalid' : '' %>"
+                            id="image"
+                            name="image"
+                            value=""
+                        />
+                        <div
+                            class="imgPreviewContainer bg-light rounded-bottom border <%= user.image ? '' : 'd-none' %> p-2"
+                        >
+                            <div class="row justify-content-center">
+                                <div class="col-9 col-md-7 col-lg-5">
+                                    <img
+                                        src="<%= user.image ? `/uploads/users/${user.image}`: '' %>"
+                                        alt=""
+                                        id="imgPreview"
+                                        class="rounded border w-100"
+                                        style="
+                                            max-height: 180px;
+                                            object-fit: cover;
+                                        "
+                                    />
+                                    <% if (user.image) { %>
+                                    <button
+                                        type="button"
+                                        id="removeImageBtn"
+                                        class="btn btn-danger w-100 mt-1"
+                                        onclick="document.getElementById('removeImageForm').submit()"
+                                    >
+                                        Delete image
+                                    </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <% if (errors && errors.image) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.image.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Bio -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label class="mb-2" for="bio"> Bio </label>
+                        <textarea
+                            id="bio"
+                            name="bio"
+                            class="form-control <%= errors && errors.bio ? 'is-invalid' : '' %>"
+                            rows="4"
+                        >
+<%= userData.bio ?? user.bio %></textarea
+                        >
+                        <% if (errors && errors.bio) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.bio.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Bio -->
+                    <div
+                        class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4"
+                    >
+                        <label class="mb-3" for="socialMedia">
+                            Social Media Links
+                        </label>
+                        <div class="row mb-2">
+                            <label
+                                for="facebook"
+                                class="col-form-label col-md-3"
+                                >Facebook</label
+                            >
+                            <div class="col-md-9">
+                                <input
+                                    type="text"
+                                    id="facebook"
+                                    class="form-control <%= errors && errors.facebook ? 'is-invalid': '' %>"
+                                    name="facebook"
+                                    value="<%= userData.facebook ?? user.socialMedia.facebook %>"
+                                    placeholder="https://facebook.com/username"
+                                />
+                                <% if (errors && errors.facebook) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.facebook.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label
+                                for="instagram"
+                                class="col-form-label col-md-3"
+                                >Instagram</label
+                            >
+                            <div class="col-md-9">
+                                <input
+                                    type="text"
+                                    id="instagram"
+                                    class="form-control <%= errors && errors.instagram ? 'is-invalid': '' %>"
+                                    name="instagram"
+                                    value="<%= userData.instagram ?? user.socialMedia.instagram %>"
+                                    placeholder="https://instagram.com/username"
+                                />
+                                <% if (errors && errors.instagram) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.instagram.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="twitter" class="col-form-label col-md-3"
+                                >Twitter</label
+                            >
+                            <div class="col-md-9">
+                                <input
+                                    type="text"
+                                    id="twitter"
+                                    class="form-control <%= errors && errors.twitter ? 'is-invalid': '' %>"
+                                    name="twitter"
+                                    value="<%= userData.twitter ?? user.socialMedia.twitter %>"
+                                    placeholder="https://twitter.com/username"
+                                />
+                                <% if (errors && errors.twitter) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.twitter.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label
+                                for="whatsapp"
+                                class="col-form-label col-md-3"
+                                >Whatsapp</label
+                            >
+                            <div class="col-md-9">
+                                <input
+                                    type="text"
+                                    id="whatsapp"
+                                    class="form-control <%= errors && errors.whatsapp ? 'is-invalid': '' %>"
+                                    name="whatsapp"
+                                    value="<%= userData.whatsapp ?? user.socialMedia.whatsapp %>"
+                                    placeholder="https://wa.me/phonenumber"
+                                />
+                                <% if (errors && errors.whatsapp) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.whatsapp.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label
+                                for="telegram"
+                                class="col-form-label col-md-3"
+                                >Telegram</label
+                            >
+                            <div class="col-md-9">
+                                <input
+                                    type="text"
+                                    id="telegram"
+                                    class="form-control <%= errors && errors.telegram ? 'is-invalid': '' %>"
+                                    name="telegram"
+                                    value="<%= userData.telegram ?? user.socialMedia.telegram %>"
+                                    placeholder="https://t.me/username"
+                                />
+                                <% if (errors && errors.telegram) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.telegram.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <button class="btn btn-primary" type="submit">
+                            <i
+                                class="align-middle me-1"
+                                data-feather="send"
+                            ></i>
+                            <span class="align-middle">Submit</span>
+                        </button>
+                        <button class="btn btn-secondary" type="button" onclick="window.location=document.referrer;">
+                            <i
+                                class="align-middle me-1"
+                                data-feather="x-square"
+                            ></i>
+                            <span class="align-middle">Cancel</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<% if (errors && errors.password || errors && errors.repassword) { %>
+<div id="passwordError"></div>
+<% } %>
+
+<!-- User modal -->
+<div
+    class="modal fade"
+    id="changePassword"
+    tabindex="-1"
+    aria-labelledby="changePasswordLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form
+                id="changePasswordForm"
+                action="/dashboard/users/<%= user.id %>?_method=PATCH&_csrf=<%=csrfToken%>"
+                method="POST"
+                enctype="multipart/form-data"
+                autocomplete="off"
+            >
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordLabel">
+                        Change Password
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Password -->
+                    <div class="form-group mb-4">
+                        <label for="password" class="mb-2">
+                            New password<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control <%= errors && errors.password ? 'is-invalid' : '' %>"
+                            id="password"
+                            name="password"
+                            value=""
+                            required
+                        />
+                        <% if (errors && errors.password) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.password.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Password confirmation -->
+                    <div class="form-group mb-2">
+                        <label for="repassword" class="mb-2">
+                            Password confirmation<span class="text-danger"
+                                >*</span
+                            >
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control <%= errors && errors.repassword ? 'is-invalid' : '' %>"
+                            id="repassword"
+                            name="repassword"
+                            value=""
+                            required
+                        />
+                        <% if (errors && errors.repassword) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.repassword.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        <i
+                            class="align-middle me-1"
+                            data-feather="x-square"
+                        ></i>
+                        <span class="align-middle">Close</span>
+                    </button>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="align-middle me-1" data-feather="send"></i>
+                        <span class="align-middle" id="changePasswordSubmit"
+                            >Submit</span
+                        >
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const isPasswordErr = document.querySelector('#passwordError') || null
+    if (isPasswordErr) {
+        window.onload = function () {
+            document.querySelector('#changePasswordBtn').click()
+        }
+    }
+
+    const changePasswordSubmit = document.querySelector('#changePasswordSubmit')
+    const changePasswordForm = document.querySelector('#changePasswordForm')
+
+
+    changePasswordForm.onsubmit = function (e) {
+        e.preventDefault()
+
+        // Get values from main form
+        const fullname = document.querySelector('#fullname').value
+        const username = document.querySelector('#username').value
+        const email = document.querySelector('#email').value
+        const image = document.querySelector('#image').files
+        console.log(image)
+        const bio = document.querySelector('#bio').value
+        const facebook = document.querySelector('#facebook').value
+        const instagram = document.querySelector('#instagram').value
+        const twitter = document.querySelector('#twitter').value
+        const telegram = document.querySelector('#telegram').value
+        const whatsapp = document.querySelector('#whatsapp').value
+
+        // Create new input elements for the modal form
+        const modalBody = document.querySelector('.modal-body')
+
+        // Function to create and append input elements
+        function createAndAppendInput(type, name, value) {
+            const input = document.createElement('input')
+            input.type = type
+            input.name = name
+            input.value = value
+            modalBody.appendChild(input)
+        }
+
+        createAndAppendInput('hidden', 'fullname', fullname)
+        createAndAppendInput('hidden', 'username', username)
+        createAndAppendInput('hidden', 'email', email)
+        createAndAppendInput('hidden', 'bio', bio)
+        createAndAppendInput('hidden', 'facebook', facebook)
+        createAndAppendInput('hidden', 'instagram', instagram)
+        createAndAppendInput('hidden', 'twitter', twitter)
+        createAndAppendInput('hidden', 'telegram', telegram)
+        createAndAppendInput('hidden', 'whatsapp', whatsapp)
+
+        if (image) {
+            const imageInput = document.createElement('input')
+            imageInput.type = 'file'
+            imageInput.className = 'd-none';
+            imageInput.name = 'image'
+            imageInput.files = image
+            modalBody.appendChild(imageInput)
+        }
+
+        changePasswordForm.submit()
+    }
+
+    let removeImageBtn = document.querySelector('#removeImageBtn')
+    document.querySelector('#image').onchange = function () {
+        let file = this.files[0]
+        if (file) {
+            let reader = new FileReader()
+            reader.onload = function (event) {
+                document
+                    .querySelector('#imgPreview')
+                    .setAttribute('src', event.target.result)
+                document
+                    .querySelector('.imgPreviewContainer')
+                    .classList.remove('d-none')
+            }
+            reader.readAsDataURL(file)
+        }
+        if (removeImageBtn) {
+            removeImageBtn.remove()
+        }
+    }
+</script>

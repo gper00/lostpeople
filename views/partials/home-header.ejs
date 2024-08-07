@@ -1,0 +1,26 @@
+<!-- Responsive navbar-->
+<header class="bg-white sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light" aria-label="Offcanvas navbar large">
+        <div class="container-md col-lg-9 col-xxl-8">
+            <a class="navbar-brand brand-name fw-bolder text-body-secondary fs-6" href="/"> Lostpeople </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-start text-bg-light" tabindex="-1" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label" style="width: 270px">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbar2Label">
+                        <a class="navbar-brand brand-name fw-bolder text-body-secondary fs-6" href="/"> Lostpeople </a>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 small">
+                        <li class="nav-item"><a class="nav-link <%= pageActive === 'home' ? 'active' : '' %>" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link <%= pageActive === 'blog' ? 'active' : '' %>" href="/posts">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link <%= pageActive === 'about' ? 'active' : '' %>" href="/about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

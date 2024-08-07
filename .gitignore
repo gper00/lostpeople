@@ -1,0 +1,11 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore .env file
+.env
+
+# Ignore seeder file
+app/utils/seeder.js
+
+# Ignore the uploads folder inside public
+public/uploads/

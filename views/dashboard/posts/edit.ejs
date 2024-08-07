@@ -1,0 +1,288 @@
+<!-- Delete thumbnail form -->
+<% if (post.thumbnail) { %>
+<form
+    action="/dashboard/posts/<%= post._id %>/remove-thumbnail?_method=PATCH&_csrf=<%= csrfToken %>"
+    id="removeThumbnailForm"
+    method="POST"
+    style="display: none"
+>
+</form>
+<% } %>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8 p-0">
+                <form
+                    action="/dashboard/posts/<%= post._id %>?_method=PATCH&_csrf=<%=csrfToken%>"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    autocomplete="off"
+                >
+                    <h1 class="h3 mb-3">Edit Post</h1>
+                    <!-- Title -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label class="mb-2" for="title">
+                            Title<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control <%= errors && errors.title ? 'is-invalid' : '' %>"
+                            id="title"
+                            name="title"
+                            value="<%= postData.title ?? post.title %>"
+                            required
+                        />
+                        <% if (errors && errors.title) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.title.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Thumbnail -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label class="mb-2" for="thumbnail"> Thumbnail </label>
+                        <input
+                            type="file"
+                            class="form-control <%= errors && errors.thumbnail ? 'is-invalid' : '' %>"
+                            id="thumbnail"
+                            name="thumbnail"
+                            value=""
+                        />
+                        <div
+                            class="imgPreviewContainer bg-light rounded-bottom border <%= post.thumbnail ? '' : 'd-none' %> p-2"
+                        >
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 col-lg-6">
+                                    <img
+                                        src="<%= post.thumbnail ? `/uploads/posts/${post.thumbnail}`: '' %>"
+                                        alt=""
+                                        id="imgPreview"
+                                        class="rounded border w-100"
+                                        style="
+                                            max-height: 180px;
+                                            object-fit: cover;
+                                        "
+                                    />
+                                    <% if (post.thumbnail) { %>
+                                        <button type="button" id="removeThumbnailBtn" class="btn btn-danger w-100 mt-1" onclick="document.getElementById('removeThumbnailForm').submit()">
+                                            Delete thumbnail
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <% if (errors && errors.thumbnail) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.thumbnail.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <div class="row">
+                            <label class="mb-2" for="category"> Category </label>
+                            <div class="col-md-6">
+                                <select
+                                    name="category"
+                                    id="category"
+                                    class="form-select <%= errors && errors.category ? 'is-invalid' : '' %>"
+                                >
+                                    <% if (!post.category) { %>
+                                    <option value="">--Select one--</option>
+                                    <% } else { %>
+                                    <option value="">Remove category</option>
+                                    <% } %>
+                                    <% let category = postData.category ?? post.category %>
+                                    <% if (postCategories) { %>
+                                    <% postCategories.forEach(item => { %>
+                                    <option <%= category == item ? 'selected' : '' %> value="<%= item %>">
+                                        <%= capitalizeEachWord(item) %>
+                                    </option>
+                                    <% }) %>
+                                    <% } %>
+                                </select>
+                                <% if (errors && errors.category) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.category.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                            <div class="col-md-6 mt-2 mt-lg-0">
+                                <input
+                                    type="text"
+                                    class="form-control <%= errors && errors.newCategory ? 'is-invalid' : '' %>"
+                                    name="newCategory"
+                                    value="<%= postData.newCategory ?? '' %>"
+                                    placeholder="New category"
+                                    autocomplete="off"
+                                />
+                                <% if (errors && errors.newCategory) { %>
+                                <div class="invalid-feedback">
+                                    <%= errors.newCategory.msg %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <%
+                            let tags = ''
+                            if(postData.tags) {
+                                tags = postData.tags
+                            } else if(post.tags.length) {
+                                tags = post.tags.join(', ')
+                            }
+                        %>
+                        <label class="mb-2" for="tags"> Tags
+                            <br>
+                            <span class="small">Use a comma (,) if the post has many tag</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control <%= errors && errors.tags ? 'is-invalid' : '' %>"
+                            id="tags"
+                            name="tags"
+                            value="<%= tags %>"
+                        />
+                        <% if (errors && errors.tags) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.tags.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Excerpt -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label class="mb-2" for="excerpt">
+                            Excerpt<span class="text-danger">*</span>
+                        </label>
+                        <textarea
+                            id="excerpt"
+                            name="excerpt"
+                            class="form-control <%= errors && errors.excerpt ? 'is-invalid' : '' %>"
+                            rows="4"
+                            required
+                        ><%= postData.excerpt ?? post.excerpt %></textarea>
+                        <% if (errors && errors.excerpt) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.excerpt.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <%
+                            let status = postData.status ?? post.status
+                        %>
+                        Published<span class="text-danger">*</span>
+                        <div class="form-check mt-2">
+                            <input
+                                class="form-check-input  <%= errors && errors.status ? 'is-invalid' : '' %>"
+                                type="radio"
+                                name="status"
+                                id="published"
+                                value="published"
+                                <%= status === 'published' ? 'checked' : '' %>
+                            />
+                            <label
+                                class="form-check-label"
+                                for="published"
+                            >
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input
+                                class="form-check-input  <%= errors && errors.status ? 'is-invalid' : '' %>"
+                                type="radio"
+                                name="status"
+                                value="draft"
+                                id="draft"
+                                <%= status !== 'published' ? 'checked' : '' %>
+                            />
+                            <label
+                                class="form-check-label"
+                                for="draft"
+                            >
+                                No
+                            </label>
+                        </div>
+                        <% if (errors && errors.status) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.status.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Content -->
+                    <div
+                        id="dataContent" class="d-none"
+                        data-valid="<%= errors && errors.content ? 'true' : 'false' %>"
+                        data-value="<%= postData.content ?? post.content %>"
+                    ></div>
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label for="editor" class="mb-2">
+                            Content<span class="text-danger">*</span>
+                        </label>
+                        <textarea id="editor" name="content"></textarea>
+                        <% if (errors && errors.content) { %>
+                        <div class="small text-danger">
+                            <%= errors.content.msg %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <div class="mb-5">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="align-middle me-1" data-feather="send"></i>
+                            <span class="align-middle">Submit</span>
+                        </button>
+                        <button class="btn btn-secondary" type="button" onclick="window.location=document.referrer;">
+                            <i class="align-middle me-1" data-feather="x-square"></i>
+                            <span class="align-middle">Cancel</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let removeThumbnailBtn = document.querySelector('#removeThumbnailBtn')
+    document.querySelector('#thumbnail').onchange = function () {
+        let file = this.files[0]
+        if (file) {
+            let reader = new FileReader()
+            reader.onload = function (event) {
+                document
+                    .querySelector('#imgPreview')
+                    .setAttribute('src', event.target.result)
+                document
+                    .querySelector('.imgPreviewContainer')
+                    .classList.remove('d-none')
+                }
+                reader.readAsDataURL(file)
+        }
+        if(removeThumbnailBtn) {
+            removeThumbnailBtn.remove()
+        }
+    }
+</script>
+
+<!-- CK Editor -->
+<script type="importmap">
+    {
+        "imports": {
+            "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.js",
+            "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/42.0.1/"
+        }
+    }
+</script>
+<script type="module" src="/js/ckeditor.js"></script>

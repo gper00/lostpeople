@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>DevChamploo | Login</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link
+            rel="stylesheet"
+            href="/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
+        />
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body class="bg-light text-body-secondary">
+        <% if (errorMessage.length) { %>
+        <div
+            class="alert alert-danger alert-dismissible rounded-4 border-0 shadow-sm fade show login-alert"
+            role="alert"
+        >
+            <span class="small">
+                <%= errorMessage %>
+            </span>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+        <% } %>
+
+        <div class="my-form card rounded-4 p-4 border-0 shadow-sm small">
+            <form method="POST">
+                <h1 class="text-center fw-bolder fs-5 mt-3 pb-4 mb-3">
+                    Log in to Dashboard
+                </h1>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <div class="form-group mb-4">
+                    <label for="usernameOrEmail" class="form-label mb-1"
+                        >Username or Email</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control <%= errors && errors.usernameOrEmail ? 'is-invalid' : '' %>"
+                        id="usernameOrEmail"
+                        name="usernameOrEmail"
+                        autocomplete="off"
+                        value="<%= userData.usernameOrEmail ?? '' %>"
+                        required
+                        autofocus
+                    />
+                    <% if (errors && errors.usernameOrEmail) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.usernameOrEmail.msg %>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="password" class="form-label mb-1"
+                        >Password</label
+                    >
+                    <input
+                        type="password"
+                        class="form-control <%= errors && errors.password ? 'is-invalid' : '' %>"
+                        id="password"
+                        name="password"
+                        value=""
+                        required
+                    />
+                    <% if (errors && errors.password) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.password.msg %>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="form-check mb-4">
+                    <input type="checkbox" class="form-check-input shadow-none"
+                    id="rememberMe" name="rememberMe" <%= userData.rememberMe ?
+                    'checked' : '' %> />
+                    <label class="form-check-label" for="rememberMe"
+                        >Remember me</label
+                    >
+                </div>
+                <button type="submit" class="btn btn-dark w-100 mb-2">
+                    Log in
+                </button>
+            </form>
+        </div>
+
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/script.js"></script>
+    </body>
+</html>

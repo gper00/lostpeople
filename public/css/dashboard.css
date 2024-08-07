@@ -1,0 +1,15 @@
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0.125rem 0.25rem rgba(var(--bs-body-color-rgb), 0.075);
+}
+
+.table-title {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Responsive styles for larger screens */
+@media (min-width: 768px) {
+}

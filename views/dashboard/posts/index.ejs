@@ -1,0 +1,192 @@
+<!-- Delete form -->
+<form
+    action=""
+    id="deleteForm"
+    method="POST"
+    style="display: none"
+>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+</form>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3"> Posts </h1>
+
+        <% if (successMessage.length) { %>
+        <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+        >
+            <%= successMessage %>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+        <% } else if(errorMessage.length) {%>
+        <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+        >
+            <%= errorMessage %>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+        <% } %>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card flex-fill mb-3">
+                    <% if (posts.length) { %>
+                    <table class="table table-hover my-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%">#</th>
+                                <th style="width: 45%">Title</th>
+                                <% if (authUser.role === 'super-admin') { %>
+                                <th
+                                    class="d-none d-xl-table-cell"
+                                    style="width: 14%"
+                                >
+                                    Author
+                                </th>
+                                <% } %>
+                                <th
+                                    class="d-none d-md-table-cell"
+                                    style="width: 11%"
+                                >
+                                    Status
+                                </th>
+                                <th
+                                    class="d-none d-xl-table-cell"
+                                    style="width: 13%"
+                                >
+                                    Created at
+                                </th>
+                                <th style="width: 14%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let i = 0; posts.forEach(post => { %>
+                            <tr>
+                                <td><%= i++ %></td>
+                                <td class="table-title"><%= post.title %></td>
+                                <% if (authUser.role === 'super-admin') { %>
+                                <td
+                                    class="d-none d-xl-table-cell"
+                                    style="width: 12%"
+                                >
+                                    @<%= post.userId.username %>
+                                </td>
+                                <% } %>
+                                <td class="d-none d-md-table-cell">
+                                    <span
+                                        class="badge <%= post.status === 'published' ? 'bg-success' : 'bg-secondary' %>"
+                                    >
+                                        <%= capitalizeEachWord(post.status) %>
+                                    </span>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <%= formatDate(post.createdAt) %>
+                                </td>
+                                <td>
+                                    <a
+                                        href="/dashboard/posts/<%= post._id %>"
+                                        class="text-decoration-none text-info me-1"
+                                    >
+                                        <i data-feather="info"></i>
+                                    </a>
+                                    <a
+                                        href="/dashboard/posts/<%= post._id %>/edit"
+                                        class="text-decoration-none text-primary"
+                                    >
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        class="text-decoration-none text-danger ms-1 deletePost"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deletePost"
+                                        data-action="/dashboard/posts/<%= post._id %>?_method=DELETE"
+                                    >
+                                        <i data-feather="trash-2"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                    <div class="text-center py-4">No post yet!</div>
+                    <% } %>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="/dashboard/posts/create" class="btn btn-primary">
+                        <i class="align-middle me-1" data-feather="file-plus"></i>
+                        <span class="align-middle">Add post</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!-- Delete modal -->
+<div
+    class="modal fade"
+    id="deletePost"
+    tabindex="-1"
+    aria-labelledby="deletePostLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center pt-5 pb-4 px-5">
+                <div class="mb-4">
+                    <div class="fs-4 fw-bolder mb-2">Are you sure?</div>
+                    This post will be deleted permanently!
+                </div>
+                <div class="mb-2">
+                    <button class="btn btn-primary" id="deleteButton">
+                        <i class="align-middle me-1" data-feather="Trash"></i>
+                        <span class="align-middle">Delete</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        <i
+                            class="align-middle me-1"
+                            data-feather="x-square"
+                        ></i>
+                        <span class="align-middle">Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const deleteForm = document.querySelector('#deleteForm')
+    document.querySelectorAll('.deletePost').forEach((e) => {
+        e.addEventListener('click', function () {
+            deleteForm.setAttribute('action', this.dataset.action)
+        })
+    })
+
+    document
+        .querySelector('#deleteButton')
+        .addEventListener('click', function () {
+            deleteForm.submit()
+        })
+</script>

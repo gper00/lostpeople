@@ -1,0 +1,92 @@
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-xl-6 p-0">
+                <h1 class="h3 mb-3">Create User</h1>
+                <form action="/dashboard/users?_csrf=<%=csrfToken%>" method="POST" autocomplete="off">
+                    <!-- Fullname -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label for="fullname" class="mb-2">
+                            Fullname<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control <%= errors && errors.fullname ? 'is-invalid' : '' %>"
+                            id="fullname"
+                            name="fullname"
+                            value="<%= userData.fullname ?? '' %>"
+                            required
+                        />
+                        <% if (errors && errors.fullname) { %>
+                        <div class="invalid-feedback"><%= errors.fullname.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label for="email" class="mb-2">
+                            Email<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            class="form-control <%= errors && errors.email ? 'is-invalid' : '' %>"
+                            id="email"
+                            name="email"
+                            value="<%= userData.email ?? '' %>"
+                            required
+                        />
+                        <% if (errors && errors.email) { %>
+                        <div class="invalid-feedback"><%= errors.email.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label for="password" class="mb-2">
+                            Password<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control <%= errors && errors.password ? 'is-invalid' : '' %>"
+                            id="password"
+                            name="password"
+                            value="<%= userData.password ?? '' %>"
+                            required
+                        />
+                        <% if (errors && errors.password) { %>
+                        <div class="invalid-feedback"><%= errors.password.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <!-- Password confirmation -->
+                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
+                        <label for="repassword" class="mb-2">
+                            Password Confirmation<span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control <%= errors && errors.repassword ? 'is-invalid' : '' %>"
+                            id="repassword"
+                            name="repassword"
+                            required
+                        />
+                        <% if (errors && errors.repassword) { %>
+                        <div class="invalid-feedback"><%= errors.repassword.msg %></div>
+                        <% } %>
+                    </div>
+
+                    <div class="mb-5">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="align-middle me-1" data-feather="send"></i>
+                            <span class="align-middle">Submit</span>
+                        </button>
+                        <button class="btn btn-secondary" type="button" onclick="window.location=document.referrer;">
+                            <i class="align-middle me-1" data-feather="x-square"></i>
+                            <span class="align-middle">Cancel</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

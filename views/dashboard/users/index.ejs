@@ -1,0 +1,153 @@
+<!-- Delete form -->
+<form action="" id="deleteForm" method="POST" style="display: none">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+</form>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3">Users</h1>
+
+        <% if (successMessage.length) { %>
+        <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+        >
+            <%= successMessage %>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+        <% } else if(errorMessage.length) {%>
+        <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+        >
+            <%= errorMessage %>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+        <% } %>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card flex-fill mb-3">
+                    <table class="table table-hover my-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th class="d-none d-md-table-cell">Email</th>
+                                <th class="d-none d-xl-table-cell">
+                                    Posts count
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let i = 0; users.forEach(user => { %>
+                            <tr>
+                                <td><%= i++ %></td>
+                                <td><%= user.fullname %></td>
+                                <td class="d-none d-md-table-cell">
+                                    <%= user.email %>
+                                </td>
+                                <td class="d-none d-xl-table-cell"><%= user.postsCount %></td>
+                                <td>
+                                    <% if (user.role != 'super-admin') { %>
+                                    <a
+                                        href="/dashboard/users/<%= user._id %>"
+                                        class="text-decoration-none text-info"
+                                    >
+                                        <i data-feather="info"></i>
+                                    </a>
+                                    <a
+                                        href="/dashboard/users/<%= user._id %>/edit"
+                                        class="text-decoration-none text-warning mx-2"
+                                    >
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        class="text-decoration-none text-danger deleteUser"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteUser"
+                                        data-action="/dashboard/users/<%= user._id %>?_method=DELETE"
+                                    >
+                                        <i data-feather="trash-2"></i>
+                                    </a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="/dashboard/users/create" class="btn btn-primary">
+                    <i class="align-middle me-1" data-feather="user-plus"></i>
+                    <span class="align-middle">Add user</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Delete modal -->
+<div
+    class="modal fade"
+    id="deleteUser"
+    tabindex="-1"
+    aria-labelledby="deleteUserLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center pt-5 pb-4 px-5">
+                <div class="mb-4">
+                    <div class="fs-4 fw-bolder mb-2">Are you sure?</div>
+                    This user will deleted and cannot sign in again
+                </div>
+                <div class="mb-2">
+                    <button class="btn btn-primary" id="deleteButton">
+                        <i class="align-middle me-1" data-feather="Trash"></i>
+                        <span class="align-middle">Delete</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        <i
+                            class="align-middle me-1"
+                            data-feather="x-square"
+                        ></i>
+                        <span class="align-middle">Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const form = document.querySelector('#deleteForm')
+    document.querySelectorAll('.deleteUser').forEach((e) => {
+        e.addEventListener('click', function () {
+            form.setAttribute('action', this.dataset.action)
+        })
+    })
+
+    document
+        .querySelector('#deleteButton')
+        .addEventListener('click', function () {
+            form.submit()
+        })
+</script>
