@@ -8,4 +8,4 @@ node_modules/
 app/utils/seeder.js
 
 # Ignore the uploads folder inside public
-public/uploads/
+# public/uploads/
