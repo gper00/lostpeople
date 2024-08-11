@@ -6,7 +6,7 @@ const locale = {
     title: 'Lostpeople',
     author: 'devchamploo',
     description:
-        'Lost people is a website that contain somethings like blogpost or something that author will add later.',
+        'I dont know what to write in.',
     keywords: "lostpeople, devchamploo, gper, blog, umam alfarizi, lost, people, dev",
 }
 
@@ -22,6 +22,7 @@ const homePage = async (req, res) => {
     }
 }
 
+
 const aboutPage = async (req, res) => {
     try {
         res.render('about', {
@@ -33,6 +34,7 @@ const aboutPage = async (req, res) => {
         console.error(err)
     }
 }
+
 
 const postsPage = async (req, res) => {
     try {
@@ -219,10 +221,11 @@ const postsPage = async (req, res) => {
             locale,
             pageActive: 'blog'
         })
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.error(err)
     }
 }
+
 
 const postDetailPage = async (req, res) => {
     try {
@@ -252,8 +255,13 @@ const postDetailPage = async (req, res) => {
             locale,
             pageActive: 'blog'
         })
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.error(err)
+        req.flash(
+            'failed',
+            err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
+        )
+        res.redirect('/posts')
     }
 }
 

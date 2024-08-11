@@ -38,7 +38,7 @@ const usersPage = async (req, res) => {
             pageActive
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -109,6 +109,7 @@ const userDetailPage = async (req, res) => {
         console.log(err)
     }
 }
+
 
 const editUserPage = async (req, res) => {
     const errors = req.flash('errors')[0] ?? {}
@@ -187,7 +188,7 @@ const updateUser = async (req, res) => {
         req.flash('success', req.user._id.valueOf() === user._id.valueOf() ? 'Update profile successfuly!' : 'User updated successfuly')
         res.redirect(req.user.role === 'super-admin' && req.user._id.valueOf() !== user._id.valueOf() ? '/dashboard/users' : '/dashboard')
     } catch (err) {
-        console.log(err)
+        console.error(err)
         req.flash(
             'failed',
             err.name === 'CastError' ? 'User not found' : 'Something went wrong'
@@ -216,7 +217,7 @@ const removeUserImage = async(req, res) => {
 
         res.redirect(`/dashboard/users/${req.params.id}/edit`)
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -239,8 +240,11 @@ const deleteUser = async (req, res) => {
         req.flash('success', 'User deleted successfully')
         res.redirect('/dashboard/users')
     } catch (err) {
-        console.log(err)
-        req.flash('failed', err.message || 'Something went wrong')
+        console.error(err)
+        req.flash(
+            'failed',
+            err.name === 'CastError' ? 'Usernot found' : 'Something went wrong'
+        )
         res.redirect('/dashboard/users')
     }
 }

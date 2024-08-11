@@ -12,10 +12,11 @@ import methodOverride from 'method-override'
 import visitorRoutes from './app/routes/visitor-routes.js'
 import adminRoutes from './app/routes/admin-routes.js'
 import { authenticateToken } from './app/middlewares/auth-middleware.js'
+import { routeErrorHandler } from './app/utils/error-handler.js'
 import morgan from 'morgan'
 
 const app = express()
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 5000
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const csrfProtection = csrf({ cookie: true })
@@ -48,15 +49,9 @@ app.use(morgan('dev'))
 
 // Routes
 app.use(visitorRoutes)
-app.use('/dashboard/', authenticateToken, adminRoutes)
+app.use('/dashboard', authenticateToken, adminRoutes)
+app.use(routeErrorHandler)
 
-app.use((req, res) => {
-    res.status(404).render('404', { layout: false })
-})
-app.use((req, res) => {
-    res.status(405).send('Method not allowed')
-})
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`)
-})
+app.listen(PORT, () =>
+    console.log(`Server is running on http://127.0.0.1:${PORT}`)
+)

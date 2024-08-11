@@ -32,4 +32,9 @@ const imageErrorHandler = (err, req, res, next) => {
     next()
 }
 
-export { thumbnailErrorHandler, imageErrorHandler }
+const routeErrorHandler = (req, res) => {
+    if (req.method == 'GET') res.status(404).render('404', { layout: false })
+    else res.status(405).send('Method not allowed')
+}
+
+export { thumbnailErrorHandler, imageErrorHandler, routeErrorHandler }

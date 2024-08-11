@@ -84,8 +84,7 @@
                                     month: 'short', day: 'numeric'})
                                     %>
 
-                                    <%if
-                                    (post.category) { %>
+                                    <% if (post.category) { %>
                                     <span class="fw-bold mx-1"
                                         >&centerdot;</span
                                     >
@@ -109,7 +108,7 @@
                         />
                     </figure>
                     <% } %>
-                    <section class="mt-5 medium text-dark">
+                    <section class="mt-5 medium">
                         <%- post.content %>
                     </section>
                     <% if (post.tags.length) { %>

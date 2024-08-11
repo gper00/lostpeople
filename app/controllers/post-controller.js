@@ -56,7 +56,7 @@ const createPostPage = async (req, res) => {
             capitalizeEachWord
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         req.flash('failed', err.message || 'Something went wrong')
         res.redirect('/dashboard/posts')
     }
@@ -88,7 +88,7 @@ const storePost = async (req, res) => {
         req.flash('success', 'Post created successfully!')
         res.redirect('/dashboard/posts')
     } catch (err) {
-        console.log(err)
+        console.error(err)
         req.flash('failed', err.message || 'Something went wrong')
         res.redirect('/dashboard/posts')
     }
@@ -107,7 +107,12 @@ const postDetailPage = async (req, res) => {
             capitalizeEachWord
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
+        req.flash(
+            'failed',
+            err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
+        )
+        res.redirect('/dashboard/posts')
     }
 }
 
@@ -224,7 +229,7 @@ const removePostThumbnail = async (req, res) => {
 
         res.redirect(`/dashboard/posts/${req.params.id}/edit`)
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -248,8 +253,11 @@ const deletePost = async (req, res) => {
         req.flash('success', 'Post deleted successfully')
         res.redirect('/dashboard/posts')
     } catch (err) {
-        console.log(err)
-        req.flash('failed', err.message || 'Something went wrong')
+        console.error(err)
+        req.flash(
+            'failed',
+            err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
+        )
         res.redirect('/dashboard/posts')
     }
 }
