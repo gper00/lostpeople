@@ -56,7 +56,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-8 col-lg-6">
                                     <img
-                                        src="<%= post.thumbnail ? `/uploads/posts/${post.thumbnail}`: '' %>"
+                                        src="<%= post.thumbnail ? post.thumbnail : '' %>"
                                         alt=""
                                         id="imgPreview"
                                         class="rounded border w-100"

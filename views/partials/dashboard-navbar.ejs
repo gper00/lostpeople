@@ -21,7 +21,7 @@
                     <span class="text-dark"><%= authUser.fullname %></span>
                     <img
                         <% if(authUser.image) { %>
-                        src="<%= `/uploads/users/${authUser.image}` %>"
+                        src="<%= authUser.image %>"
                         alt="<%= authUser.fullname %>"
                         style="object-fit: cover;"
                         <% } else { %>

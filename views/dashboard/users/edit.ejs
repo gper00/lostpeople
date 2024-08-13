@@ -130,7 +130,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-9 col-md-7 col-lg-5">
                                     <img
-                                        src="<%= user.image ? `/uploads/users/${user.image}`: '' %>"
+                                        src="<%= user.image ? user.image: '' %>"
                                         alt=""
                                         id="imgPreview"
                                         class="rounded border w-100"

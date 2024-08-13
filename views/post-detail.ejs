@@ -66,7 +66,7 @@
                             <div class="flex-shrink-0">
                                 <img
                                     <% if (post.userId.image) { %>
-                                    src="<%= `/uploads/users/${post.userId.image}`%>"
+                                    src="<%= post.userId.image%>"
                                     alt="<%= post.userId.fullname %>"
                                     <% } else { %>
                                     src="/assets/img/user-default.jpg" alt=""
@@ -103,8 +103,8 @@
                     <figure class="mt-5">
                         <img
                             class="img-fluid rounded-4 post-thumbnail"
-                            src="/uploads/posts/<%= post.thumbnail %>"
-                            alt="<%= post.thumbnail %>"
+                            src="<%= post.thumbnail %>"
+                            alt="<%= post.title %>"
                         />
                     </figure>
                     <% } %>

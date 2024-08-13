@@ -50,7 +50,7 @@
                                 <span class="fw-bolder">Thumbnail : </span>
                                 <span>
                                     <% if(post.thumbnail) { %>
-                                    <img src="<%= `/uploads/posts/${post.thumbnail}` %>" alt="<%= post.title %>" class="rounded" style="width: 150px; height: 100px; object-fit: cover;">
+                                    <img src="<%= post.thumbnail %>" alt="<%= post.title %>" class="rounded" style="width: 150px; height: 100px; object-fit: cover;">
                                     <% } else { %> - <% } %>
                                 </span>
                             </div>

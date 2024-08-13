@@ -76,7 +76,7 @@ const storePost = async (req, res) => {
             slug: await generateUniqueSlug(title),
             userId: req.user._id,
             category,
-            thumbnail: req.file ? req.file.filename : null,
+            thumbnail: req.file ? req.file.path : null,
             tags: tags ? tags.split(',').map((tag) => tag.trim()) : [],
             excerpt,
             content,
@@ -185,11 +185,10 @@ const updatePost = async (req, res) => {
         }
 
         if (req.file) {
-            updatedFields.thumbnail = req.file.filename
+            updatedFields.thumbnail = req.file.path
             if (post.thumbnail) {
-                deletePostThumbnail(post.thumbnail).catch((err) =>
-                    console.log(err.message)
-                )
+                deletePostThumbnail(post.thumbnail)
+                    .catch((err) => console.eror(err.message))
             }
         }
 
@@ -221,9 +220,8 @@ const removePostThumbnail = async (req, res) => {
             thumbnail: null
         }
 
-        deletePostThumbnail(post.thumbnail).catch((err) =>
-            console.log(err.message)
-        )
+        deletePostThumbnail(post.thumbnail)
+            .catch((err) => console.eror(err.message))
 
         await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields })
 
@@ -244,9 +242,8 @@ const deletePost = async (req, res) => {
         }
 
         if (post.thumbnail) {
-            deletePostThumbnail(post.thumbnail).catch((err) =>
-                console.log(err.message)
-            )
+            deletePostThumbnail(post.thumbnail)
+                .catch((err) => console.eror(err.message))
         }
 
         await Post.findByIdAndDelete(req.params.id)

@@ -175,11 +175,10 @@ const updateUser = async (req, res) => {
         }
 
         if (req.file) {
-            updatedFields.image = req.file.filename
+            updatedFields.image = req.file.path
             if (user.image) {
-                deleteUserImage(user.image).catch((err) =>
-                    console.log(err.message)
-                )
+                deleteUserImage(user.image)
+                    .catch((err) => console.error(err.message))
             }
         }
 
@@ -210,8 +209,8 @@ const removeUserImage = async(req, res) => {
             image: null
         }
 
-        deleteUserImage(user.image).catch((err) =>
-            console.log(err.message))
+        deleteUserImage(user.image)
+            .catch((err) => console.error(err.message))
 
         await User.findByIdAndUpdate(req.params.id, { $set: updatedFields })
 
@@ -231,9 +230,8 @@ const deleteUser = async (req, res) => {
         }
 
         if (user.image) {
-            deleteUserImage(user.image).catch((err) =>
-                console.log(err.message)
-            )
+            deleteUserImage(user.image)
+                .catch((err) => console.error(err.message))
         }
 
         await User.findByIdAndDelete(req.params.id)

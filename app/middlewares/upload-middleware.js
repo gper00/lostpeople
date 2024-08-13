@@ -1,35 +1,34 @@
 import multer from 'multer'
 import path from 'path'
 import crypto from 'crypto'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import cloudinary from '../config/cloudinary-config.js'
 
 const allowedExtensions = ['.jpg', '.jpeg', '.png']
 
-// Multer storage configuration
-const postStorage = multer.diskStorage({ // post
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/posts')
-    },
-    filename: (req, file, cb) => {
-        crypto.randomBytes(16, (err, raw) => {
-            if (err) return cb(err)
-
+// Cloudinary storage configuration for posts
+const postStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads/posts',
+        format: async (req, file) => {
             const ext = path.extname(file.originalname).toLowerCase()
-            cb(null, raw.toString('hex') + ext)
-        })
+            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+        },
+        public_id: (req, file) => crypto.randomBytes(16).toString('hex')
     }
 })
 
-const userStorage = multer.diskStorage({ // user
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/users')
-    },
-    filename: (req, file, cb) => {
-        crypto.randomBytes(16, (err, raw) => {
-            if (err) return cb(err)
-
+// Cloudinary storage configuration for users
+const userStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads/users',
+        format: async (req, file) => {
             const ext = path.extname(file.originalname).toLowerCase()
-            cb(null, raw.toString('hex') + ext)
-        })
+            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+        },
+        public_id: (req, file) => crypto.randomBytes(16).toString('hex')
     }
 })
 
