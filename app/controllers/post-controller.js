@@ -174,7 +174,7 @@ const updatePost = async (req, res) => {
         const updatedFields = {
             title,
             category,
-            tags: tags ? tags.split(',').map((tag) => tag.trim()) : post.tags,
+            tags: tags ? tags.split(',').map((tag) => tag.trim()) : tags,
             excerpt,
             content,
             status
