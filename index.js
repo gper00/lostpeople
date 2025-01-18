@@ -13,7 +13,7 @@ import visitorRoutes from './app/routes/visitor-routes.js'
 import adminRoutes from './app/routes/admin-routes.js'
 import { authenticateToken } from './app/middlewares/auth-middleware.js'
 import { routeErrorHandler } from './app/utils/error-handler.js'
-import morgan from 'morgan'
+// import morgan from 'morgan'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -45,7 +45,7 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken()
     next()
 })
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 // Routes
 app.use(visitorRoutes)
