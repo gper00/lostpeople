@@ -67,4 +67,5 @@ const logoutAction = (req, res) => {
         res.redirect('/login')
     })
 }
+
 export { loginPage, loginAction, logoutAction }

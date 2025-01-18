@@ -1,10 +1,10 @@
 <!-- Page content-->
-<div class="container-md col-lg-10 col-xxl-9 my-4">
-    <div class="row justify-content-center">
+<div class="container-md col-lg-9 col-xxl-8 my-4">
+    <div class="row">
         <!-- Side widget 1 -->
-        <div class="col-lg-1 d-none d-lg-block share pe-0">
-            <div class="position-sticky" style="top: 4.7rem">
-                <div class="text-end large-3 mb-2">
+        <div class="col-lg-2 align-items-center d-none d-lg-block share">
+            <div class="position-sticky" style="top: 35%">
+                <div class="large-3 my-3">
                     <a
                         class="share-link twitter-lg text-body-secondary p-2"
                         href="#"
@@ -12,7 +12,7 @@
                         ><i class="bi bi-twitter"></i
                     ></a>
                 </div>
-                <div class="text-end large-3 mb-2">
+                <div class="large-3 my-3">
                     <a
                         class="share-link linkedin-lg text-body-secondary p-2"
                         href="#"
@@ -20,7 +20,7 @@
                         ><i class="bi bi-linkedin"></i
                     ></a>
                 </div>
-                <div class="text-end large-3 mb-2">
+                <div class="large-3 my-3">
                     <a
                         class="share-link facebook-lg text-body-secondary p-2"
                         href="#"
@@ -28,7 +28,7 @@
                         ><i class="bi bi-facebook"></i
                     ></a>
                 </div>
-                <div class="text-end large-3 mb-2">
+                <div class="large-3 my-3">
                     <a
                         class="share-link whatsapp-lg text-body-secondary p-2"
                         href="#"
@@ -36,7 +36,7 @@
                         ><i class="bi bi-whatsapp"></i
                     ></a>
                 </div>
-                <div class="text-end large-3 mb-2">
+                <div class="large-3 my-3">
                     <a
                         class="share-link telegram-lg text-body-secondary p-2"
                         href="#"
@@ -44,7 +44,7 @@
                         ><i class="bi bi-telegram"></i
                     ></a>
                 </div>
-                <div class="text-end large-3 mt-3">
+                <div class="large-3 mt-3">
                     <a
                         class="share-link text-body-secondary p-2 d-none toTop"
                         href="#top"
@@ -55,79 +55,81 @@
         </div>
 
         <!-- Main content -->
-        <div class="col-lg-7">
+        <div class="col-lg-8">
             <main>
-                <article class="rounded-4 bg-white p-3 py-lg-4 px-lg-5">
-                    <header>
-                        <h1 class="post-title fs-3 fw-bold mt-3 pe-5">
-                            <%= post.title %>
-                        </h1>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img
-                                    <% if (post.userId.image) { %>
-                                    src="<%= post.userId.image%>"
-                                    alt="<%= post.userId.fullname %>"
-                                    <% } else { %>
-                                    src="/assets/img/user-default.jpg" alt=""
-                                    <% } %>
-                                    class="rounded-circle author-post-thumbnail"
-                                />
-                            </div>
-                            <div class="ms-3">
-                                <h6 class="fw-semibold m-0 medium">
-                                    <%= post.userId.fullname %>
-                                </h6>
-                                <p class="small-8 m-0">
-                                    <%=
-                                    post.createdAt.toLocaleDateString('en-EN', {
-                                    month: 'short', day: 'numeric'})
-                                    %>
-
-                                    <% if (post.category) { %>
-                                    <span class="fw-bold mx-1"
-                                        >&centerdot;</span
-                                    >
-                                    <a
-                                        href="/posts/?category=<%= post.category.toLowerCase() %>"
-                                        class="text-decoration-none text-body-secondary"
-                                    >
-                                        <%= capitalizeEachWord(post.category)%>
-                                    </a>
-                                    <% } %>
-                                </p>
-                            </div>
-                        </div>
-                    </header>
+                <article class="card border-0 bg-light">
                     <% if (post.thumbnail) { %>
-                    <figure class="mt-5">
+                    <figure>
                         <img
-                            class="img-fluid rounded-4 post-thumbnail"
+                            class="card-img-top rounded-4 img-fluid post-thumbnail"
                             src="<%= post.thumbnail %>"
                             alt="<%= post.title %>"
                         />
                     </figure>
                     <% } %>
-                    <section class="mt-5 medium">
-                        <%- post.content %>
-                    </section>
-                    <% if (post.tags.length) { %>
-                    <section class="mt-5 tags medium mb-lg-2">
-                        <i class="bi bi-tags"></i>
-                        <span class="me-2">Tags:</span>
-                        <% post.tags.forEach(tag => { %>
-                        <a
-                            href="/?tag=<%= tag %>"
-                            class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
-                            >#<%= tag %>
-                        </a>
-                        <% }) %>
-                    </section>
-                    <% } %>
+                    <div class="card-body px-3 pb-lg-4 px-lg-5">
+                        <header>
+                            <h1 class="post-title fs-3 fw-bold pe-5 mt-4">
+                                <%= post.title %>
+                            </h1>
+                            <div class="d-flex align-items-center mt-5">
+                                <div class="flex-shrink-0">
+                                    <img
+                                        <% if (post.userId.image) { %>
+                                        src="<%= post.userId.image%>"
+                                        alt="<%= post.userId.fullname %>"
+                                        <% } else { %>
+                                        src="/assets/img/user-default.jpg" alt=""
+                                        <% } %>
+                                        class="rounded-circle author-post-thumbnail"
+                                    />
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-semibold m-0 medium">
+                                        <%= post.userId.fullname %>
+                                    </h6>
+                                    <p class="small-8 m-0">
+                                        <%=
+                                        post.createdAt.toLocaleDateString('en-EN', {
+                                        month: 'short', day: 'numeric'})
+                                        %>
+
+                                        <% if (post.category) { %>
+                                        <span class="fw-bold mx-1"
+                                            >&centerdot;</span
+                                        >
+                                        <a
+                                            href="/posts/?category=<%= post.category.toLowerCase() %>"
+                                            class="text-decoration-none text-body-secondary"
+                                        >
+                                            <%= capitalizeEachWord(post.category)%>
+                                        </a>
+                                        <% } %>
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+                        <section class="mt-5 post-text">
+                            <%- post.content %>
+                        </section>
+                        <% if (post.tags.length) { %>
+                        <section class="mt-5 tags medium mb-lg-2">
+                            <i class="bi bi-tags"></i>
+                            <span class="me-2">Tags:</span>
+                            <% post.tags.forEach(tag => { %>
+                            <a
+                                href="/posts?tag=<%= tag %>"
+                                class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
+                                >#<%= tag %>
+                            </a>
+                            <% }) %>
+                        </section>
+                        <% } %>
+                    </div>
                 </article>
 
                 <!-- Share -->
-                <section class="d-lg-none mt-5 mb-5">
+                <section class="d-lg-none mt-5 mb-5 pb-5">
                     <div class="text-center pb-4">Share to :</div>
                     <div class="text-center">
                         <span
@@ -162,6 +164,24 @@
                     </div>
                 </section>
 
+                <section id="comments" class="bg-white rounded-4 p-lg-4 px-3 py-4 my-5">
+                    <script src="https://giscus.app/client.js"
+                        data-repo="devChampl00/blog-comments"
+                        data-repo-id="R_kgDONr94rA"
+                        data-category="General"
+                        data-category-id="DIC_kwDONr94rM4CmIHN"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="bottom"
+                        data-theme="light"
+                        data-lang="id"
+                        crossorigin="anonymous"
+                        async>
+                    </script>
+                </section>
+
                 <!-- Pagination -->
                 <!-- <div class="row mt-5">
                     <nav aria-label="Page navigation">
@@ -188,9 +208,6 @@
                 </div> -->
             </main>
         </div>
-
-        <!-- tes -->
-        <div class="col-lg-1"></div>
     </div>
 </div>
 
@@ -266,3 +283,14 @@
             `https://api.whatsapp.com/send/?text=${document.URL}&type=custom_url&app_absent=0`
         )
 </script>
+
+<!-- CK Editor -->
+<script type="importmap">
+    {
+        "imports": {
+            "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.js",
+            "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/42.0.1/"
+        }
+    }
+</script>
+<script type="module" src="/js/ckeditor.js"></script>

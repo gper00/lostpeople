@@ -1,5 +1,5 @@
 import express from 'express'
-import { aboutPage, homePage, postDetailPage, postsPage } from '../controllers/home-controller.js'
+import { aboutPage, homePage, postDetailPage, postsPage } from '../controllers/home-controller-backup.js'
 import { checkAuthenticated } from '../middlewares/auth-middleware.js'
 import { loginPage, loginAction } from '../controllers/auth-controller.js'
 import validateData from '../middlewares/validators/login-validator.js'

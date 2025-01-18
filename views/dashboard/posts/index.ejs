@@ -52,7 +52,7 @@
                                 <% if (authUser.role === 'super-admin') { %>
                                 <th
                                     class="d-none d-xl-table-cell"
-                                    style="width: 14%"
+                                    style="width: 10%"
                                 >
                                     Author
                                 </th>
@@ -69,7 +69,8 @@
                                 >
                                     Created at
                                 </th>
-                                <th style="width: 14%">Action</th>
+                                <th style="width: 8%">Views</th>
+                                <th style="width: 13%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,6 +95,9 @@
                                 </td>
                                 <td class="d-none d-xl-table-cell">
                                     <%= formatDate(post.createdAt) %>
+                                </td>
+                                <td>
+                                    <%= post.viewsCount %>
                                 </td>
                                 <td>
                                     <a

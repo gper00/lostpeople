@@ -12,9 +12,22 @@ const locale = {
 
 const homePage = async (req, res) => {
     try {
+        const posts =await Post.aggregate([
+                {
+                    $sort: { createdAt:  -1 }
+                },
+                {
+                    $match: { status: 'published' }
+                }
+            ])
+                .limit(7)
+                .exec()
+
         res.render('index', {
+            posts,
             layout,
             locale,
+            capitalizeEachWord,
             pageActive: 'home'
         })
     } catch (err) {
@@ -229,10 +242,11 @@ const postsPage = async (req, res) => {
 
 const postDetailPage = async (req, res) => {
     try {
-        const post = await Post.findOne({
-            slug: req.params.slug,
-            status: 'published'
-        })
+        const post = await Post.findOneAndUpdate(
+            { slug: req.params.slug, status: 'published' },
+            { $inc: { viewsCount: 1 } }, // Tambahkan viewsCount sebanyak 1
+            { new: true } // Kembalikan data terbaru setelah update
+        )
             .populate('userId')
             .exec()
 
