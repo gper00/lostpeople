@@ -1,4 +1,4 @@
-import { body, validationResult } from 'express-validator'
+const { body, validationResult } = require('express-validator')
 
 const validateData = [
     body('usernameOrEmail')
@@ -19,4 +19,4 @@ const validateData = [
     }
 ]
 
-export default validateData
+module.exports = validateData

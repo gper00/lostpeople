@@ -2,8 +2,11 @@
     <div class="px-lg-5 my-5 py-5">
         <div class="bg-light container d-flex flex-column align-items-center text-center px-5 py-5">
             <h1 class="display-5 fw-bold mb-4">Welcome to My Blog!</h1>
-            <p class="fs-5 fst-italic text-muted mb-4">
-              I am  an IT student, this is a place where i can share about my experience and knowledge around technology, self improvement, and many other
+            <p class="fs-5 fst-italic text-muted mb-4 d-md-block d-none">
+              This is a place for me to share about my experience and knowledge around technology, self improvement, and many other
+            </p>
+            <p class="fs-5 fst-italic text-muted mb-4 d-md-none">
+              This is a place for me to share about everything
             </p>
             <div class="d-flex gap-3">
                 <a href="#latest-blog" class="btn btn-dark py-2 px-4 px-md-5 rounded-5">Latest post</a>
@@ -44,7 +47,7 @@
                 >
                     <div class="d-flex <%= (index < posts.length - 1) ? 'py-4' : 'pt-4' %>">
                         <div class="flex-shrink-0">
-                            <img class="rounded-4" src="<%= post.thumbnail ?? 'https://dummyimage.com/70x50/ced4da/6c757d.jpg' %>" alt="<%= post.title %>" width="250px">
+                            <img class="rounded-4" src="<%= post.thumbnail ?? '/assets/img/no-image.png' %>" alt="<%= post.title %>" style="width: 250px; height: 175px; object-fit: cover;">
                         </div>
                         <div class="ms-3">
                             <h5 class="card-title fw-semibold large-3 mb-2">
@@ -146,7 +149,7 @@
 
 <!-- Contact section-->
 <section class="bg-light mt-5 py-5" id="contact">
-    <div class="container-md col-lg-9 col-xxl-8 px-5 pt-5 my-5">
+    <div class="container-md col-lg-9 col-xxl-8 px-lg--5 pt-5 my-5">
         <div class="text-center mb-5">
             <div
                 class="bg-dark bg-gradient text-white rounded-4 mb-3"

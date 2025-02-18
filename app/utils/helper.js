@@ -1,5 +1,5 @@
-import slugify from 'slugify'
-import Post from '../models/post-model.js'
+const slugify = require('slugify')
+const Post = require('../models/post-model.js')
 
 const capitalizeEachWord = (str) => {
     return str.replace(/\b\w/g, function (char) {
@@ -61,4 +61,4 @@ function timeSince(date) {
 //   console.log(timeSince(new Date(Date.now()-aDay)));
 //   console.log(timeSince(new Date(Date.now()-aDay*2)));
 
-export { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince }
+module.exports = { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince }

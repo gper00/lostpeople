@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken'
-import User from '../models/user-model.js'
-import bcrypt from 'bcrypt'
+const jwt = require('jsonwebtoken')
+const User = require('../models/user-model.js')
+const bcrypt = require('bcrypt')
 
 const loginPage = (req, res) => {
     const errors = req.flash('errors')[0] ?? {}
@@ -68,4 +68,4 @@ const logoutAction = (req, res) => {
     })
 }
 
-export { loginPage, loginAction, logoutAction }
+module.exports =  { loginPage, loginAction, logoutAction }

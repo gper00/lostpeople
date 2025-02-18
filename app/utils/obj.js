@@ -8,4 +8,4 @@ function isEmpty(obj) {
     return true
 }
 
-export { isEmpty }
+module.exports = { isEmpty }

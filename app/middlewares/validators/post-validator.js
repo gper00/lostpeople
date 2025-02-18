@@ -1,7 +1,7 @@
-import { body, validationResult } from 'express-validator'
-import Post from '../../models/post-model.js'
-import { deletePostThumbnail } from '../../utils/delete-file.js'
-import { isEmpty } from '../../utils/obj.js'
+const { body, validationResult } = require('express-validator')
+const Post = require('../../models/post-model.js')
+const { deletePostThumbnail } = require('../../utils/delete-file.js')
+const { isEmpty } = require('../../utils/obj.js')
 
 const validatePost = [
     body('title')
@@ -77,4 +77,4 @@ const validatePost = [
     }
 ]
 
-export default validatePost
+module.exports = validatePost

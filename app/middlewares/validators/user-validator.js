@@ -1,7 +1,7 @@
-import { body, validationResult } from 'express-validator'
-import User from '../../models/user-model.js'
-import { deleteUserImage } from '../../utils/delete-file.js'
-import { isEmpty } from '../../utils/obj.js'
+const { body, validationResult } = require('express-validator')
+const User = require('../../models/user-model.js')
+const { deleteUserImage } = require('../../utils/delete-file.js')
+const { isEmpty } = require('../../utils/obj.js')
 
 const validateUser = [
     body('fullname')
@@ -116,4 +116,4 @@ const validateUser = [
     }
 ]
 
-export default validateUser
+module.exports = validateUser

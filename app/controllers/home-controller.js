@@ -1,5 +1,5 @@
-import Post from '../models/post-model.js'
-import { capitalizeEachWord } from '../utils/helper.js'
+const Post = require('../models/post-model.js')
+const { capitalizeEachWord } = require('../utils/helper.js')
 
 const layout = 'layouts/home'
 const locale = {
@@ -205,7 +205,7 @@ const postsPage = async (req, res) => {
         )
 
         const locale = {
-            title: 'Lostpeople | Blog',
+            title: 'Lostpeople',
             description:
                 'Lost people is a website that contain somethings like blogpost or something that author will add later.',
             keywords: "lostpeople, devchamploo, gper, blog, umam alfarizi, lost, people, dev",
@@ -240,7 +240,7 @@ const postsPage = async (req, res) => {
 }
 
 
-const postDetailPage = async (req, res) => {
+const postDetailPage = async (req, res, next) => {
     try {
         const post = await Post.findOneAndUpdate(
             { slug: req.params.slug, status: 'published' },
@@ -249,6 +249,11 @@ const postDetailPage = async (req, res) => {
         )
             .populate('userId')
             .exec()
+
+        // Tambahkan pengecekan jika post tidak ditemukan
+        if (!post) {
+            return next()
+        }
 
         const locale = {
             title: `${post.title} - Lostpeople`,
@@ -271,12 +276,13 @@ const postDetailPage = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
-        req.flash(
-            'failed',
-            err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-        )
-        res.redirect('/posts')
+        // req.flash(
+        //     'failed',
+        //     err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
+        // )
+        // res.redirect('/posts')
+        next(err)
     }
 }
 
-export { homePage, aboutPage, postsPage, postDetailPage }
+module.exports = { homePage, aboutPage, postsPage, postDetailPage }

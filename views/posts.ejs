@@ -1,9 +1,9 @@
 <!-- Page content-->
-<div class="container-md col-lg-9 col-xxl-8 my-4">
+<div class="container-md col-lg-9 col-xxl-8 my-5">
     <div class="row">
         <!-- Side widget 1 -->
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="position-sticky" style="top: 4.7rem">
+            <div class="position-sticky" style="top: 2.5rem">
                 <h6 class=""><i class="bi bi-folder"></i> Categories</h6>
                 <nav class="nav flex-column category-nav">
                     <% postCategories.forEach(item => { %>
@@ -22,7 +22,7 @@
             <main>
                 <!-- Search -->
                 <div class="search">
-                    <h6 class="mb-2"><i class="bi bi-search"></i> Search</h6>
+                    <h6><i class="bi bi-search"></i> Search</h6>
                     <form>
                         <% if (tag) { %>
                         <input type="hidden" name="tag" value="<%= tag %>" />
@@ -120,7 +120,7 @@
                     <% if (posts.length) { %> <% posts.forEach(post => { %>
                     <div class="card rounded-4 border-0 mb-4 post">
                         <a
-                            href="/posts/<%= post.slug %>"
+                            href="/<%= post.slug %>"
                             class="text-body-secondary text-decoration-none"
                         >
                             <% if (post.thumbnail) { %>
@@ -135,21 +135,21 @@
                                     <%= post.title %>
                                 </h5>
                                 <div class="small-7 mb-2">
-                                    <%=
+                                    <i class="bi bi-calendar3"></i> <%=
                                     post.createdAt.toLocaleDateString('en-EN', {
                                     month: 'short', day: 'numeric'}) %> <% if
                                     (post.category) { %>
                                     <span class="fw-bold mx-1"
                                         >&centerdot;</span
                                     >
-                                    <%= capitalizeEachWord(post.category) %> <%
+                                    <i class="bi bi-folder"></i> <%= capitalizeEachWord(post.category) %> <%
                                     } %>
                                 </div>
                                 <p class="card-text small mb-0">
                                     <%= post.excerpt %>
                                 </p>
                                 <% if (post.tags.length) { %>
-                                <p class="card-text mt-3 mb-0">
+                                <p class="card-text small mt-3 mb-0">
                                     <% post.tags.forEach(tag => { %>
                                     <span
                                         class="badge bg-body-secondary text-body-secondary rounded-4 px-3 py-2 my-1"
@@ -195,7 +195,7 @@
 
         <!-- Side widget 2-->
         <div class="col-lg-3">
-            <div class="position-sticky" style="top: 4.7rem">
+            <div class="position-sticky" style="top: 2.5rem">
                 <!-- Profile -->
                 <h6 class="mt-5 mt-lg-0"><i class="bi bi-person"></i> Profile</h6>
                 <div class="widget bg-white text-center rounded-4 px-3 py-4">

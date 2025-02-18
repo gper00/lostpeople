@@ -1,38 +1,100 @@
-import multer from 'multer'
-import path from 'path'
-import crypto from 'crypto'
-import { CloudinaryStorage } from 'multer-storage-cloudinary'
-import cloudinary from '../config/cloudinary-config.js'
+// import multer from 'multer'
+// import path from 'path'
+// import crypto from 'crypto'
+// import { CloudinaryStorage } from 'multer-storage-cloudinary'
+// import cloudinary from '../config/cloudinary-config.js'
+
+// const allowedExtensions = ['.jpg', '.jpeg', '.png']
+
+// // Cloudinary storage configuration for posts
+// const postStorage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//         folder: 'uploads/posts',
+//         format: async (req, file) => {
+//             const ext = path.extname(file.originalname).toLowerCase()
+//             return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+//         },
+//         public_id: (req, file) => crypto.randomBytes(16).toString('hex')
+//     }
+// })
+
+// // Cloudinary storage configuration for users
+// const userStorage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//         folder: 'uploads/users',
+//         format: async (req, file) => {
+//             const ext = path.extname(file.originalname).toLowerCase()
+//             return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+//         },
+//         public_id: (req, file) => crypto.randomBytes(16).toString('hex')
+//     }
+// })
+
+// // file filter
+// const fileFilter = (req, file, cb) => {
+//     const ext = path.extname(file.originalname).toLowerCase()
+//     if (!allowedExtensions.includes(ext)) {
+//         const error = new Error('Forbidden extension')
+//         error.code = 'INVALID_FILE_TYPE'
+//         return cb(error, false)
+//     }
+//     cb(null, true)
+// }
+
+// // Multer upload configuration
+// const uploadPostThumbnail = multer({
+//     storage: postStorage,
+//     fileFilter,
+//     limits: { fileSize: 1 * 1024 * 1024 } // 1MB
+// }).single('thumbnail')
+
+// const uploadUserImage = multer({
+//     storage: userStorage,
+//     fileFilter,
+//     limits: { fileSize: 1 * 1024 * 1024 } // 1MB
+// }).single('image')
+
+// export { uploadPostThumbnail, uploadUserImage }
+
+
+
+const multer = require('multer')
+const path = require('path')
+const crypto = require('crypto')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
+const cloudinary = require('../config/cloudinary-config.js')
 
 const allowedExtensions = ['.jpg', '.jpeg', '.png']
 
-// Cloudinary storage configuration for posts
+// Konfigurasi Cloudinary storage untuk posts
 const postStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'uploads/posts',
         format: async (req, file) => {
             const ext = path.extname(file.originalname).toLowerCase()
-            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Mendukung jpg, png
         },
         public_id: (req, file) => crypto.randomBytes(16).toString('hex')
     }
 })
 
-// Cloudinary storage configuration for users
+// Konfigurasi Cloudinary storage untuk users
 const userStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'uploads/users',
         format: async (req, file) => {
             const ext = path.extname(file.originalname).toLowerCase()
-            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Supports jpg, png
+            return ext === '.jpeg' ? 'jpg' : ext.slice(1) // Mendukung jpg, png
         },
         public_id: (req, file) => crypto.randomBytes(16).toString('hex')
     }
 })
 
-// Multer file filter to check file extension
+// Filter file
 const fileFilter = (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase()
     if (!allowedExtensions.includes(ext)) {
@@ -43,7 +105,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, true)
 }
 
-// Multer upload configuration
+// Konfigurasi upload menggunakan multer
 const uploadPostThumbnail = multer({
     storage: postStorage,
     fileFilter,
@@ -56,4 +118,4 @@ const uploadUserImage = multer({
     limits: { fileSize: 1 * 1024 * 1024 } // 1MB
 }).single('image')
 
-export { uploadPostThumbnail, uploadUserImage }
+module.exports = { uploadPostThumbnail, uploadUserImage }

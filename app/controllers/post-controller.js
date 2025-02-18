@@ -1,6 +1,6 @@
-import Post from '../models/post-model.js'
-import { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } from '../utils/helper.js'
-import { deletePostThumbnail } from '../utils/delete-file.js'
+const Post = require('../models/post-model.js')
+const { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } = require('../utils/helper.js')
+const { deletePostThumbnail } = require('../utils/delete-file.js')
 
 const layout = 'layouts/dashboard'
 const pageActive = 'post'
@@ -260,7 +260,7 @@ const deletePost = async (req, res) => {
 }
 
 
-export {
+module.exports = {
     postsPage,
     createPostPage,
     storePost,

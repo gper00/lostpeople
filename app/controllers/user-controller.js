@@ -1,6 +1,6 @@
-import bcrypt from 'bcrypt'
-import User from '../models/user-model.js'
-import { deleteUserImage } from '../utils/delete-file.js'
+const bcrypt = require('bcrypt')
+const User = require('../models/user-model.js')
+const { deleteUserImage } = require('../utils/delete-file.js')
 
 const layout = 'layouts/dashboard'
 const pageActive = 'user'
@@ -247,7 +247,7 @@ const deleteUser = async (req, res) => {
     }
 }
 
-export {
+module.exports = {
     usersPage,
     createUserPage,
     storeUser,

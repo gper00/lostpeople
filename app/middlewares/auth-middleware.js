@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken'
-import User from '../models/user-model.js'
-import Post from '../models/post-model.js'
+const jwt = require('jsonwebtoken')
+const User = require('../models/user-model.js')
+const Post = require('../models/post-model.js')
 
 const authenticateToken = (req, res, next) => {
     const token =
@@ -32,11 +32,11 @@ const authenticateToken = (req, res, next) => {
                     const newToken = jwt.sign(
                         { userId: authUser._id, role: authUser.role },
                         process.env.ACCESS_TOKEN_SECRET,
-                        { expiresIn: '1h' }
+                        { expiresIn: '2h' }
                     )
                     res.cookie('accessToken', newToken, {
                         httpOnly: true,
-                        maxAge: 60 * 60 * 1000 // 1 hour
+                        maxAge: 60 * 60 * 2000 // 2 hour
                     })
                 }
 
@@ -106,7 +106,7 @@ const checkPostAccess = async (req, res, next) => {
     }
 }
 
-export {
+module.exports = {
     authenticateToken,
     checkAuthenticated,
     authSuperAdmin,

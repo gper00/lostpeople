@@ -1,12 +1,12 @@
-import express from 'express'
-import { usersPage, createUserPage, storeUser, userDetailPage, editUserPage, updateUser, removeUserImage, deleteUser } from '../controllers/user-controller.js'
-import validateUser from '../middlewares/validators/user-validator.js'
-import { logoutAction } from '../controllers/auth-controller.js'
-import { postsPage, createPostPage, storePost, postDetailPage, editPostPage, updatePost, removePostThumbnail, deletePost, } from '../controllers/post-controller.js'
-import validatePost from '../middlewares/validators/post-validator.js'
-import { uploadPostThumbnail, uploadUserImage } from '../middlewares/upload-middleware.js'
-import { thumbnailErrorHandler, imageErrorHandler } from '../utils/error-handler.js'
-import { authSuperAdmin, checkPostAccess } from '../middlewares/auth-middleware.js'
+const express = require('express')
+const { usersPage, createUserPage, storeUser, userDetailPage, editUserPage, updateUser, removeUserImage, deleteUser } = require('../controllers/user-controller.js')
+const validateUser = require('../middlewares/validators/user-validator.js')
+const { logoutAction } = require('../controllers/auth-controller.js')
+const { postsPage, createPostPage, storePost, postDetailPage, editPostPage, updatePost, removePostThumbnail, deletePost, } = require('../controllers/post-controller.js')
+const validatePost = require('../middlewares/validators/post-validator.js')
+const { uploadPostThumbnail, uploadUserImage } = require('../middlewares/upload-middleware.js')
+const { thumbnailErrorHandler, imageErrorHandler } = require('../utils/error-handler.js')
+const { authSuperAdmin, checkPostAccess } = require('../middlewares/auth-middleware.js')
 
 const router = express.Router()
 
@@ -44,4 +44,4 @@ router.delete('/posts/:id', checkPostAccess, deletePost)
 
 router.post('/logout', logoutAction)
 
-export default router
+module.exports = router

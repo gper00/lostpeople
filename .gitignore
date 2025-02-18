@@ -3,6 +3,3 @@ node_modules/
 
 # Ignore .env file
 .env
-
-# Ignore seeder file
-app/utils/seeder.js

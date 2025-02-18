@@ -1,14 +1,14 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const header = document.querySelector('header')
+// document.addEventListener('DOMContentLoaded', function () {
+//     const header = document.querySelector('header')
 
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) {
-            header.classList.add('header-shadow')
-        } else {
-            header.classList.remove('header-shadow')
-        }
-    })
-})
+//     window.addEventListener('scroll', function () {
+//         if (window.scrollY > 50) {
+//             header.classList.add('header-shadow')
+//         } else {
+//             header.classList.remove('header-shadow')
+//         }
+//     })
+// })
 
 try {
     const aboutBtn = document.getElementById('about-btn')

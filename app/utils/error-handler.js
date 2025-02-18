@@ -37,4 +37,4 @@ const routeErrorHandler = (req, res) => {
     else res.status(405).send('Method not allowed')
 }
 
-export { thumbnailErrorHandler, imageErrorHandler, routeErrorHandler }
+module.exports = { thumbnailErrorHandler, imageErrorHandler,  routeErrorHandler }
