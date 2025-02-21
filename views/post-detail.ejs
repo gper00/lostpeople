@@ -56,85 +56,95 @@
 
         <!-- Main content -->
         <div class="col-lg-8 p-0-lg">
+            <nav style="--bs-breadcrumb-divider: '/'" aria-label="breadcrumb" class="small-4">
+                <ol class="breadcrumb">
+                    <a href="#" class="text-reset me-2" onclick="return history.go(-1)">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <li class="breadcrumb-item">
+                        <a href="/" class="nav-link breadcrumb-link">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active d-none d-md-block" aria-current="page"><%= post.title %></li>
+                </ol>
+            </nav>
             <main>
-                <article class="card border-0 bg-light">
-                    <header class="text-center mt-5 p-2">
-                        <h1 class="post-title fs-2 fw-bold">
+                <article class="bg-white rounded-4 border">
+                    <header class="mt-4 mt-lg-5 px-3 px-md-4 px-lg-5">
+                        <h1 class="post-title">
                             <%= post.title %>
                         </h1>
-                        <p class="fst-italic text-muted">By <%= post.userId.fullname %></p>
-                        <!-- <div class="d-flex align-items-center mt-5">
+
+                        <div class="d-flex align-items-center mt-3 mb-2 mb-lg-0 pb-3 border-bottom">
                             <div class="flex-shrink-0">
                                 <img
                                     <% if (post.userId.image) { %>
                                     src="<%= post.userId.image%>"
-                                    alt="<%= post.userId.fullname %>"
                                     <% } else { %>
                                     src="/assets/img/user-default.jpg" alt=""
                                     <% } %>
                                     class="rounded-circle author-post-thumbnail"
+                                    itemprop="image"
+                                    alt="Foto profil <%= post.userId.fullname %>"
                                 />
+                                <figcaption class="d-none"><%= post.title %></figcaption>
                             </div>
                             <div class="ms-3">
-                                <h6 class="fw-semibold m-0 medium">
+                                <h6 class="medium m-0" itemprop="author">
                                     <%= post.userId.fullname %>
                                 </h6>
                                 <p class="small-8 m-0">
-                                    <%=
-                                    post.createdAt.toLocaleDateString('en-EN', {
-                                    month: 'short', day: 'numeric'})
-                                    %>
-
+                                    <time datetime="<%= post.createdAt.toLocaleDateString('en-CA') %>">
+                                        <!-- <i class="bi bi-calendar3"></i> -->
+                                        <%= post.createdAt.toLocaleDateString('en-EN', { month: 'short', day: 'numeric', year: '2-digit'}) %>
+                                    </time>
                                     <% if (post.category) { %>
-                                    <span class="fw-bold mx-1"
-                                        >&centerdot;</span
-                                    >
-                                    <a
-                                        href="/?category=<%= post.category.toLowerCase() %>"
-                                        class="text-decoration-none text-body-secondary"
-                                    >
-                                        <%= capitalizeEachWord(post.category)%>
-                                    </a>
+                                    <span class="fw-bold mx-1">&centerdot;</span>
+                                    <span itemprop="articleSection">
+                                        <a href="/?category=<%= post.category.toLowerCase() %>"class="text-decoration-none text-reset">
+                                            <!-- <i class="bi bi-folder"></i> -->
+                                            <%= capitalizeEachWord(post.category)%>
+                                        </a>
+                                    </span>
                                     <% } %>
                                 </p>
                             </div>
-                        </div> -->
+                        </div>
+
+                        <% if (post.tags.length) { %>
+                        <div class="tags small-4 mb-lg-2 mt-3">
+                            <!-- <i class="bi bi-tags"></i> -->
+                            <!-- <span class="me-2"></span> -->
+                            <% post.tags.forEach(tag => { %>
+                            <a
+                                href="/?tag=<%= tag %>"
+                                class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
+                                rel="tag"
+                                >#<%= tag %>
+                            </a>
+                            <% }) %>
+                        </div>
+                        <% } %>
                     </header>
 
                     <% if (post.thumbnail) { %>
-                    <figure class="my-4 my-lg-5">
+                    <figure class=" mt-3 mt-lg-4 px-3 px-md-4 px-lg-5">
                         <img
-                            class="card-img-top rounded-4 img-fluid post-thumbnail"
+                            class="post-thumbnail rounded-4"
                             src="<%= post.thumbnail %>"
                             alt="<%= post.title %>"
                         />
                     </figure>
                     <% } %>
-                    <div class="card-body px-3 px-lg-5 pb-lg-4">
-                        <section class="mt-2 post-text">
+                    <div class="card-body px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4">
+                        <section class="post-body markdown-body">
                             <%- post.content %>
                         </section>
-
-                        <% if (post.tags.length) { %>
-                        <section class="mt-5 tags medium mb-lg-2 mt-5">
-                            <i class="bi bi-tags"></i>
-                            <span class="me-2"></span>
-                            <% post.tags.forEach(tag => { %>
-                            <a
-                                href="/?tag=<%= tag %>"
-                                class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
-                                >#<%= tag %>
-                            </a>
-                            <% }) %>
-                        </section>
-                        <% } %>
-
                     </div>
                 </article>
 
                 <!-- Share -->
                 <section class="d-lg-none mt-5 mb-5 pb-5">
-                    <div class="text-center pb-4">Share to :</div>
+                    <div class="text-center pb-4">Share</div>
                     <div class="text-center">
                         <span
                             class="bg-white px-2 py-3 fs-5 rounded-4 text-body-secondary border"
@@ -288,13 +298,27 @@
         )
 </script>
 
-<!-- CK Editor -->
-<!-- <script type="importmap">
+<script type="application/ld+json">
     {
-        "imports": {
-            "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.js",
-            "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/42.0.1/"
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "<%= post.title %>",
+      "image": "<%= `${post.thumbnail}` %>",
+      "author": {
+        "@type": "Person",
+        "name": "<%= post.userId.name %>"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "<%= locale.name %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= locale.icon %>"
         }
+      },
+      "datePublished": "<%= post.createdAt.toISOString() %>",
+      "dateModified": "<%= post.updatedAt ? post.updatedAt.toISOString() : post.createdAt.toISOString() %>",
+      "description": "<%= post.excerpt %>",
+      "mainEntityOfPage": "<%= locale.url %>/<%= post.slug %>"
     }
-</script>
-<script type="module" src="/js/ckeditor.js"></script> -->
+    </script>

@@ -1,11 +1,11 @@
 <!-- Page content-->
-<div class="container-md col-lg-9 col-xxl-8 my-5">
+<div class="container-md col-lg-10 col-xl-9 col-xxl-8 my-5">
     <div class="row">
         <!-- Side widget 1 -->
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="position-sticky" style="top: 2.5rem">
+            <div class="position-sticky" style="top: 2rem">
                 <h6 class=""><i class="bi bi-folder"></i> Categories</h6>
-                <nav class="nav flex-column category-nav">
+                <nav class="nav flex-column category-nav mt-3 border-start">
                     <% postCategories.forEach(item => { %>
                     <a
                         class="nav-link small-3 text-body-secondary rounded-4 py-1 <%= category === item.toLowerCase() ? 'active' : '' %>"
@@ -118,7 +118,7 @@
 
                     <!-- Posts -->
                     <% if (posts.length) { %> <% posts.forEach(post => { %>
-                    <div class="card rounded-4 border-0 mb-4 post">
+                    <div class="card rounded-4 mb-4 post">
                         <a
                             href="/<%= post.slug %>"
                             class="text-body-secondary text-decoration-none"
@@ -135,15 +135,16 @@
                                     <%= post.title %>
                                 </h5>
                                 <div class="small-7 mb-2">
-                                    <i class="bi bi-calendar3"></i> <%=
-                                    post.createdAt.toLocaleDateString('en-EN', {
-                                    month: 'short', day: 'numeric'}) %> <% if
-                                    (post.category) { %>
-                                    <span class="fw-bold mx-1"
-                                        >&centerdot;</span
-                                    >
-                                    <i class="bi bi-folder"></i> <%= capitalizeEachWord(post.category) %> <%
-                                    } %>
+                                    <span>
+                                        <i class="bi bi-calendar3"></i>
+                                        <%= post.createdAt.toLocaleDateString('en-EN', {month: 'short', day: 'numeric', year: '2-digit'}) %>
+                                    </span>
+                                    <% if (post.category) { %>
+                                    <span class="fw-bold mx-1" >&centerdot;</span>
+                                    <span>
+                                        <i class="bi bi-folder"></i> <%= capitalizeEachWord(post.category) %>
+                                    </span>
+                                    <% } %>
                                 </div>
                                 <p class="card-text small mb-0">
                                     <%= post.excerpt %>
@@ -193,12 +194,14 @@
             </main>
         </div>
 
+        <hr class="d-lg-none my-5">
+
         <!-- Side widget 2-->
         <div class="col-lg-3">
-            <div class="position-sticky" style="top: 2.5rem">
+            <div class="position-sticky" style="top: 2rem">
                 <!-- Profile -->
-                <h6 class="mt-5 mt-lg-0"><i class="bi bi-person"></i> Profile</h6>
-                <div class="widget bg-white text-center rounded-4 px-3 py-4">
+                <h6 class="mt-lg-0"><i class="bi bi-person"></i> Profile</h6>
+                <div class="widget bg-white border text-center rounded-4 px-3 py-4">
                     <img
                         src="/assets/img/author.jpg"
                         alt="devchamploo"
@@ -212,7 +215,7 @@
 
                 <!-- Contact -->
                 <h6 class="mt-5"><i class="bi bi-chat-text"></i> Contact</h6>
-                <div class="widget bg-white rounded-4 small pt-2 pb-1 px-2">
+                <div class="widget bg-white border rounded-4 small pt-2 pb-1 px-2">
                     <div class="d-flex">
                         <a
                             href="mailto:alfariziuchiha@gmail.com"
@@ -268,3 +271,17 @@
         </div>
     </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lostpeople",
+  "url": "<%= locale.url %>",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://lostpeople.com/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>

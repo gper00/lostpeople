@@ -1,14 +1,8 @@
 const Post = require('../models/post-model.js')
 const { capitalizeEachWord } = require('../utils/helper.js')
+const marked = require('marked')
 
 const layout = 'layouts/home'
-const locale = {
-    title: 'Lostpeople',
-    author: 'devchamploo',
-    description:
-        'I dont know what to write in.',
-    keywords: "lostpeople, devchamploo, gper, blog, umam alfarizi, lost, people, dev",
-}
 
 const homePage = async (req, res) => {
     try {
@@ -206,13 +200,13 @@ const postsPage = async (req, res) => {
 
         const locale = {
             title: 'Lostpeople',
-            description:
-                'Lost people is a website that contain somethings like blogpost or something that author will add later.',
-            keywords: "lostpeople, devchamploo, gper, blog, umam alfarizi, lost, people, dev",
-            author: 'Umam Alfarizi',
+            description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
+            keywords: "lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev",
+            author: 'devChampl000',
             image: null,
-            icon: null,
-            name: 'DevChamploo'
+            icon: '/assets/favicon.svg',
+            name: 'Lostpeople',
+            url: 'https://lostpeople.vercel.app'
         }
 
         res.render('posts', {
@@ -250,21 +244,21 @@ const postDetailPage = async (req, res, next) => {
             .populate('userId')
             .exec()
 
-        // Tambahkan pengecekan jika post tidak ditemukan
         if (!post) {
             return next()
         }
 
+        post.content = marked.parse(post.content)
+
         const locale = {
-            title: `${post.title} - Lostpeople`,
+            title: `${post.title} | Lostpeople`,
             description: post.excerpt,
-            keywords: `${post.tags.join(
-                ', '
-            )}, lostpeople, devchamploo, gper, blog, umam alfarizi, lost, people, dev`,
-            author: 'devchamploo',
-            image: `/uploads/${post.thumbnail}`,
-            icon: null,
-            name: 'Lostpeople'
+            keywords: `${post.tags.join(', ')}, lostpeople, blog, devchamploo, gper, blog, umam alfarizi, lost, people, dev`,
+            author: post.userId.name || 'Umam Alfarizi',
+            image: `${post.thumbnail}`,
+            icon: '/assets/favicon.svg',
+            name: 'Lostpeople',
+            url: `https://lostpeople.vercel.app/${post.slug}`
         }
 
         res.render('post-detail', {
@@ -272,15 +266,10 @@ const postDetailPage = async (req, res, next) => {
             post,
             capitalizeEachWord,
             locale,
-            pageActive: 'blog'
+            pageActive: 'post-detail'
         })
     } catch (err) {
         console.error(err)
-        // req.flash(
-        //     'failed',
-        //     err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-        // )
-        // res.redirect('/posts')
         next(err)
     }
 }

@@ -9,6 +9,7 @@
                     autocomplete="off"
                 >
                     <h1 class="h3 mb-3">Create Post</h1>
+
                     <!-- Title -->
                     <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
                         <label class="mb-2" for="title">
@@ -75,13 +76,13 @@
                                     class="form-select <%= errors && errors.category ? 'is-invalid' : '' %>"
                                 >
                                     <option value="">--Select one--</option>
-                                    <% if (postCategories) {
-                                        postCategories.forEach(item => {
-                                    %>
-                                    <option value="<%= item %>" <%= postData.category == item ? 'selected' : '' %>>
-                                        <%= capitalizeEachWord(item) %>
-                                    </option>
-                                    <% })} %>
+                                    <% if (postCategories) { %>
+                                    <% postCategories.forEach(item => { %>
+                                        <option value="<%= item %>" <%= postData.category == item ? 'selected' : '' %>>
+                                            <%= capitalizeEachWord(item) %>
+                                        </option>
+                                    <% }) %>
+                                    <% } %>
                                 </select>
                                 <% if (errors && errors.category) { %>
                                 <div class="invalid-feedback">
@@ -198,7 +199,7 @@
                         <label for="editor" class="mb-2">
                             Content<span class="text-danger">*</span>
                         </label>
-                        <textarea id="editor" name="content"></textarea>
+                        <textarea name="content" id="editor"></textarea>
                         <% if (errors && errors.content) { %>
                         <div class="small text-danger">
                             <%= errors.content.msg %>
@@ -250,4 +251,5 @@
         }
     }
 </script>
+
 <script type="module" src="/js/ckeditor.js"></script>

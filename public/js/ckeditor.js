@@ -39,11 +39,14 @@ import {
     LinkImage,
     List,
     ListProperties,
+    Markdown,
     MediaEmbed,
     Paragraph,
     PasteFromOffice,
     RemoveFormat,
     SelectAll,
+    ShowBlocks,
+    SourceEditing,
     SpecialCharacters,
     SpecialCharactersArrows,
     SpecialCharactersCurrency,
@@ -140,11 +143,14 @@ const editorConfig = {
         LinkImage,
         List,
         ListProperties,
+        Markdown,
         MediaEmbed,
         Paragraph,
         PasteFromOffice,
         RemoveFormat,
         SelectAll,
+        ShowBlocks,
+        SourceEditing,
         SpecialCharacters,
         SpecialCharactersArrows,
         SpecialCharactersCurrency,
@@ -260,7 +266,7 @@ const editorConfig = {
     menuBar: {
         isVisible: true
     },
-    placeholder: 'Type or paste your content here!',
+    placeholder: 'Type your content here!',
     table: {
         contentToolbar: [
             'tableColumn',

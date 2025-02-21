@@ -1,6 +1,7 @@
 const Post = require('../models/post-model.js')
 const { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } = require('../utils/helper.js')
 const { deletePostThumbnail } = require('../utils/delete-file.js')
+const marked = require('marked');
 
 const layout = 'layouts/dashboard'
 const pageActive = 'post'
@@ -98,6 +99,8 @@ const storePost = async (req, res) => {
 const postDetailPage = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id).populate('userId').exec()
+        post.content = marked.parse(post.content)
+
         res.render('dashboard/posts/detail', {
             layout,
             post,

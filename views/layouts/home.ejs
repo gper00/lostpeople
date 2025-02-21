@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="id" data-bs-theme="light">
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,34 +16,41 @@
         <!-- Google / Search Engine Tags -->
         <meta itemprop="name" content="<%= locale.name %>" />
         <meta itemprop="description" content="<%= locale.description %>" />
-        <meta itemprop="image" content="<%= locale.image %>" />
+        <meta itemprop="image" content="<%= locale.image || locale.icon %>" />
 
         <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="" />
+        <meta property="og:type" content="<%= pageActive == 'post-detail' ? 'article' : 'website' %>" />
+        <meta property="og:url" content="<%= locale.url %>" />
         <meta property="og:title" content="<%= locale.title %>" />
         <meta property="og:description" content="<%= locale.description %>" />
-        <meta property="og:image" content="<%= locale.image %>" />
+        <meta property="og:image" content="<%= locale.image || locale.icon %>" />
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="" />
+        <meta property="twitter:url" content="<%= locale.url %>" />
         <meta property="twitter:title" content="<%= locale.title %>" />
         <meta
-            property="twitter:description"
-            content="<%= locale.description %>"
+            property="twitter:description" content="<%= locale.description %>"
         />
-        <meta property="twitter:image" content="<%= locale.image %>" />
+        <meta property="twitter:image" content="<%= locale.image || locale.icon %>" />
 
+        <% if(pageActive == 'post-detail'){ %>
         <!-- Article -->
-        <meta property="article:publisher" content="" />
-        <meta property="article:tag" content="" />
-        <meta property="article:section" content="" />
-        <meta property="article:published_time" content="" />
-        <meta property="article:modified_time" content="" />
+        <meta property="article:publisher" content="<%= locale.name %>" />
+        <% post.tags.forEach(tag => { %>
+        <meta property="article:tag" content="<%= tag %>" />
+        <% }) %>
+        <meta property="article:section" content="<%= post.category %>" />
+        <meta property="article:published_time" content="<%= post.createdAt.toISOString() %>" />
+        <meta property="article:modified_time" content="<%= post.updatedAt.toISOString() %>" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+        <% } %>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<%= locale.icon %>" />
+        <link rel="icon" type="image/svg+xml" href="<%= locale.icon %>" />
+
+        <!-- Cannonical -->
+        <link rel="canonical" href="<%= locale.url %>" />
 
         <!-- Styles -->
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -52,10 +59,10 @@
             href="/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
         />
         <!-- CK Editor -->
-        <!-- <link
+        <link
             rel="stylesheet"
             href="https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.css"
-        /> -->
+        />
 
         <link rel="stylesheet" href="/css/style.css" />
     </head>
