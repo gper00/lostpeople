@@ -1,4 +1,4 @@
-# MyWeb - Web Application
+# Lostpeople - Web Application
 
 A full-stack web application built with Express.js, EJS, and MongoDB. This application features user authentication, content management, and a responsive design.
 
@@ -38,7 +38,7 @@ Before you begin, ensure you have the following installed:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd myweb
+cd lostpeople
 ```
 
 2. Install dependencies:
@@ -66,7 +66,7 @@ The application will be available at `http://localhost:5000`
 ## Project Structure
 
 ```
-myweb/
+lostpeople/
 ├── app/
 │   ├── config/         # Configuration files
 │   ├── controllers/    # Route controllers
@@ -126,7 +126,3 @@ myweb/
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
