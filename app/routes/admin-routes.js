@@ -42,6 +42,11 @@ router.patch('/posts/:id', checkPostAccess, uploadPostThumbnail, thumbnailErrorH
 router.patch('/posts/:id/remove-thumbnail', checkPostAccess, removePostThumbnail)
 router.delete('/posts/:id', checkPostAccess, deletePost)
 
+
+// api
+// router.get('/api/posts', getAllPost)
+// router.get('/api/latest-post', getLatestPost)
+
 router.post('/logout', logoutAction)
 
 module.exports = router

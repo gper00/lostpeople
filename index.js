@@ -113,5 +113,5 @@ app.use('/dashboard', authenticateToken, adminRoutes)
 app.use(routeErrorHandler)
 
 app.listen(PORT, () =>
-    console.log(`Server is running on http://127.0.0.1:${PORT}`)
+    console.log(`Listening on port ${PORT}`)
 )
