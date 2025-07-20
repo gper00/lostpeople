@@ -1,16 +1,16 @@
-<div class="container-md col-lg-9 col-xxl-8 py-5">
+<div class="container-narrow py-5">
     <div class="px-lg-5 my-5 py-5">
-        <div class="bg-light container d-flex flex-column align-items-center text-center px-5 py-5">
-            <h1 class="display-5 fw-bold mb-4">Welcome to My Blog!</h1>
-            <p class="fs-5 fst-italic text-muted mb-4 d-md-block d-none">
+        <div class="bg-light d-flex-center flex-column text-center px-5 py-5">
+            <h1 class="display-5 fw-bold mb-lg">Welcome to My Blog!</h1>
+            <p class="fs-5 fst-italic text-muted mb-lg d-md-block d-none">
               This is a place for me to share about my experience and knowledge around technology, self improvement, and many other
             </p>
-            <p class="fs-5 fst-italic text-muted mb-4 d-md-none">
+            <p class="fs-5 fst-italic text-muted mb-lg d-md-none">
               This is a place for me to share about everything
             </p>
             <div class="d-flex gap-3">
-                <a href="#latest-blog" class="btn btn-dark py-2 px-4 px-md-5 rounded-5">Latest post</a>
-                <a href="/about" class="btn btn-outline-dark py-2 px-4 px-md-5 rounded-5">About me</a>
+                <a href="#latest-blog" class="btn btn-dark">Latest post</a>
+                <a href="/about" class="btn btn-outline-dark">About me</a>
             </div>
         </div>
       </div>
@@ -18,19 +18,10 @@
 
 <!-- Blog section-->
 <section class="bg-light mt-5 py-5" id="latest-blog">
-    <div class="container-md col-lg-9 col-xxl-8">
+    <div class="container-narrow">
         <div class="text-center mb-5">
-            <div
-                class="bg-dark bg-gradient text-white rounded-4 mb-3"
-                style="
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 3rem;
-                    width: 3rem;
-                    font-size: 1.5rem;
-                "
-            >
+            <div class="d-flex-center bg-dark bg-gradient text-white rounded-4 mb-3"
+                 style="height: 3rem; width: 3rem; font-size: 1.5rem;">
                 <i class="bi bi-file-richtext"></i>
             </div>
             <h3 class="fw-bolder fs-4 mb-1">Latest Post</h3>
@@ -47,10 +38,11 @@
                 >
                     <div class="d-flex <%= (index < posts.length - 1) ? 'py-4' : 'pt-4' %>">
                         <div class="flex-shrink-0">
-                            <img class="rounded-4" src="<%= post.thumbnail ?? '/assets/img/no-image.png' %>" alt="<%= post.title %>" style="width: 250px; height: 175px; object-fit: cover;">
+                            <img class="rounded-4" src="<%= post.thumbnail ?? '/assets/img/no-image.png' %>" alt="<%= post.title %>"
+                                 style="width: 250px; height: 175px; object-fit: cover;">
                         </div>
                         <div class="ms-3">
-                            <h5 class="card-title fw-semibold large-3 mb-2">
+                            <h5 class="post-title mb-sm">
                                 <%= post.title %>
                             </h5>
 
@@ -70,12 +62,9 @@
                                 <%= post.excerpt %>
                             </p>
                             <% if (post.tags.length) { %>
-                            <div class="card-text mt-3 mb-0">
+                            <div class="card-text mt-md mb-0">
                                 <% post.tags.forEach(tag => { %>
-                                <span
-                                    class="badge bg-body-secondary text-body-secondary rounded-4 px-3 py-2 my-1"
-                                    >#<%= tag %></span
-                                >
+                                <span class="tag">#<%= tag %></span>
                                 <% }) %>
                             </div>
                             <% } %>
@@ -88,7 +77,7 @@
             <div class="d-block d-md-none">
             <!-- JIKA DI LAYAR MOBILE -->
             <% posts.forEach(post => { %>
-            <div class="card rounded-4 border-0 mb-4 post">
+            <div class="card-post border-0">
                 <a
                     href="/posts/<%= post.slug %>"
                     class="text-body-secondary text-decoration-none"
@@ -96,12 +85,12 @@
                     <% if (post.thumbnail) { %>
                     <img
                         src="<%= post.thumbnail %>"
-                        class="card-img-top rounded-top-4"
+                        class="card-post__image"
                         alt="<%= post.title %>"
                     />
                     <% } %>
                     <div class="card-body px-3 px-md-4 pt-4 pb-3">
-                        <h5 class="card-title fw-semibold large-3 mb-2">
+                        <h5 class="post-title mb-sm">
                             <%= post.title %>
                         </h5>
                         <div class="small-7 mb-2">
@@ -119,12 +108,9 @@
                             <%= post.excerpt %>
                         </p>
                         <% if (post.tags.length) { %>
-                        <p class="card-text mt-3 mb-0">
+                        <p class="card-text mt-md mb-0">
                             <% post.tags.forEach(tag => { %>
-                            <span
-                                class="badge bg-body-secondary text-body-secondary rounded-4 px-3 py-2 my-1"
-                                >#<%= tag %></span
-                            >
+                            <span class="tag">#<%= tag %></span>
                             <% }) %>
                         </p>
                         <% } %>
@@ -149,19 +135,10 @@
 
 <!-- Contact section-->
 <section class="bg-light mt-5 py-5" id="contact">
-    <div class="container-md col-lg-9 col-xxl-8 px-lg--5 pt-5 my-5">
+    <div class="container-narrow pt-5 my-5">
         <div class="text-center mb-5">
-            <div
-                class="bg-dark bg-gradient text-white rounded-4 mb-3"
-                style="
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 3rem;
-                    width: 3rem;
-                    font-size: 1.5rem;
-                "
-            >
+            <div class="d-flex-center bg-dark bg-gradient text-white rounded-4 mb-3"
+                 style="height: 3rem; width: 3rem; font-size: 1.5rem;">
                 <i class="bi bi-envelope"></i>
             </div>
             <h3 class="fw-bolder fs-4 mb-1">Contact Me</h3>

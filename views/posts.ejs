@@ -1,11 +1,11 @@
 <!-- Page content-->
 <div class="container-md col-lg-10 col-xl-9 col-xxl-8 my-5">
     <div class="row">
-        <!-- Side widget 1 -->
+        <!-- Side widget 1: Categories -->
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="position-sticky" style="top: 2rem">
-                <h6 class=""><i class="bi bi-folder"></i> Categories</h6>
-                <nav class="nav flex-column category-nav mt-3 border-start">
+            <div class="sticky-top">
+                <h6><i class="bi bi-folder"></i> Categories</h6>
+                <nav class="nav flex-column category-nav mt-md border-start">
                     <% postCategories.forEach(item => { %>
                     <a
                         class="nav-link small-3 text-body-secondary rounded-4 py-1 <%= category === item.toLowerCase() ? 'active' : '' %>"
@@ -21,9 +21,9 @@
         <div class="col-lg-7 px-lg-3">
             <main>
                 <!-- Search -->
-                <div class="search">
+                <div class="search-widget mb-lg">
                     <h6><i class="bi bi-search"></i> Search</h6>
-                    <form>
+                    <form class="search-form">
                         <% if (tag) { %>
                         <input type="hidden" name="tag" value="<%= tag %>" />
                         <% } %> <% if (order) { %>
@@ -47,14 +47,14 @@
                             value="<%= search %>"
                         />
                         <% if (search) { %>
-                        <div class="small mt-2 ps-1">Found: <%= count %></div>
+                        <div class="text-sm mt-sm ps-1">Found: <%= count %></div>
                         <% } %>
                     </form>
                 </div>
 
                 <div class="mt-5">
                     <div
-                        class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3"
+                        class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3 sticky-top bg-light"
                     >
                         <h4 class="fs-5 fw-bold m-0">
                             <%= category ? capitalizeEachWord(category) : 'All'
@@ -118,7 +118,7 @@
 
                     <!-- Posts -->
                     <% if (posts.length) { %> <% posts.forEach(post => { %>
-                    <div class="card rounded-4 mb-4 post">
+                    <div class="card-post border bg-white">
                         <a
                             href="/<%= post.slug %>"
                             class="text-body-secondary text-decoration-none"
@@ -126,15 +126,15 @@
                             <% if (post.thumbnail) { %>
                             <img
                                 src="<%= post.thumbnail %>"
-                                class="card-img-top rounded-top-4"
+                                class="card-post__image"
                                 alt="<%= post.title %>"
                             />
                             <% } %>
                             <div class="card-body px-3 px-md-4 pt-4 pb-3">
-                                <h5 class="card-title fw-semibold large-3 mb-2">
+                                <h5 class="post-title large-3 mb-sm">
                                     <%= post.title %>
                                 </h5>
-                                <div class="small-7 mb-2">
+                                <div class="small-7 mb-sm">
                                     <span>
                                         <i class="bi bi-calendar3"></i>
                                         <%= post.createdAt.toLocaleDateString('en-EN', {month: 'short', day: 'numeric', year: '2-digit'}) %>
@@ -149,16 +149,6 @@
                                 <p class="card-text small mb-0">
                                     <%= post.excerpt %>
                                 </p>
-                                <% if (post.tags.length) { %>
-                                <p class="card-text small mt-3 mb-0">
-                                    <% post.tags.forEach(tag => { %>
-                                    <span
-                                        class="badge bg-body-secondary text-body-secondary rounded-4 px-3 py-2 my-1"
-                                        >#<%= tag %></span
-                                    >
-                                    <% }) %>
-                                </p>
-                                <% } %>
                             </div>
                         </a>
                     </div>
@@ -169,20 +159,20 @@
                     <!-- Pagination -->
                     <% if (prevPage || nextPage) { %>
                     <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center mt-5">
+                        <ul class="pagination justify-content-center">
                             <li class="page-item">
                                 <a
-                                    class="page-link small rounded-start-4 text-body-secondary px-4 py-2 <%= prevPage ? '' : 'disabled' %>"
+                                    class="page-link text-sm <%= prevPage ? '' : 'disabled' %>"
                                     href="?<%= pageUrl %>page=<%= prevPage %>"
                                     >Previous</a
                                 >
                             </li>
-                            <!-- <li class="page-item"><a class="page-link small active" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link small" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link small" href="#">3</a></li> -->
+                            <!-- <li class="page-item"><a class="page-link text-sm active" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link text-sm" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link text-sm" href="#">3</a></li> -->
                             <li class="page-item">
                                 <a
-                                    class="page-link small rounded-end-4 text-body-secondary px-4 py-2 <%= nextPage ? '' : 'disabled' %>"
+                                    class="page-link text-sm <%= nextPage ? '' : 'disabled' %>"
                                     href="?<%= pageUrl %>page=<%= nextPage %>"
                                     >Next</a
                                 >
@@ -198,31 +188,31 @@
 
         <!-- Side widget 2-->
         <div class="col-lg-3">
-            <div class="position-sticky" style="top: 2rem">
+            <div class="sticky-top">
                 <!-- Profile -->
-                <h6 class="mt-lg-0"><i class="bi bi-person"></i> My Profile</h6>
-                <div class="widget bg-white border text-center rounded-4 px-3 py-4">
+                <h6 class="mt-lg-0"><i class="bi bi-person"></i> About Me</h6>
+                <div class="widget widget-profile">
                     <img
                         src="/assets/img/author.jpg"
                         alt="devchamploo"
-                        class="rounded-circle img-thumbnail mb-3 gper-img"
+                        class="img-profile mb-md"
                     />
-                    <h6 class="">Umam Alfarizi</h6>
-                    <p class="small text-body-secondary fst-italic m-0 px-4 px-md-5 px-lg-3">
+                    <h6>Umam Alfarizi</h6>
+                    <p class="text-sm text-body-secondary fst-italic m-0 px-4 px-md-5 px-lg-3">
                         Informatics Student | Web Developer
                     </p>
                 </div>
 
                 <!-- Projects -->
-                <h6 class="mt-5"><i class="bi bi-chat-text"></i> My Projects</h6>
-                <div class="widget bg-white border rounded-4 small pt-2 pb-1 px-2">
+                <h6 class="mt-xl"><i class="bi bi-chat-text"></i> My Projects</h6>
+                <div class="widget bg-white border pt-sm pb-xs px-sm px-1">
                     <div class="d-flex">
                         <a
                             href="https://gper00.github.io/"
                             class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
                             target="_blank"
                         >
-                            <i class="bi bi-envelope"></i>
+                            <i class="bi bi-globe2"></i>
                             <span class="ms-2">Porfolio Website</span>
                         </a>
                     </div>
@@ -232,8 +222,8 @@
                             class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
                             target="_blank"
                         >
-                            <i class="bi bi-envelope"></i>
-                            <span class="ms-2">Random Static Web[site|app]s</span>
+                            <i class="bi bi-globe2"></i>
+                            <span class="ms-2">Static Web[site|app]s</span>
                         </a>
                     </div>
                     <div class="d-flex">
@@ -242,14 +232,14 @@
                             class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100"
                             target="_blank"
                         >
-                            <i class="bi bi-envelope"></i>
+                            <i class="bi bi-globe2"></i>
                             <span class="ms-2">Modern Portfolio Website</span>
                         </a>
                     </div>
                 </div>
 
-                <h6 class="mt-5"><i class="bi bi-chat-text"></i> Contact Me</h6>
-                <div class="widget bg-white border rounded-4 small pt-2 pb-1 px-2">
+                <!-- <h6 class="mt-xl"><i class="bi bi-chat-text"></i> Contact Me</h6>
+                <div class="widget bg-white border pt-sm pb-xs px-sm px-1">
                     <div class="d-flex">
                         <a
                             href="mailto:alfariziuchiha@gmail.com"
@@ -300,7 +290,7 @@
                             <span class="ms-2">Instagram</span>
                         </a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

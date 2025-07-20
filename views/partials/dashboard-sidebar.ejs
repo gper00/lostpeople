@@ -21,7 +21,7 @@
                 </a>
             </li>
 
-            <% if (authUser.role === 'super-admin') { %>
+            <% if (authUser.role === ROLES.SUPER_ADMIN) { %>
             <li class="sidebar-item <%= pageActive === 'user' ? 'active' : '' %>">
                 <a class="sidebar-link" href="/dashboard/users">
                     <i class="align-middle" data-feather="users"></i>

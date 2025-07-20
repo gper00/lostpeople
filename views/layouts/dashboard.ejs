@@ -21,6 +21,7 @@
             rel="stylesheet"
             href="https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.css"
         />
+        <link href="/css/main.css" rel="stylesheet" />
         <link href="/css/dashboard.css" rel="stylesheet" />
     </head>
 
@@ -78,20 +79,16 @@
                                                 <img
                                                     src="<%= authUser.image %>"
                                                     alt="<%= authUser.fullname %>"
-                                                    class="rounded-circle img-thumbnail"
-                                                    style="
-                                                        width: 200px;
-                                                        height: 200px;
-                                                        object-fit: cover;
-                                                    "
+                                                    class="img-profile img-thumbnail"
+                                                    style="width: 200px; height: 200px;"
                                                 />
                                             </div>
                                         </td>
                                     </tr>
                                     <% } %>
                                     <tr>
-                                        <td style="width: 25%;">Fullname</td>
-                                        <td class="text-end" style="width: 75%;">
+                                        <td class="w-25">Fullname</td>
+                                        <td class="text-end w-75">
                                             <%= authUser.fullname %>
                                         </td>
                                     </tr>

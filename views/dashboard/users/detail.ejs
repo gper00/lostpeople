@@ -117,7 +117,7 @@
                                     <span class="align-middle pe-2">Back</span>
                                 </button>
                                 <div class="text-end">
-                                    <% if (authUser.role === 'super-admin' && authUser._id.toString() !== user._id.toString()) { %>
+                                    <% if (authUser.role === ROLES.SUPER_ADMIN && authUser._id.toString() !== user._id.toString()) { %>
                                     <a
                                         class="btn btn-danger deleteUser"
                                         data-bs-toggle="modal"

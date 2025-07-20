@@ -1,11 +1,16 @@
+/**
+ * Checks if an object is empty (has no own properties)
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Returns true if the object is empty
+ */
 function isEmpty(obj) {
-    for (var prop in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-            return false
-        }
+  for (const prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+      return false
     }
+  }
 
-    return true
+  return true
 }
 
-module.exports = { isEmpty }
+export { isEmpty }

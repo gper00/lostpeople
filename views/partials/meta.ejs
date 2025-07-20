@@ -1,0 +1,12 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title><%= typeof title !== 'undefined' ? `${title} | ${siteTitle}` : siteTitle %></title>
+<meta name="description" content="<%= metaDesc || defaultDesc %>">
+<meta name="keywords" content="<%= (metaKeywords || defaultKeywords).join(', ') %>">
+<meta property="og:title" content="<%= ogTitle || title || siteTitle %>">
+<meta property="og:description" content="<%= ogDesc || metaDesc || defaultDesc %>">
+<meta property="og:image" content="<%= ogImage || defaultImage %>">
+<meta property="og:type" content="article">
+<meta property="og:url" content="<%= canonicalUrl %>">
+<link rel="canonical" href="<%= canonicalUrl %>">

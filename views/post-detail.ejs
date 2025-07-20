@@ -1,9 +1,9 @@
 <!-- Page content-->
-<div class="container-md col-lg-9 col-xxl-8 my-5">
+<div class="container-narrow my-5">
     <div class="row">
-        <!-- Side widget 1 -->
+        <!-- Side widget 1: Social sharing -->
         <div class="col-lg-2 align-items-center d-none d-lg-block share">
-            <div class="position-sticky" style="top: 35%">
+            <div class="sticky-top" style="top: 35%">
                 <div class="large-3 my-3">
                     <a
                         class="share-link twitter-lg text-body-secondary p-2"
@@ -69,7 +69,7 @@
             </nav>
             <main>
                 <article class="bg-white rounded-4 border">
-                    <header class="mt-4 mt-lg-5 px-3 px-md-4 px-lg-5">
+                    <header class="mt-lg pt-lg px-3 px-md-4 px-lg-5">
                         <h1 class="post-title">
                             <%= post.title %>
                         </h1>
@@ -82,9 +82,9 @@
                                     <% } else { %>
                                     src="/assets/img/user-default.jpg" alt=""
                                     <% } %>
-                                    class="rounded-circle author-post-thumbnail"
+                                    class="img-author"
                                     itemprop="image"
-                                    alt="Foto profil <%= post.userId.fullname %>"
+                                    alt="Foto profil <%= post.userId.name %>"
                                 />
                                 <figcaption class="d-none"><%= post.title %></figcaption>
                             </div>
@@ -117,7 +117,7 @@
                             <% post.tags.forEach(tag => { %>
                             <a
                                 href="/?tag=<%= tag %>"
-                                class="tag-link badge bg-body-secondary text-body-secondary text-decoration-none rounded-4 px-3 py-2 my-1"
+                                class="tag tag-link"
                                 rel="tag"
                                 >#<%= tag %>
                             </a>
@@ -129,13 +129,13 @@
                     <% if (post.thumbnail) { %>
                     <figure class=" mt-3 mt-lg-4 px-3 px-md-4 px-lg-5">
                         <img
-                            class="post-thumbnail rounded-4"
+                            class="post-thumbnail"
                             src="<%= post.thumbnail %>"
                             alt="<%= post.title %>"
                         />
                     </figure>
                     <% } %>
-                    <div class="card-body px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4">
+                    <div class="card-body px-3 px-md-4 px-lg-5 pb-lg pt-lg">
                         <section class="post-body markdown-body">
                             <%- post.content %>
                         </section>
@@ -143,42 +143,40 @@
                 </article>
 
                 <!-- Share -->
-                <section class="d-lg-none mt-5 mb-5 pb-5">
-                    <div class="text-center pb-4">Share</div>
+                <section class="d-lg-none mt-xl mb-xl pb-xl">
+                    <div class="text-center pb-md">Share</div>
                     <div class="text-center">
-                        <span
-                            class="bg-white px-2 py-3 fs-5 rounded-4 text-body-secondary border"
-                        >
+                        <div class="d-inline-block bg-white p-md rounded-4 text-body-secondary border">
                             <a
-                                class="share-link facebook-sm text-body-secondary p-2 mx-2"
+                                class="share-link facebook-sm text-body-secondary p-sm mx-sm"
                                 href="#"
                                 ><i class="bi bi-facebook"></i
                             ></a>
                             <a
-                                class="share-link linkedin-sm text-body-secondary p-2 mx-2"
+                                class="share-link linkedin-sm text-body-secondary p-sm mx-sm"
                                 href="#"
                                 ><i class="bi bi-linkedin"></i
                             ></a>
                             <a
-                                class="share-link twitter-sm text-body-secondary p-2 mx-2"
+                                class="share-link twitter-sm text-body-secondary p-sm mx-sm"
                                 href="#"
                                 ><i class="bi bi-twitter"></i
                             ></a>
                             <a
-                                class="share-link telegram-sm text-body-secondary p-2 mx-2"
+                                class="share-link telegram-sm text-body-secondary p-sm mx-sm"
                                 href="#"
                                 ><i class="bi bi-telegram"></i
                             ></a>
                             <a
-                                class="share-link whatsapp-sm text-body-secondary p-2 mx-2"
+                                class="share-link whatsapp-sm text-body-secondary p-sm mx-sm"
                                 href="#"
                                 ><i class="bi bi-whatsapp"></i
                             ></a>
-                        </span>
+                        </div>
                     </div>
                 </section>
 
-                <section id="comments" class="bg-white rounded-4 border p-lg-4 px-3 py-4 my-5">
+                <section id="comments" class="bg-white rounded-3 border p-lg-4 px-3 py-4 my-xl">
                     <script src="https://giscus.app/client.js"
                         data-repo="devChampl00/blog-comments"
                         data-repo-id="R_kgDONr94rA"

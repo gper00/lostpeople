@@ -60,7 +60,7 @@
                                 </td>
                                 <td class="d-none d-xl-table-cell"><%= user.postsCount %></td>
                                 <td>
-                                    <% if (user.role != 'super-admin') { %>
+                                    <% if (user.role != ROLES.SUPER_ADMIN) { %>
                                     <a
                                         href="/dashboard/users/<%= user._id %>"
                                         class="text-decoration-none text-info"
