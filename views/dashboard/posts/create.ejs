@@ -1,254 +1,155 @@
 <main class="content">
     <div class="container-fluid p-0">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8 p-0">
-                <form
-                    action="/dashboard/posts/?_csrf=<%=csrfToken%>"
-                    method="POST"
-                    enctype="multipart/form-data"
-                    autocomplete="off"
-                >
-                    <h1 class="h3 mb-3">Create Post</h1>
 
-                    <!-- Title -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <label class="mb-2" for="title">
-                            Title<span class="text-danger">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control <%= errors && errors.title ? 'is-invalid' : '' %>"
-                            id="title"
-                            name="title"
-                            value="<%= postData.title ?? '' %>"
-                            required
-                        />
-                        <% if (errors && errors.title) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.title.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3">Create New Post</h1>
+            <a href="/dashboard/posts" class="btn btn-secondary">Back to Posts</a>
+        </div>
 
-                    <!-- Thumbnail -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <label class="mb-2" for="thumbnail"> Thumbnail </label>
-                        <input
-                            type="file"
-                            class="form-control <%= errors && errors.thumbnail ? 'is-invalid' : '' %>"
-                            id="thumbnail"
-                            name="thumbnail"
-                            value=""
-                        />
-                        <div
-                            class="imgPreviewContainer bg-light rounded-bottom border d-none p-2"
-                        >
-                            <div class="row justify-content-center">
-                                <div class="col-md-8 col-lg-6">
-                                    <img
-                                        src=""
-                                        alt=""
-                                        id="imgPreview"
-                                        class="rounded border w-100"
-                                        style="
-                                            max-height: 180px;
-                                            object-fit: cover;
-                                        "
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <% if (errors && errors.thumbnail) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.thumbnail.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/dashboard/posts?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
 
-                    <!-- Category -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <div class="row">
-                            <label class="mb-2" for="category"> Category </label>
-                            <div class="col-md-6">
-                                <select
-                                    name="category"
-                                    id="category"
-                                    class="form-select <%= errors && errors.category ? 'is-invalid' : '' %>"
-                                >
-                                    <option value="">--Select one--</option>
-                                    <% if (postCategories) { %>
-                                    <% postCategories.forEach(item => { %>
-                                        <option value="<%= item %>" <%= postData.category == item ? 'selected' : '' %>>
-                                            <%= capitalizeEachWord(item) %>
-                                        </option>
-                                    <% }) %>
+                            <!-- Title -->
+                            <div class="row mb-3">
+                                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control <%= errors.title ? 'is-invalid' : '' %>" id="title" name="title" value="<%= postData.title || '' %>" required>
+                                    <% if (errors.title) { %>
+                                        <div class="invalid-feedback"><%= errors.title.msg %></div>
                                     <% } %>
-                                </select>
-                                <% if (errors && errors.category) { %>
-                                <div class="invalid-feedback">
-                                    <%= errors.category.msg %>
                                 </div>
-                                <% } %>
                             </div>
-                            <div class="col-md-6 mt-2 mt-lg-0">
-                                <input
-                                    type="text"
-                                    class="form-control  <%= errors && errors.newCategory ? 'is-invalid' : '' %>"
-                                    name="newCategory"
-                                    value="<%= postData.newCategory ?? '' %>"
-                                    placeholder="New category"
-                                    autocomplete="off"
-                                />
-                                <% if (errors && errors.newCategory) { %>
-                                <div class="invalid-feedback">
-                                    <%= errors.newCategory.msg %>
+
+                            <!-- Category -->
+                            <div class="row mb-3">
+                                <label for="category" class="col-sm-2 col-form-label">Category</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select <%= errors.category ? 'is-invalid' : '' %>" id="category" name="category">
+                                        <option value="">Select a category</option>
+                                        <% postCategories.forEach(cat => { %>
+                                            <option value="<%= cat %>" <%= postData.category === cat ? 'selected' : '' %>><%= capitalizeEachWord(cat) %></option>
+                                        <% }) %>
+                                    </select>
+                                    <div class="form-text">Or create a new one below.</div>
+                                    <% if (errors.category) { %>
+                                        <div class="invalid-feedback"><%= errors.category.msg %></div>
+                                    <% } %>
                                 </div>
-                                <% } %>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Tags -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <label class="mb-2" for="tags"> Tags
-                            <br>
-                            <span class="small">Use a comma (,) if the post has many tag</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control <%= errors && errors.tags ? 'is-invalid' : '' %>"
-                            id="tags"
-                            name="tags"
-                            value="<%= postData.tags ?? '' %>"
-                        />
-                        <% if (errors && errors.tags) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.tags.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+                            <!-- New Category -->
+                            <div class="row mb-3">
+                                <label for="newCategory" class="col-sm-2 col-form-label">New Category</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control <%= errors.newCategory ? 'is-invalid' : '' %>" id="newCategory" name="newCategory" value="<%= postData.newCategory || '' %>">
+                                    <% if (errors.newCategory) { %>
+                                        <div class="invalid-feedback"><%= errors.newCategory.msg %></div>
+                                    <% } %>
+                                </div>
+                            </div>
 
-                    <!-- Excerpt -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <label class="mb-2" for="excerpt">
-                            Excerpt<span class="text-danger">*</span>
-                        </label>
-                        <textarea
-                            id="excerpt"
-                            name="excerpt"
-                            class="form-control <%= errors && errors.excerpt ? 'is-invalid' : '' %>"
-                            rows="4"
-                            required
-                        ><%= postData.excerpt ?? '' %></textarea>
-                        <% if (errors && errors.excerpt) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.excerpt.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+                            <!-- Thumbnail -->
+                            <div class="row mb-3">
+                                <label for="thumbnail" class="col-sm-2 col-form-label">Thumbnail</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control <%= errors.thumbnail ? 'is-invalid' : '' %>" type="file" id="thumbnail" name="thumbnail" onchange="previewImage(event)">
+                                    <% if (errors.thumbnail) { %>
+                                        <div class="invalid-feedback"><%= errors.thumbnail.msg %></div>
+                                    <% } %>
+                                    <img id="image-preview" src="#" alt="Image Preview" class="mt-2" style="display: none; max-width: 200px;"/>
+                                </div>
+                            </div>
 
-                    <!-- Status -->
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        Published<span class="text-danger">*</span>
-                        <div class="form-check mt-2">
-                            <input
-                                class="form-check-input  <%= errors && errors.status ? 'is-invalid' : '' %>"
-                                type="radio"
-                                name="status"
-                                id="published"
-                                value="published"
-                                <%= postData.status === 'published' ? 'checked' : '' %>
-                            />
-                            <label
-                                class="form-check-label"
-                                for="published"
-                            >
-                                Yes
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input
-                                class="form-check-input  <%= errors && errors.status ? 'is-invalid' : '' %>"
-                                type="radio"
-                                name="status"
-                                value="draft"
-                                id="draft"
-                                <%= postData.status !== 'published' ? 'checked' : '' %>
-                            />
-                            <label
-                                class="form-check-label"
-                                for="draft"
-                            >
-                                No
-                            </label>
-                        </div>
-                        <% if (errors && errors.status) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.status.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+                            <!-- Tags -->
+                            <div class="row mb-3">
+                                <label for="tags" class="col-sm-2 col-form-label">Tags</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control <%= errors.tags ? 'is-invalid' : '' %>" id="tags" name="tags" value="<%= postData.tags || '' %>">
+                                    <div class="form-text">Comma-separated values (e.g., tech, news, gaming).</div>
+                                    <% if (errors.tags) { %>
+                                        <div class="invalid-feedback"><%= errors.tags.msg %></div>
+                                    <% } %>
+                                </div>
+                            </div>
 
-                    <!-- Content -->
-                    <div
-                        id="dataContent" class="d-none"
-                        data-valid="<%= errors && errors.content ? 'true' : 'false' %>"
-                        data-value="<%= postData.content ?? '' %>"
-                    ></div>
-                    <div class="form-group bg-white rounded p-3 p-md-4 mb-3 mb-md-4">
-                        <label for="editor" class="mb-2">
-                            Content<span class="text-danger">*</span>
-                        </label>
-                        <textarea name="content" id="editor"></textarea>
-                        <% if (errors && errors.content) { %>
-                        <div class="small text-danger">
-                            <%= errors.content.msg %>
-                        </div>
-                        <% } %>
-                    </div>
+                            <!-- Excerpt -->
+                            <div class="row mb-3">
+                                <label for="excerpt" class="col-sm-2 col-form-label">Excerpt</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control <%= errors.excerpt ? 'is-invalid' : '' %>" id="excerpt" name="excerpt" rows="3" data-char-count-target="excerpt-char-count"><%= postData.excerpt || '' %></textarea>
+                                    <div id="excerpt-char-count" class="form-text text-end"></div>
+                                    <% if (errors.excerpt) { %>
+                                        <div class="invalid-feedback"><%= errors.excerpt.msg %></div>
+                                    <% } %>
+                                </div>
+                            </div>
 
-                    <div class="mb-5">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="align-middle me-1" data-feather="send"></i>
-                            <span class="align-middle">Submit</span>
-                        </button>
-                        <button class="btn btn-secondary" type="button" onclick="window.location=document.referrer;">
-                            <i class="align-middle me-1" data-feather="x-square"></i>
-                            <span class="align-middle">Cancel</span>
-                        </button>
+                            <!-- Content -->
+                            <div class="row mb-3">
+                                <label for="content" class="col-sm-2 col-form-label">Content</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control <%= errors.content ? 'is-invalid' : '' %>" id="content" name="content" rows="10"><%= postData.content || '' %></textarea>
+                                    <% if (errors.content) { %>
+                                        <div class="invalid-feedback"><%= errors.content.msg %></div>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="row mb-3">
+                                <label for="status" class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select <%= errors.status ? 'is-invalid' : '' %>" id="status" name="status">
+                                        <option value="draft" <%= postData.status === 'draft' ? 'selected' : '' %>>Draft</option>
+                                        <option value="published" <%= postData.status === 'published' ? 'selected' : '' %>>Published</option>
+                                        <option value="archived" <%= postData.status === 'archived' ? 'selected' : '' %>>Archived</option>
+                                    </select>
+                                    <% if (errors.status) { %>
+                                        <div class="invalid-feedback"><%= errors.status.msg %></div>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-10 offset-sm-2">
+                                    <button type="submit" class="btn btn-primary">Create Post</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
 <script>
-    document.querySelector('#thumbnail').onchange = function () {
-        let file = this.files[0]
-        if (file) {
-            let reader = new FileReader()
-            reader.onload = function (event) {
-                console.log(event.target.results)
-                document
-                    .querySelector('#imgPreview')
-                    .setAttribute('src', event.target.result)
-                document
-                    .querySelector('.imgPreviewContainer')
-                    .classList.remove('d-none')
-            }
-            reader.readAsDataURL(file)
-        }
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('image-preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
     }
-</script>
 
-<!-- CK Editor -->
-<script type="importmap">
-    {
-        "imports": {
-            "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/42.0.1/ckeditor5.js",
-            "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/42.0.1/"
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.querySelectorAll('textarea[data-char-count-target]');
+        textareas.forEach(textarea => {
+            const charCountEl = document.getElementById(textarea.dataset.charCountTarget);
+            const maxLength = textarea.maxLength || 500; // Default to 500 if not set
+
+            function updateCharCount() {
+                const currentLength = textarea.value.length;
+                charCountEl.textContent = `${currentLength} / ${maxLength}`;
+            }
+
+            textarea.addEventListener('input', updateCharCount);
+            updateCharCount(); // Initial count
+        });
+    });
 </script>
-<script type="module" src="/js/ckeditor.js"></script>

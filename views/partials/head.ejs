@@ -1,0 +1,70 @@
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title><%= title %></title>
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="<%= title || 'Lostpeople Blog' %>" />
+<meta name="description" content="<%= (typeof post !== 'undefined' && post?.excerpt) ? post.excerpt : 'Blog tentang teknologi, pengembangan diri, dan kisah inspiratif' %>" />
+<meta name="author" content="<%= (typeof post !== 'undefined' && post?.author?.name) ? post.author.name : 'Lostpeople Team' %>" />
+<meta name="generator" content="Lostpeople CMS 1.0">
+<meta name="generator" content="Lostpeople CMS 1.0">
+<meta name="keywords" content="<%= (typeof post !== 'undefined' && post?.tags) ? post.tags : 'teknologi, blog, inspirasi, pengembangan diri, coding' %>" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="<%= (typeof post !== 'undefined' && post) ? 'article' : 'website' %>" />
+<meta property="og:url" content="<%= canonicalUrl %>" />
+<meta property="og:title" content="<%= title || 'Lostpeople Blog' %>" />
+<meta property="og:description" content="<%= (typeof post !== 'undefined' && post?.excerpt) ? post.excerpt : 'Blog tentang teknologi, pengembangan diri, dan kisah inspiratif' %>" />
+<meta property="og:image" content="<%= (typeof post !== 'undefined' && post?.thumbnail) ? post.thumbnail : '/assets/img/seo-default.jpg' %>" />
+<meta property="og:image:alt" content="<%= title || 'Lostpeople Blog' %>" />
+<meta property="og:site_name" content="Lostpeople">
+<meta property="og:locale" content="id_ID">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="<%= canonicalUrl %>" />
+<meta property="twitter:title" content="<%= title || 'Lostpeople Blog' %>" />
+<meta property="twitter:description" content="<%= (typeof post !== 'undefined' && post?.excerpt) ? post.excerpt : 'Blog tentang teknologi, pengembangan diri, dan kisah inspiratif' %>" />
+<meta property="twitter:image" content="<%= (typeof post !== 'undefined' && post?.thumbnail) ? post.thumbnail : '/assets/img/seo-default.jpg' %>" />
+<meta property="twitter:image:alt" content="<%= title || 'Lostpeople Blog' %>" />
+<meta property="twitter:image:alt" content="<%= title || 'Lostpeople Blog' %>" />
+
+<% if(typeof post !== 'undefined' && post){ %>
+<!-- Article -->
+<meta property="article:publisher" content="Lostpeople" />
+<% post.tags.forEach(tag => { %>
+<meta property="article:tag" content="<%= tag.name %>" />
+<% }) %>
+<meta property="article:section" content="<%= post.category || 'General' %>" />
+<meta property="article:published_time" content="<%= post.createdAt.toISOString() %>" />
+<meta property="article:modified_time" content="<%= post.updatedAt.toISOString() %>" />
+<link rel="stylesheet" href="/css/github-markdown.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<% } %>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+<!-- Canonical -->
+<link rel="canonical" href="<%= canonicalUrl %>" />
+
+<!-- Styles -->
+<!-- Fonts & Styles -->
+<link rel="stylesheet" href="/css/fonts.css">
+<link rel="stylesheet" href="/css/output.css">
+<link rel="stylesheet" href="/css/custom.css">
+<!-- Font Awesome (local) - preload critical webfonts -->
+<link rel="preload" href="/assets/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fontawesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/fontawesome/css/all.min.css"></noscript>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<%- include('structured-data.ejs') %>

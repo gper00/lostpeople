@@ -1,0 +1,33 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "<%= typeof post !== 'undefined' && post ? 'BlogPosting' : 'WebSite' %>",
+  <% if (typeof post !== 'undefined' && post) { %>
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "<%= canonicalUrl %>"
+  },
+  "headline": "<%= title %>",
+  "description": "<%= post.excerpt %>",
+  "image": "<%= post.coverImage || '/assets/img/seo-default.jpg' %>",  
+  "author": {
+    "@type": "Person",
+    "name": "<%= post.author.name %>"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Lostpeople",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/assets/favicon.svg"
+    }
+  },
+  "datePublished": "<%= post.createdAt.toISOString() %>",
+  "dateModified": "<%= post.updatedAt.toISOString() %>"
+  <% } else { %>
+  "url": "<%= canonicalUrl %>",
+  "name": "<%= title %>",
+  "description": "Blog about technology and life."
+  <% } %>
+}
+</script>

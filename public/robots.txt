@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard/*
-Disallow: /admin
-Sitemap: <%= process.env.BASE_URL %>/sitemap.xml
+Sitemap: <%= baseUrl %>/sitemap.xml

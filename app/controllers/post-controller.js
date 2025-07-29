@@ -18,14 +18,28 @@ const postsPage = async (req, res) => {
         .exec()
     } else {
       posts = await Post.find()
-        .populate('userId')
+        .populate('userId', 'name image')
         .sort({ createdAt: -1 })
         .exec()
     }
 
     res.render('dashboard/posts/index', {
       layout,
-      posts,
+      posts: posts.map(post => ({
+        ...post._doc,
+        user: post.userId ? {
+          name: post.userId.name,
+          image: post.userId.image
+        } : { 
+          name: 'Anonymous',
+          image: '/assets/img/user-default.jpg'
+        },
+        author: post.userId ? {
+          name: post.userId.name
+        } : {
+          name: 'Anonymous'
+        }
+      })),
       successMessage,
       errorMessage,
       pageActive,
@@ -90,6 +104,17 @@ const storePost = async (req, res) => {
     res.redirect('/dashboard/posts')
   } catch (err) {
     console.error(err)
+    // Handle validation errors from Mongoose
+    if (err.name === 'ValidationError') {
+      const errors = {}
+      for (const field in err.errors) {
+        errors[field] = { msg: err.errors[field].message }
+      }
+      req.flash('errors', errors)
+      req.flash('postData', req.body)
+      return res.redirect('/dashboard/posts/create')
+    }
+
     req.flash('failed', err.message || 'Something went wrong')
     res.redirect('/dashboard/posts')
   }
@@ -98,8 +123,10 @@ const storePost = async (req, res) => {
 
 const postDetailPage = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate('userId').exec()
-    post.content = parse(post.content)
+    const post = await Post.findById(req.params.id)
+      .populate('userId', 'name image') // ✅ Field yang aman digunakan
+      .exec()
+    post.content = parse(post.content, { sanitize: true, gfm: true, breaks: true, smartLists: true, smartypants: true })
 
     res.render('dashboard/posts/detail', {
       layout,
@@ -170,7 +197,7 @@ const updatePost = async (req, res) => {
     let { title, category, newCategory, tags, excerpt, status, content } =
             req.body
 
-    if (category) category = category
+    if (category) category = category.toLowerCase()
     else if (newCategory) category = newCategory.toLowerCase()
     else category = null
 
@@ -183,7 +210,7 @@ const updatePost = async (req, res) => {
       status
     }
 
-    if (title !== post.title) {
+    if (title && title !== post.title) {
       updatedFields.slug = await generateUniqueSlug(title)
     }
 
@@ -195,12 +222,23 @@ const updatePost = async (req, res) => {
       }
     }
 
-    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields })
+    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields }, { runValidators: true })
 
     req.flash('success', 'Post updated successfully!')
     res.redirect('/dashboard/posts')
   } catch (err) {
     console.log(err)
+    // Handle validation errors from Mongoose
+    if (err.name === 'ValidationError') {
+      const errors = {}
+      for (const field in err.errors) {
+        errors[field] = { msg: err.errors[field].message }
+      }
+      req.flash('errors', errors)
+      req.flash('postData', req.body)
+      return res.redirect(`/dashboard/posts/${req.params.id}/edit`)
+    }
+
     req.flash(
       'failed',
       err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
@@ -224,7 +262,7 @@ const removePostThumbnail = async (req, res) => {
     }
 
     deletePostThumbnail(post.thumbnail)
-      .catch(err => console.eror(err.message))
+      .catch(err => console.error(err.message))
 
     await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields })
 

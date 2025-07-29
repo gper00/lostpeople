@@ -118,18 +118,6 @@ const validatePost = [
       return res.redirect(redirectUrl)
     }
 
-    // If thumbnail is required for published posts, check here
-    if (req.body.status === 'published' && !req.file && !req.body.existingThumbnail) {
-      req.flash('error', 'A thumbnail is required for published posts')
-      req.flash('postData', req.body)
-
-      const redirectUrl = req.params.id
-        ? `/dashboard/posts/${req.params.id}/edit`
-        : '/dashboard/posts/create'
-
-      return res.redirect(redirectUrl)
-    }
-
     // All validation passed
     next()
   }

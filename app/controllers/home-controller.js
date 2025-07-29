@@ -1,6 +1,17 @@
 import Post from '../models/post-model.js'
-import { capitalizeEachWord } from '../utils/helper.js'
-import { parse } from 'marked'
+import { capitalizeEachWord, formatDate } from '../utils/helper.js'
+import { marked } from 'marked'
+import slugify from 'slugify'
+import hljs from 'highlight.js'
+
+// Configure marked to use highlight.js
+marked.setOptions({
+  highlight: function (code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  },
+  langPrefix: 'hljs language-',
+});
 
 // Use a simpler in-memory cache solution
 const cache = new Map()
@@ -41,29 +52,6 @@ const defaultLocale = {
   url: 'https://lostpeople.vercel.app'
 }
 
-const homePage = async (req, res) => {
-  try {
-    const posts = await Post.find({ status: 'published' })
-      .select('title slug excerpt thumbnail category createdAt author')
-      .populate('author', 'fullname')
-      .sort({ createdAt: -1 })
-      .limit(7)
-      .lean()
-
-    res.render('index', {
-      posts,
-      layout,
-      locale: defaultLocale,
-      capitalizeEachWord,
-      pageActive: 'home'
-    })
-  } catch (err) {
-    console.error(err)
-    res.status(500).send('Server Error')
-  }
-}
-
-
 
 // Enhanced URL builder with proper encoding and param handling
 const buildUrlParams = (existingParams = {}, updates = {}) => {
@@ -102,155 +90,153 @@ const getCategories = async () => {
   return categories
 }
 
-const postsPage = async (req, res) => {
+const homePage = async (req, res) => {
   try {
-    const startTime = Date.now()
-    const perPage = 10
-    const page = parseInt(req.query.page) || 1
+    const perPage = 10;
+    const page = parseInt(req.query.page) || 1;
+    const { category, search, order: orderParam } = req.query;
+    const order = orderParam === 'asc' ? 'asc' : 'desc';
 
-    const {
-      order = null,
-      category = null,
-      tag = null,
-      search = null
-    } = req.query
-
-    const cacheKey = `posts_${page}_${order}_${category}_${tag}_${search}`
-    const cachedData = cacheManager.get(cacheKey)
-
-    if (cachedData) {
-      console.log(`Cache hit for ${cacheKey}`)
-      return res.render('posts', cachedData)
-    }
-
-    const urlParams = { order, category, tag, search }
-    const categoryUrl = buildUrlParams({ ...urlParams, category: null })
-    const orderUrl = buildUrlParams({ ...urlParams, order: null })
-    const pageUrl = buildUrlParams(urlParams)
-
-    let matchQuery = { status: 'published' }
-    if (category) matchQuery.category = category
-    if (tag) matchQuery.tags = tag
+    let matchQuery = { status: 'published' };
+    if (category) matchQuery.category = category;
     if (search) {
-      const searchNoSpecialChar = search.replace(/[^a-zA-Z0-9 ]/g, '')
-      matchQuery.$text = { $search: searchNoSpecialChar }
+      const searchNoSpecialChar = search.replace(/[^a-zA-Z0-9 ]/g, '');
+      matchQuery.$text = { $search: searchNoSpecialChar };
     }
 
-    const sortOrder = { createdAt: order === 'asc' ? 1 : -1 }
-
-    const [posts, count, postCategories] = await Promise.all([
+    const [postsData, count, categoryList, popularPosts] = await Promise.all([
       Post.find(matchQuery)
-        .sort(sortOrder)
+        .sort({ createdAt: order === 'asc' ? 1 : -1 })
         .skip(perPage * (page - 1))
         .limit(perPage)
-        .select('title slug excerpt thumbnail category createdAt tags')
+        .populate('userId', 'fullname image') // Corrected path from 'author' to 'userId'
         .lean(),
       Post.countDocuments(matchQuery),
-      getCategories()
-    ])
+      Post.distinct('category', { status: 'published', category: { $ne: null } }),
+      Post.find({ status: 'published' })
+        .sort({ viewsCount: -1 })
+        .limit(5)
+        .select('title slug coverImage createdAt')
+        .lean(),
+    ]);
 
-    const prevPage = page > 1 ? page - 1 : null
-    const nextPage = page < Math.ceil(count / perPage) ? page + 1 : null
+    const posts = postsData.map(post => {
+      const mappedPost = {
+        ...post,
+        author: post.userId, // alias
+      };
 
-    const renderData = {
-      layout,
-      posts,
-      postCategories,
-      capitalizeEachWord,
-      categoryUrl,
-      orderUrl,
-      pageUrl,
-      current: page,
-      count,
-      prevPage,
-      nextPage,
-      order,
-      category,
-      tag,
-      search,
-      locale: defaultLocale,
-      pageActive: 'blog'
-    }
+      if (post.category) {
+        mappedPost.category = {
+          name: post.category,
+          slug: slugify(post.category, { lower: true, strict: true }),
+        };
+      } else {
+        mappedPost.category = null;
+      }
 
-    cacheManager.set(cacheKey, renderData)
+      return mappedPost;
+    });
 
-    const endTime = Date.now()
-    console.log(`postsPage rendered in ${endTime - startTime}ms`)
+    const categories = categoryList.sort().map(cat => ({ name: cat, slug: slugify(cat, { lower: true, strict: true }) }));
 
-    res.render('posts', renderData)
+    const totalPages = Math.ceil(count / perPage);
+
+    // Pick site author info from first post
+    const siteAuthor = postsData.length ? postsData[0].userId : null;
+
+    const pageTitle = () => {
+        if (category) {
+            const cat = categories.find(c => c.slug === category);
+            return cat ? cat.name : 'Category Not Found';
+        }
+        if (search) return `Search results for "${search}"`;
+        return 'All Posts';
+    };
+
+    res.render('index', {
+      title: pageTitle(),
+      posts: posts, // Use the transformed posts
+      categories,
+      popularPosts,
+      siteAuthor,
+      buildUrlParams,
+      totalPages,
+      currentPage: page,
+      query: req.query,
+      layout: 'layouts/main',
+    });
+
   } catch (err) {
-    console.error(err)
-    res.status(500).send('Server Error')
+    console.error(err);
+    res.status(500).send('Server Error');
   }
-}
+};
 
 
 const postDetailPage = async (req, res, next) => {
   try {
-    const startTime = Date.now()
-    const slug = req.params.slug
+    const slug = req.params.slug;
 
-    // Check cache first (except for view count which must be accurate)
-    const cacheKey = `post_detail_${slug}`
-    const cachedPost = cacheManager.get(cacheKey)
+    const post = await Post.findOneAndUpdate(
+      { slug, status: 'published' },
+      { $inc: { viewsCount: 1 } },
+      { new: true }
+    )
+      .populate('userId', 'fullname image bio') // Changed from 'userId' to 'user' to match template expectations
+      .lean();
 
-    let post
-    if (cachedPost) {
-      // If cached, just update view count in background but use cached data
-      post = cachedPost
-      // Update view count in background without waiting
-      Post.updateOne(
-        { slug, status: 'published' },
-        { $inc: { viewsCount: 1 } }
-      ).exec().catch(err => console.error('Error updating view count:', err))
+    if (!post) {
+      return next(); // Not found
+    }
+
+    // Alias userId to author for template consistency
+    post.author = post.userId;
+
+    // Manually construct category and tags objects for the template
+    if (post.category) {
+      post.category = { name: post.category, slug: slugify(post.category, { lower: true, strict: true }) };
     } else {
-      // If not cached, get from database
-      post = await Post.findOneAndUpdate(
-        { slug, status: 'published' },
-        { $inc: { viewsCount: 1 } },
-        { new: true }
-      )
-        .populate('userId', 'name image fullname')
-        .lean()
-        .exec()
+      post.category = null;
+    }
+    post.tags = post.tags.map(tag => ({ name: tag, slug: slugify(tag, { lower: true, strict: true }) }));
 
-      if (!post) {
-        return next()
-      }
+    // Calculate reading time (words per minute)
+    const wordsPerMinute = 200;
+    const noOfWords = post.content.split(/\s/g).length;
+    post.readingTime = Math.ceil(noOfWords / wordsPerMinute);
 
-      // Parse markdown content
-      post.content = parse(post.content)
+    // Parse markdown content to HTML
+    post.content = marked(post.content);
 
-      // Cache the post for future requests
-      cacheManager.set(cacheKey, post)
+    // Fetch related posts (from the same category, excluding the current post)
+    let relatedPosts = [];
+    if (post.category && post.category.name) {
+        relatedPosts = await Post.find({
+          status: 'published',
+          category: post.category.name, // Use the category name (string) for querying
+          _id: { $ne: post._id },
+        })
+        .limit(2)
+        .select('title slug coverImage createdAt')
+        .lean();
     }
 
-    // Build locale for the post
-    const locale = {
-      ...defaultLocale,
-      title: `${post.title} | Lostpeople`,
-      description: post.excerpt,
-      keywords: `${post.tags.join(', ')}, lostpeople, blog, devchamploo, gper, blog, umam alfarizi, lost, people, dev`,
-      author: post.userId?.name || 'Umam Alfarizi',
-      image: post.thumbnail,
-      url: `https://lostpeople.vercel.app/${post.slug}`
-    }
-
-    // Log performance
-    const endTime = Date.now()
-    console.log(`postDetailPage rendered in ${endTime - startTime}ms`)
+    const canonicalUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
     res.render('post-detail', {
-      layout,
+      title: post.title,
       post,
+      relatedPosts,
+      layout: 'layouts/main',
       capitalizeEachWord,
-      locale,
-      pageActive: 'post-detail'
-    })
-  } catch (err) {
-    console.error(err)
-    next(err)
-  }
-}
+      formatDate
+    });
 
-export { homePage, postsPage, postDetailPage }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+export { homePage, postDetailPage }

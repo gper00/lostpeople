@@ -89,18 +89,19 @@ postSchema.index({ status: 1, category: 1 })  // Filtering by status and categor
 postSchema.index({ status: 1, tags: 1 })  // Filtering by status and tags
 
 // Text index for full-text search
+// Using a consistent name matching existing index to prevent duplication errors
 postSchema.index(
-  { title: 'text', excerpt: 'text', tags: 'text', category: 'text' },
+  { title: 'text', excerpt: 'text', content: 'text', tags: 'text', category: 'text' },
   {
     weights: { title: 10, tags: 5, category: 5, excerpt: 3, content: 1 },
-    name: 'search_text_index' // Explicitly name the index to avoid conflicts
+    name: 'title_text_excerpt_text_content_text_tags_text_category_text' // Match existing index name
   }
 )
 
 const Post = mongoose.model('Post', postSchema)
 export default Post
 
-// Modified function to handle existing indexes gracefully
+// Improved function to handle existing indexes more gracefully
 export const ensureIndexes = async () => {
   try {
     console.log('Ensuring database indexes are created...')
@@ -114,9 +115,24 @@ export const ensureIndexes = async () => {
     const indexNames = existingIndexes.map(index => index.name)
     console.log('Existing indexes:', indexNames.join(', '))
 
-    // Only create indexes if they don't exist
-    await Post.createIndexes()
-    console.log('Database indexes verified successfully')
+    // Check if text index already exists to avoid recreation errors
+    const textIndexExists = existingIndexes.some(index =>
+      index.textIndexVersion !== undefined
+    )
+
+    if (!textIndexExists) {
+      // If no text index exists, create all indexes
+      await Post.createIndexes()
+      console.log('All database indexes created successfully')
+    } else {
+      // If text index exists, we won't try to recreate it
+      // Just make sure other indexes exist
+      console.log('Text index already exists, verifying other indexes')
+
+      // MongoDB will handle duplicate index creation gracefully
+      await Post.createIndexes()
+      console.log('Database indexes verified successfully')
+    }
   } catch (err) {
     // Handle the error but don't crash the application
     console.log('Index verification issue:', err.message)
