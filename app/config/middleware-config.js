@@ -26,7 +26,7 @@ export const setupMiddleware = app => {
   // CORS configuration - more restrictive and secure
   const corsOptions = {
     origin: process.env.NODE_ENV === 'production'
-      ? process.env.ALLOWED_ORIGINS?.split(',') || 'https://yourdomain.com'
+      ? process.env.ALLOWED_ORIGINS?.split(',') || 'https://gper00.github.io'
       : '*', // Only allow specific origins in production
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
