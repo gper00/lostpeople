@@ -22,8 +22,7 @@ import {
   deletePost
 } from '../controllers/post-controller.js'
 import validatePost from '../middlewares/validators/post-validator.js'
-import { uploadPostThumbnail, uploadUserImage } from '../middlewares/upload-middleware.js'
-import { createUploadErrorHandler } from '../utils/error-handler.js'
+import { uploadPostThumbnail, uploadUserImage, createUploadErrorHandler } from '../middlewares/upload-middleware.js'
 import { authSuperAdmin, checkPostAccess } from '../middlewares/auth-middleware.js'
 
 const router = express.Router()

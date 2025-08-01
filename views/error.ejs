@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Error</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link
+            rel="stylesheet"
+            href="/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
+        />
+        <style>
+            body, html {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+
+    <body class="bg-light text-body-secondary">
+        <div class="col-10 col-md-8 col-lg-6 p-0">
+            <h1 class="fw-bold display-2">Something Went Wrong</h1>
+            <p class="lead"><%= message %></p>
+            <% if (process.env.NODE_ENV !== 'production' && err) { %>
+                <pre class="bg-dark text-white p-3 rounded"><%= err.stack %></pre>
+            <% } %>
+            <a href="/" class="text-reset">Back to Home</a>
+        </div>
+
+        <script src="/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

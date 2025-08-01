@@ -97,4 +97,27 @@ const uploadUserImage = multer({
   limits: { fileSize: MAX_FILE_SIZE }
 }).single('image')
 
-export { uploadPostThumbnail, uploadUserImage }
+/**
+ * Creates a middleware to handle multer upload errors gracefully.
+ * @param {string} fieldName - The name of the file input field.
+ * @returns {Function} - Express middleware function.
+ */
+const createUploadErrorHandler = (fieldName) => {
+    return (err, req, res, next) => {
+        if (err) {
+            if (err instanceof multer.MulterError) {
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('failed', `${fieldName} exceeds the maximum size of 1MB.`);
+                } else {
+                    req.flash('failed', `Error uploading ${fieldName}: ${err.message}`);
+                }
+            } else {
+                req.flash('failed', err.message);
+            }
+            return res.redirect('back');
+        }
+        next();
+    };
+};
+
+export { uploadPostThumbnail, uploadUserImage, createUploadErrorHandler }

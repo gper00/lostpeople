@@ -1,4 +1,5 @@
 import 'dotenv/config' // environment variables
+import 'express-async-errors'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -93,19 +94,8 @@ import { errorHandlers } from './app/config/middleware-config.js'
 errorHandlers(app)
 
 // Create HTTP server
-const server = app.listen(PORT, () =>
+app.listen(PORT, () =>
   console.log(`Server is running on http://127.0.0.1:${PORT}`)
 )
 
-// Handle server errors
-server.on('error', error => {
-  console.error('Server error:', error)
-})
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully')
-  server.close(() => {
-    console.log('Process terminated')
-  })
-})
+export default app

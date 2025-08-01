@@ -1,75 +1,37 @@
-import logger from './logger.js'
-import util from 'util'
+import logger from './logger.js';
 
-// Custom error classes
-export class ApiError extends Error {
-  constructor(message, statusCode = 500, details = {}) {
-    super(message)
-    this.statusCode = statusCode
-    this.details = details
-    this.isOperational = true
-    Error.captureStackTrace(this, this.constructor)
-  }
-}
+const errorHandler = (err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
 
-export class ValidationError extends ApiError {
-  constructor(errors, message = 'Validation failed') {
-    super(message, 400, { errors })
-  }
-}
+    // Log the error
+    logger.error(
+        `${statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+        {
+            error: {
+                message: err.message,
+                stack: err.stack,
+            },
+        }
+    );
 
-// Central error handler
-export const errorHandler = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500
-  err.status = `${err.statusCode}`.startsWith('4') ? 'fail' : 'error'
+    // If the request expects JSON (e.g., an API call), send a JSON response
+    if (req.originalUrl.startsWith('/api/')) {
+        return res.status(statusCode).json({
+            message: err.message,
+            stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+        });
+    }
 
-  // Log unexpected errors
-  if (!err.isOperational) {
-    logger.error(`${err.statusCode} ${err.message}`, {
-      error: err,
-      request: {
-        method: req.method,
-        url: req.originalUrl,
-        params: req.params,
-        query: util.isArray(req.query) ? req.query : {}
-      },
-      stack: err.stack
-    })
-  }
+    // Otherwise, render the appropriate error page
+    if (statusCode === 404) {
+        return res.status(404).render('404');
+    }
 
-  // Error response formatting
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    ...(process.env.NODE_ENV === 'development' && {
-      stack: err.stack,
-      details: err.details
-    })
-  })
-}
+    res.status(statusCode).render('error', {
+        message: 'We are sorry, but something went wrong on our end. Please try again later.',
+        // We only pass the detailed error object in development mode
+        err: process.env.NODE_ENV !== 'production' ? err : null,
+    });
+};
 
-export const notFoundHandler = (req, res, next) => {
-  next(new ApiError(`Not found - ${req.method} ${req.originalUrl}`, 404))
-}
-
-export const createUploadErrorHandler = fieldName => (err, req, res, next) => {
-  if (err) {
-    logger.error('File upload error', { error: err, field: fieldName })
-    next(new ValidationError(
-      { [fieldName]: err.message },
-      'File upload failed'
-    ))
-  }
-  next()
-}
-
-// Process-level error handlers
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection at:', { promise, reason })
-  process.exit(1)
-})
-
-process.on('uncaughtException', (error) => {
-  logger.error('Uncaught Exception:', error)
-  process.exit(1)
-})
+export default errorHandler;

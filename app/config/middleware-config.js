@@ -8,7 +8,9 @@ import csrf from 'csurf'
 import compression from 'compression'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { errorHandler, notFoundHandler } from '../utils/error-handler.js'
+import 'express-async-errors'
+import errorHandler from '../utils/error-handler.js';
+import notFound from '../middlewares/not-found-middleware.js';
 import cors from 'cors'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -127,6 +129,6 @@ export const setupMiddleware = app => {
  * @param {import('express').Application} app
  */
 export const errorHandlers = app => {
-  app.use(notFoundHandler)
+  app.use(notFound)
   app.use(errorHandler)
 }
