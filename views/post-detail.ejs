@@ -20,11 +20,11 @@
 
             <!-- Article Header -->
             <div class="mb-8">
-                <h1 class="text-3xl md:text-4xl font-bold font-display mb-4 text-gray-900"><%= post.title %></h1>
+                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900"><%= post.title %></h1>
 
                 <div class="flex flex-wrap items-center text-sm text-gray-500 mb-4">
                     <div class="flex items-center mr-6 mb-2 md:mb-0">
-                        <img src="<%= post.userId.image || '/assets/img/user-default.jpg' %>" alt="Author" class="w-6 h-6 rounded-full mr-2">
+                        <img src="<%= post.userId.image || defaults.userAvatar %>" alt="Author" class="w-6 h-6 rounded-full mr-2">
                         <span><%= post.userId.fullname %></span>
                     </div>
                     <div class="flex items-center mr-6 mb-2 md:mb-0">
@@ -69,18 +69,15 @@
             <!-- Author Bio -->
             <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
                 <div class="flex items-start">
-                    <img src="https://dummyimage.com/80x80/000/fff" alt="John Doe" class="w-16 h-16 rounded-full mr-4">
+                    <img src="<%= author.avatar %>" alt="<%= author.name %>" class="w-16 h-16 rounded-full mr-4">
                     <div>
-                        <h3 class="text-lg font-bold font-display mb-1">John Doe</h3>
-                        <p class="text-gray-600 text-sm mb-3">Senior Web Developer with 8+ years of experience. Passionate about JavaScript, React, and web performance optimization.</p>
+                        <h3 class="text-lg font-bold font-display mb-1"><%= author.name %></h3>
+                        <p class="text-gray-600 text-sm mb-3"><%= author.bio %></p>
                         <div class="flex space-x-3">
-                            <a href="#" class="text-gray-500 hover:text-primary-600">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="text-gray-500 hover:text-primary-600">
+                            <a href="<%= author.socials.github %>" class="text-gray-500 hover:text-primary-600">
                                 <i class="fab fa-github"></i>
                             </a>
-                            <a href="#" class="text-gray-500 hover:text-primary-600">
+                            <a href="<%= author.socials.linkedin %>" class="text-gray-500 hover:text-primary-600">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>

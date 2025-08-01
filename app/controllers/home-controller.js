@@ -1,5 +1,6 @@
 import Post from '../models/post-model.js'
 import { capitalizeEachWord, formatDate } from '../utils/helper.js'
+import { site, author, newsletter, defaults } from '../utils/constants.js';
 import { marked } from 'marked'
 import slugify from 'slugify'
 import hljs from 'highlight.js'
@@ -38,19 +39,7 @@ const cacheManager = {
   }
 }
 
-const layout = 'layouts/home'
 
-// Locale data is constant and can be defined once
-const defaultLocale = {
-  title: 'Lostpeople',
-  description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
-  keywords: 'lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev',
-  author: 'devChampl000',
-  image: null,
-  icon: '/assets/favicon.svg',
-  name: 'Lostpeople',
-  url: 'https://lostpeople.vercel.app'
-}
 
 
 // Enhanced URL builder with proper encoding and param handling
@@ -165,6 +154,10 @@ const homePage = async (req, res) => {
       currentPage: page,
       query: req.query,
       layout: 'layouts/main',
+      site,
+      author,
+      newsletter,
+      defaults
     });
 
   } catch (err) {
@@ -230,7 +223,10 @@ const postDetailPage = async (req, res, next) => {
       relatedPosts,
       layout: 'layouts/main',
       capitalizeEachWord,
-      formatDate
+      formatDate,
+      site,
+      author,
+      defaults
     });
 
   } catch (err) {

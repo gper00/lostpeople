@@ -5,29 +5,35 @@
   <% if (typeof post !== 'undefined' && post) { %>
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "<%= canonicalUrl %>"
+    "@id": "<%= site.url %>/<%= post.slug %>"
   },
-  "headline": "<%= title %>",
+  "headline": "<%= post.title %>",
   "description": "<%= post.excerpt %>",
-  "image": "<%= post.coverImage || '/assets/img/seo-default.jpg' %>",  
+  "image": "<%= post.thumbnail || (site.url + site.image) %>",
   "author": {
     "@type": "Person",
-    "name": "<%= post.author.name %>"
-  },  
+    "name": "<%= author.name %>",
+    "url": "<%= author.socials.github %>"
+  },
   "publisher": {
     "@type": "Organization",
-    "name": "Lostpeople",
+    "name": "<%= site.title %>",
     "logo": {
       "@type": "ImageObject",
-      "url": "/assets/favicon.svg"
+      "url": "<%= site.url + site.favicon %>"
     }
   },
   "datePublished": "<%= post.createdAt.toISOString() %>",
   "dateModified": "<%= post.updatedAt.toISOString() %>"
   <% } else { %>
-  "url": "<%= canonicalUrl %>",
-  "name": "<%= title %>",
-  "description": "Blog about technology and life."
+  "url": "<%= site.url %>",
+  "name": "<%= site.title %>",
+  "description": "<%= site.description %>",
+  "author": {
+    "@type": "Person",
+    "name": "<%= author.name %>",
+    "url": "<%= author.socials.github %>"
+  }
   <% } %>
 }
 </script>

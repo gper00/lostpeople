@@ -21,6 +21,8 @@
 
     if (!elements.gridViewBtn || !elements.listViewBtn) return;
 
+    if (!elements.gridView || !elements.listView) return;
+
     // Function to toggle view - reduces code duplication
     const toggleView = (showGrid) => {
       // Toggle visibility

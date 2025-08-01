@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc><%= siteUrl %></loc>
+    <lastmod><%= new Date().toISOString() %></lastmod>
+    <priority>1.00</priority>
+  </url>
+  <% posts.forEach(post => { %>
+  <url>
+    <loc><%= siteUrl %>/<%= post.slug %></loc>
+    <lastmod><%= post.updatedAt.toISOString() %></lastmod>
+    <priority>0.80</priority>
+  </url>
+  <% }) %>
+</urlset>

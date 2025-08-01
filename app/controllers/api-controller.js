@@ -1,4 +1,23 @@
 import Post from '../models/post-model.js';
+import { site } from '../utils/constants.js';
+
+// GET /api/sitemap.xml
+const getSitemap = async (req, res) => {
+  try {
+    const posts = await Post.find({ status: 'published' }).sort({ createdAt: -1 });
+    const lastMod = posts.length ? posts[0].createdAt.toISOString() : new Date().toISOString();
+
+    res.header('Content-Type', 'application/xml');
+    res.render('sitemap', {
+      layout: false,
+      siteUrl: site.url,
+      posts,
+      lastMod
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // GET /api/posts
 const getAllPosts = async (req, res) => {
@@ -61,4 +80,4 @@ const getPostsByCategory = async (req, res) => {
   }
 };
 
-export { getAllPosts, getLatestPost, getOnePost, getPostsByCategory };
+export { getSitemap, getAllPosts, getLatestPost, getOnePost, getPostsByCategory };
