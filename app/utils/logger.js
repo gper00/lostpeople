@@ -39,28 +39,28 @@
 
 // logger.js
 
-import winston from 'winston'
-import fs from 'fs'
-import path from 'path'
+import winston from 'winston';
+import fs from 'fs';
+import path from 'path';
 
-const { combine, timestamp, printf, colorize, errors } = winston.format
+const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${timestamp} [${level}]: ${stack || message}`
-})
+  return `${timestamp} [${level}]: ${stack || message}`;
+});
 
 // Tentukan apakah environment mendukung file system (contoh: bukan di Vercel)
-const isLocal = process.env.NODE_ENV !== 'production'
-const logDir = 'logs'
+const isLocal = process.env.NODE_ENV !== 'production';
+const logDir = 'logs';
 
 const transports = [
   new winston.transports.Console()
-]
+];
 
 if (isLocal) {
   // Pastikan folder logs ada
   if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir)
+    fs.mkdirSync(logDir);
   }
 
   transports.push(
@@ -77,7 +77,7 @@ if (isLocal) {
       level: 'error',
       handleExceptions: true
     })
-  )
+  );
 }
 
 const logger = winston.createLogger({
@@ -92,6 +92,6 @@ const logger = winston.createLogger({
   exceptionHandlers: isLocal
     ? [new winston.transports.File({ filename: path.join(logDir, 'exceptions.log') })]
     : [new winston.transports.Console()]
-})
+});
 
-export default logger
+export default logger;

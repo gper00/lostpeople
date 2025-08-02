@@ -1,4 +1,4 @@
-import { body, validationResult } from 'express-validator'
+import { body, validationResult } from 'express-validator';
 
 const validateData = [
   body('usernameOrEmail')
@@ -8,15 +8,15 @@ const validateData = [
     .notEmpty()
     .withMessage('Password can not be empty.'),
   (req, res, next) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const errorObject = errors.mapped()
-      req.flash('errors', errorObject)
-      req.flash('userData', req.body)
-      return res.redirect('/login')
+      const errorObject = errors.mapped();
+      req.flash('errors', errorObject);
+      req.flash('userData', req.body);
+      return res.redirect('/login');
     }
-    next()
+    next();
   }
-]
+];
 
-export default validateData
+export default validateData;

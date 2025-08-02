@@ -1,33 +1,33 @@
 export const site = {
-  title: "Lost People",
-  description: "Personal blog about web development, programming, and other things. I write about things I'm learning and things I'm passionate about.",
-  keywords: "lostpeople, blog, personal blog, web development, programming, javascript, nodejs, react, gper, gusti p",
-  url: "https://lostpeople.vercel.app",
-  author: "Gusti P",
-  image: "/assets/img/seo-default.jpg", // Default image for SEO
-  favicon: "/assets/favicon.svg"
+  title: 'Lost People',
+  description: 'Personal blog about web development, programming, and other things. I write about things I\'m learning and things I\'m passionate about.',
+  keywords: 'lostpeople, blog, personal blog, web development, programming, javascript, nodejs, react, gper',
+  url: 'https://lostpeople.vercel.app',
+  author: 'Umam Alfarizi',
+  image: '/assets/img/seo-default.jpg', // Default image for SEO
+  favicon: '/assets/favicon.svg'
 };
 
 export const author = {
-  name: "Gusti P",
-  bio: "Web Developer & Designer",
-  avatar: "/assets/img/user-default.jpg", // Default author avatar
+  name: 'Umam Alfarizi',
+  bio: 'Wengdev Handal',
+  avatar: '/assets/img/author.jpg', // Default author avatar
   socials: {
-    email: "https://github.com/gprstw",
-    github: "https://github.com/gprstw",
-    linkedin: "https://linkedin.com/in/gprstw"
+    email: 'https://mailto:alfariziuchiha@gmail.com',
+    github: 'https://github.com/gper00',
+    linkedin: 'https://linkedin.com/in/umam-alfarizi'
   }
 };
 
 export const newsletter = {
-  title: "Subscribe to Newsletter",
-  description: "Get the latest posts delivered straight to your inbox.",
-  buttonText: "Subscribe",
+  title: 'Subscribe to Newsletter',
+  description: 'Get the latest posts delivered straight to your inbox.',
+  buttonText: 'Subscribe',
 };
 
 export const defaults = {
-  userAvatar: "/assets/img/user-default.jpg",
-  postThumbnail: "/assets/img/no-image.png"
+  userAvatar: '/assets/img/user-default.jpg',
+  postThumbnail: '/assets/img/no-image.png'
 };
 
 export const ROLES = {

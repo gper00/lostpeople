@@ -1,7 +1,7 @@
-import { body, validationResult } from 'express-validator'
-import Post from '../../models/post-model.js'
-import { deletePostThumbnail } from '../../utils/delete-file.js'
-import { isEmpty } from '../../utils/obj.js'
+import { body, validationResult } from 'express-validator';
+import Post from '../../models/post-model.js';
+import { deletePostThumbnail } from '../../utils/delete-file.js';
+import { isEmpty } from '../../utils/obj.js';
 
 /**
  * Validates post form submission data and handles errors
@@ -20,14 +20,14 @@ const validatePost = [
     .trim()
     .isLength({ max: 25 })
     .withMessage('Category must not exceed 25 characters')
-    .custom(async (value, { req }) => {
+    .custom(async (value) => {
       if (value) {
-        const categoryExists = await Post.findOne({ category: value })
+        const categoryExists = await Post.findOne({ category: value });
         if (categoryExists) {
-          throw new Error('Category already exists')
+          throw new Error('Category already exists');
         }
       }
-      return true
+      return true;
     }),
 
   // Tags validation
@@ -35,30 +35,30 @@ const validatePost = [
     .optional()
     .custom(tags => {
       if (!tags || tags.trim() === '') {
-        return true
+        return true;
       }
 
       try {
-        const tagList = tags.split(',').map(tag => tag.trim())
+        const tagList = tags.split(',').map(tag => tag.trim());
 
         // Check for empty tags
         if (tagList.some(tag => tag === '')) {
-          throw new Error('Tags cannot be empty')
+          throw new Error('Tags cannot be empty');
         }
 
         // Check tag length
         tagList.forEach(tag => {
           if (tag.length > 25) {
-            throw new Error('Each tag cannot be more than 25 characters')
+            throw new Error('Each tag cannot be more than 25 characters');
           }
-        })
+        });
 
-        return true
+        return true;
       } catch (error) {
         if (error.message.includes('tags')) {
-          throw error
+          throw error;
         }
-        throw new Error('Invalid tag format. Use comma-separated values')
+        throw new Error('Invalid tag format. Use comma-separated values');
       }
     }),
 
@@ -84,43 +84,43 @@ const validatePost = [
 
   // Custom validation handler
   async (req, res, next) => {
-    const errors = validationResult(req)
-    req.errors = req.errors || {}
+    const errors = validationResult(req);
+    req.errors = req.errors || {};
 
     // Combine validation errors with any upload errors
-    const validationMessage = Object.assign(req.errors, errors.mapped())
+    const validationMessage = Object.assign(req.errors, errors.mapped());
 
     if (!isEmpty(validationMessage)) {
       // Clean up uploaded file if validation failed
       if (req.file && req.file.path) {
         try {
-          await deletePostThumbnail(req.file.path)
-          console.log('Cleaned up invalid thumbnail upload:', req.file.path)
+          await deletePostThumbnail(req.file.path);
+          console.log('Cleaned up invalid thumbnail upload:', req.file.path);
         } catch (err) {
-          console.error('Error deleting invalid thumbnail:', err.message)
+          console.error('Error deleting invalid thumbnail:', err.message);
         }
       }
 
       // Send error information to the client
-      req.flash('error', 'Please fix the errors in the form')
+      req.flash('error', 'Please fix the errors in the form');
 
       // Detailed errors for form validation
-      req.flash('errors', validationMessage)
+      req.flash('errors', validationMessage);
 
       // Preserve user input
-      req.flash('postData', req.body)
+      req.flash('postData', req.body);
 
       // Determine where to redirect based on context (create or edit)
       const redirectUrl = req.params.id
         ? `/dashboard/posts/${req.params.id}/edit`
-        : '/dashboard/posts/create'
+        : '/dashboard/posts/create';
 
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
 
     // All validation passed
-    next()
+    next();
   }
-]
+];
 
-export default validatePost
+export default validatePost;

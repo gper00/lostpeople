@@ -23,3 +23,6 @@ dist/
 
 # Package files
 package-lock.json
+
+# Crush files
+.crush/

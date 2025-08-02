@@ -6,11 +6,11 @@
 function isEmpty(obj) {
   for (const prop in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-      return false
+      return false;
     }
   }
 
-  return true
+  return true;
 }
 
-export { isEmpty }
+export { isEmpty };

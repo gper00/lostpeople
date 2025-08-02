@@ -1,162 +1,91 @@
-<div class="container mx-auto px-4 py-8 max-w-6xl">
-    <div class="flex flex-col md:flex-row gap-8">
-        <aside class="w-full lg:w-4/12">
-        </aside>
+<%- include('partials/header') %>
+
+<!-- Page content-->
+<div class="container-md col-lg-10 col-xl-9 col-xxl-8 my-5">
+    <div class="row">
+        <!-- Side widget 1 -->
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="position-sticky" style="top: 2rem">
+                <h6 class=""><i class="bi bi-folder"></i> Categories</h6>
+                <nav class="nav flex-column category-nav mt-3 border-start">
+                    <% if (typeof categories !== 'undefined' && categories.length) { %>
+                        <% categories.forEach(category => { %>
+                            <a class="nav-link small-3 text-body-secondary rounded-4 py-1 <% if(post.category && post.category.slug === category.slug) { %>active<% } %>" href="/?category=<%= category.slug %>">
+                                <%= capitalizeEachWord(category.name) %>
+                            </a>
+                        <% }) %>
+                    <% } %>
+                </nav>
+            </div>
+        </div>
 
         <!-- Main content -->
-        <main class="w-full lg:w-4/12">
-            <!-- Breadcrumb -->
-            <nav class="mb-6 text-sm text-gray-500">
-                <ol class="list-none p-0 inline-flex">
-                    <li class="flex items-center">
-                        <a href="/" class="text-primary-600 hover:text-primary-700">Home</a>
-                        <i class="fa-solid fa-chevron-right mx-2 text-xs"></i>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-gray-500"><%= post.title %></span>
-                    </li>
-                </ol>
-            </nav>
-
-            <!-- Article Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900"><%= post.title %></h1>
-
-                <div class="flex flex-wrap items-center text-sm text-gray-500 mb-4">
-                    <div class="flex items-center mr-6 mb-2 md:mb-0">
-                        <img src="<%= post.userId.image || defaults.userAvatar %>" alt="Author" class="w-6 h-6 rounded-full mr-2">
-                        <span><%= post.userId.fullname %></span>
-                    </div>
-                    <div class="flex items-center mr-6 mb-2 md:mb-0">
-                        <i class="fa-regular fa-calendar mr-1"></i>
-                        <span><%= formatDate(post.createdAt) %></span>
-                    </div>
-                    <!-- <div class="flex items-center mr-6 mb-2 md:mb-0">
-                        <i class="fa-regular fa-clock mr-1"></i>
-                        <span>8 min read</span>
-                    </div> -->
-                    <% if (post.category && post.category.name) { %>
-                    <div class="flex items-center">
-                        <i class="fa-solid fa-folder mr-1"></i>
-                        <span><%= capitalizeEachWord(post.category.name) %></span>
-                    </div>
+        <div class="col-lg-7 px-lg-3">
+            <main>
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1"><%= post.title %></h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">Posted on <%= new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %> by <%= post.userId.fullname %></div>
+                        <!-- Post categories-->
+                        <% if (post.category) { %>
+                            <a class="badge bg-secondary text-decoration-none link-light" href="/?category=<%= post.category.slug %>"><%= post.category.name %></a>
+                        <% } %>
+                    </header>
+                    <!-- Preview image figure-->
+                    <% if (post.thumbnail) { %>
+                        <figure class="mb-4"><img class="img-fluid rounded" src="<%= post.thumbnail %>" alt="<%= post.title %>" /></figure>
                     <% } %>
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <%- post.content %>
+                    </section>
+                </article>
+            </main>
+        </div>
+
+        <hr class="d-lg-none my-5">
+
+        <!-- Side widget 2-->
+        <div class="col-lg-3">
+            <div class="position-sticky" style="top: 2rem">
+                <!-- Profile -->
+                <h6 class="mt-lg-0"><i class="bi bi-person"></i> My Profile</h6>
+                <div class="widget bg-white border text-center rounded-4 px-3 py-4">
+                    <img src="<%= author.avatar %>" alt="<%= author.name %>" class="rounded-circle img-thumbnail mb-3 gper-img" />
+                    <h6 class=""><%= author.name %></h6>
+                    <p class="small text-body-secondary fst-italic m-0 px-4 px-md-5 px-lg-3">
+                        <%= author.bio %>
+                    </p>
                 </div>
 
-                <% if (post.tags.length) { %>
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <% (typeof post.tags === 'string' ? post.tags.split(',').map(t => t.trim()) : post.tags).forEach(tag => { %>
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#<%= tag.name %></span>
-                    <% }) %>
-                </div>
-                <% } %>
-
-                <% if(post.thumbnail) { %>
-                <div class="relative rounded-xl overflow-hidden mb-8">
-                    <img src="<%= post.thumbnail || '/assets/img/no-image.jpg' %>" alt="<%= post.title %>" class="w-full h-auto object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <p class="text-white text-sm"><%= post.title %></p>
+                <!-- Contact -->
+                <h6 class="mt-5"><i class="bi bi-chat-text"></i> Contact Me</h6>
+                <div class="widget bg-white border rounded-4 small pt-2 pb-1 px-2">
+                    <div class="d-flex">
+                        <a href="<%= author.socials.email %>" class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100" target="_blank">
+                            <i class="bi bi-envelope"></i>
+                            <span class="ms-2">G-mail</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a href="<%= author.socials.github %>" class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100" target="_blank">
+                            <i class="bi bi-github"></i>
+                            <span class="ms-2">Github</span>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <a href="<%= author.socials.linkedin %>" class="widget-link text-body-secondary text-decoration-none px-3 py-2 mb-1 w-100" target="_blank">
+                            <i class="bi bi-linkedin"></i>
+                            <span class="ms-2">Linked-in</span>
+                        </a>
                     </div>
                 </div>
-                <% } %>
             </div>
-
-            <!-- Article Content -->
-            <article class="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-8 markdown-body article-content prose">
-                <%- post.content %>
-            </article>
-
-            <!-- Author Bio -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
-                <div class="flex items-start">
-                    <img src="<%= author.avatar %>" alt="<%= author.name %>" class="w-16 h-16 rounded-full mr-4">
-                    <div>
-                        <h3 class="text-lg font-bold font-display mb-1"><%= author.name %></h3>
-                        <p class="text-gray-600 text-sm mb-3"><%= author.bio %></p>
-                        <div class="flex space-x-3">
-                            <a href="<%= author.socials.github %>" class="text-gray-500 hover:text-primary-600">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="<%= author.socials.linkedin %>" class="text-gray-500 hover:text-primary-600">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comments Section -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
-              <script src="https://giscus.app/client.js"
-                data-repo="gper00/blog-comments"
-                data-repo-id="R_kgDONr94rA"
-                data-category="General"
-                data-category-id="DIC_kwDONr94rM4CmIHN"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="light"
-                data-lang="id"
-                crossorigin="anonymous"
-                async>
-            </script>
-            </div>
-
-            <!-- Navigation -->
-            <div class="flex justify-between">
-                <a href="/previous-post" class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
-                    <i class="fa-solid fa-arrow-left mr-2"></i>
-                    Previous Post
-                </a>
-                <a href="/next-post" class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
-                    Next Post
-                    <i class="fa-solid fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-        </main>
-
-        <!-- Right sidebar -->
-        <aside class="w-full lg:w-4/12">
-            <div class="sticky top-24">
-                <h2 class="text-lg font-semibold font-display mb-3 flex items-center">
-                    On This Page
-                </h2>
-                <ul id="toc" class="pl-2 border-l border-gray-200 space-y-1"></ul>
-            </div>
-        </aside>
+        </div>
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const toc = document.getElementById('toc');
-        const headings = document.querySelectorAll('.article-content h2, .article-content h3');
-
-        if (headings.length === 0) {
-            toc.innerHTML = "<li class='text-sm text-gray-400'>Tidak ada bagian cukup dalam artikel ini</li>";
-            return;
-        }
-
-        headings.forEach((heading) => {
-            if (!heading.id) heading.id = `section-${Date.now()}-${Math.round(Math.random() * 1000)}`;
-
-            const link = document.createElement('a');
-            link.href = `#${heading.id}`;
-            link.textContent = heading.textContent;
-            link.className = "block py-1 px-3 text-sm text-gray-600 hover:bg-gray-50 rounded-md no-underline hover:text-primary-600 transition";
-
-            const item = document.createElement('li');
-            item.appendChild(link);
-
-            toc.appendChild(item);
-        });
-    });
-</script>
-
-<style>
-    .article-content h2 {
-      scroll-margin-top: 6rem; /* biar tidak tertutup oleh navbar ketika scroll automatis */
-    }
-</style>
+<%- include('partials/footer') %>

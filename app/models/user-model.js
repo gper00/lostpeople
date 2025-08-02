@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-import { ROLES } from '../utils/constants.js'
+import { ROLES } from '../utils/constants.js';
 
 const userSchema = new mongoose.Schema({
   fullname: {
@@ -78,7 +78,7 @@ const userSchema = new mongoose.Schema({
       maxLength: 150
     }
   }
-})
+});
 
-const User = mongoose.model('User', userSchema)
-export default User
+const User = mongoose.model('User', userSchema);
+export default User;

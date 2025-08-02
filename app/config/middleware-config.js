@@ -1,29 +1,30 @@
-import express from 'express'
-import cookieParser from 'cookie-parser'
-import session from 'express-session'
-import { ROLES } from '../utils/constants.js'
-import flash from 'connect-flash'
-import methodOverride from 'method-override'
-import csrf from 'csurf'
-import compression from 'compression'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import 'express-async-errors'
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import { ROLES } from '../utils/constants.js';
+import flash from 'connect-flash';
+import methodOverride from 'method-override';
+import csrf from 'csurf';
+import compression from 'compression';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import 'express-async-errors';
 import errorHandler from '../utils/error-handler.js';
 import notFound from '../middlewares/not-found-middleware.js';
-import cors from 'cors'
+import cors from 'cors';
+import { site } from '../utils/constants.js';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const setupMiddleware = app => {
   // Basic Express setup
-  app.use(express.urlencoded({ extended: true, limit: '1mb' }))
-  app.use(express.json({ limit: '1mb' }))
-  app.use(cookieParser())
+  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+  app.use(express.json({ limit: '1mb' }));
+  app.use(cookieParser());
 
   // Method override middleware
-  app.use(methodOverride('_method'))
+  app.use(methodOverride('_method'));
 
   // CORS configuration - more restrictive and secure
   const corsOptions = {
@@ -35,8 +36,8 @@ export const setupMiddleware = app => {
     optionsSuccessStatus: 204,
     maxAge: 86400, // Cache preflight requests for 24 hours (in seconds)
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-  }
-  app.use(cors(corsOptions))
+  };
+  app.use(cors(corsOptions));
 
   // Enhanced compression middleware
   app.use(compression({
@@ -51,12 +52,12 @@ export const setupMiddleware = app => {
       // Use default filter for everything else
       return compression.filter(req, res);
     }
-  }))
+  }));
 
   // Static files with caching (1 day)
   app.use(express.static(path.join(__dirname, '../../public'), {
     maxAge: '1d'
-  }))
+  }));
 
   // Enhanced secure session configuration
   app.use(session({
@@ -72,39 +73,39 @@ export const setupMiddleware = app => {
     },
     name: 'sessionId', // Don't use default name (connect.sid)
     rolling: true // Reset expiration date on each request
-  }))
+  }));
 
   // Flash messages and CSRF protection
-  app.use(flash())
+  app.use(flash());
   const csrfProtection = csrf({ cookie: true, value: (req) => req.query._csrf || req.body._csrf });
-  app.use(csrfProtection)
+  app.use(csrfProtection);
 
   // Add global template variables
   app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken()
-    res.locals.siteTitle = 'LostPeople Blog'
-    res.locals.defaultDesc = 'Platform pencarian orang hilang terkini'
-    res.locals.defaultKeywords = ['orang hilang', 'pencarian', 'blog']
-    res.locals.defaultImage = '/assets/img/logo.png'
-    res.locals.canonicalUrl = process.env.BASE_URL + req.originalUrl
-    res.locals.ROLES = ROLES // Tambahkan ini
-    next()
-  })
+    res.locals.csrfToken = req.csrfToken();
+    res.locals.siteTitle = site.title;
+    res.locals.defaultDesc = site.description;
+    res.locals.defaultKeywords = site.keywords.split(',').map(item => item.trim());
+    res.locals.defaultImage = site.image;
+    res.locals.canonicalUrl = process.env.BASE_URL + req.originalUrl;
+    res.locals.ROLES = ROLES; // Tambahkan ini
+    next();
+  });
 
   // Enhanced response time logging with proper format
   app.use((req, res, next) => {
-    const start = Date.now()
+    const start = Date.now();
     res.on('finish', () => {
-      const duration = Date.now() - start
+      const duration = Date.now() - start;
 
       // Only log requests that take longer than 100ms in development
       // In production, we'd use a proper logging system
       if (duration > 100 || process.env.NODE_ENV === 'production') {
-        console.log(`${req.method} ${req.originalUrl} - ${duration}ms`)
+        console.log(`${req.method} ${req.originalUrl} - ${duration}ms`);
       }
-    })
-    next()
-  })
+    });
+    next();
+  });
 
   // Add security headers
   app.use((req, res, next) => {
@@ -122,13 +123,13 @@ export const setupMiddleware = app => {
 
     next();
   });
-}
+};
 
 
 /**
  * @param {import('express').Application} app
  */
 export const errorHandlers = app => {
-  app.use(notFound)
-  app.use(errorHandler)
-}
+  app.use(notFound);
+  app.use(errorHandler);
+};

@@ -1,9 +1,9 @@
-import Post from '../models/post-model.js'
-import { capitalizeEachWord, formatDate } from '../utils/helper.js'
-import { site, author, newsletter, defaults } from '../utils/constants.js';
-import { marked } from 'marked'
-import slugify from 'slugify'
-import hljs from 'highlight.js'
+import Post from '../models/post-model.js';
+import { capitalizeEachWord, formatDate } from '../utils/helper.js';
+import { site, author, defaults } from '../utils/constants.js';
+import { marked } from 'marked';
+import slugify from 'slugify';
+import hljs from 'highlight.js';
 
 // Configure marked to use highlight.js
 marked.setOptions({
@@ -15,38 +15,35 @@ marked.setOptions({
 });
 
 // Use a simpler in-memory cache solution
-const cache = new Map()
-const cacheTTL = 120000 // 2 minutes
-const staleTTL = 60000 // 1 minute for background revalidation
+const cache = new Map();
+const cacheTTL = 120000; // 2 minutes
 
 // Simple cache implementation
 const cacheManager = {
   get(key) {
-    if (!cache.has(key)) return null
-    const item = cache.get(key)
+    if (!cache.has(key)) return null;
+    const item = cache.get(key);
     if (Date.now() > item.expiry) {
-      cache.delete(key)
-      return null
+      cache.delete(key);
+      return null;
     }
-    return item.value
+    return item.value;
   },
   set(key, value) {
-    const expiry = Date.now() + cacheTTL
-    cache.set(key, { value, expiry })
+    const expiry = Date.now() + cacheTTL;
+    cache.set(key, { value, expiry });
   },
   clear() {
-    cache.clear()
+    cache.clear();
   }
-}
-
-
+};
 
 
 // Enhanced URL builder with proper encoding and param handling
 const buildUrlParams = (existingParams = {}, updates = {}) => {
   // Clean existing parameters
   const cleanedExisting = Object.entries(existingParams)
-    .filter(([_, v]) => v !== null && v !== undefined && v !== '')
+    .filter(([, v]) => v !== null && v !== undefined && v !== '')
     .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
 
   // Merge with updates
@@ -58,26 +55,7 @@ const buildUrlParams = (existingParams = {}, updates = {}) => {
     .join('&');
 };
 
-// Async function to get categories (cached)
-const getCategories = async () => {
-  const cacheKey = 'post_categories'
-  const cachedCategories = cacheManager.get(cacheKey)
 
-  if (cachedCategories) {
-    return cachedCategories
-  }
-
-  // Use distinct for efficiency and sort alphabetically
-  const categories = await Post.distinct('category', {
-    status: 'published',
-    category: { $exists: true, $ne: null }
-  })
-
-  categories.sort() // Sort categories alphabetically
-
-  cacheManager.set(cacheKey, categories)
-  return categories
-}
 
 const homePage = async (req, res) => {
   try {
@@ -135,15 +113,15 @@ const homePage = async (req, res) => {
     const siteAuthor = postsData.length ? postsData[0].userId : null;
 
     const pageTitle = () => {
-        if (category) {
-            const cat = categories.find(c => c.slug === category);
-            return cat ? cat.name : 'Category Not Found';
-        }
-        if (search) return `Search results for "${search}"`;
-        return 'All Posts';
+      if (category) {
+        const cat = categories.find(c => c.slug === category);
+        return cat ? cat.name : 'Category Not Found';
+      }
+      if (search) return `Search results for "${search}"`;
+      return 'All Posts';
     };
 
-    res.render('index', {
+    res.render('home', {
       title: pageTitle(),
       posts: posts, // Use the transformed posts
       categories,
@@ -156,7 +134,7 @@ const homePage = async (req, res) => {
       layout: 'layouts/main',
       site,
       author,
-      newsletter,
+      capitalizeEachWord,
       defaults
     });
 
@@ -205,17 +183,15 @@ const postDetailPage = async (req, res, next) => {
     // Fetch related posts (from the same category, excluding the current post)
     let relatedPosts = [];
     if (post.category && post.category.name) {
-        relatedPosts = await Post.find({
-          status: 'published',
-          category: post.category.name, // Use the category name (string) for querying
-          _id: { $ne: post._id },
-        })
+      relatedPosts = await Post.find({
+        status: 'published',
+        category: post.category.name, // Use the category name (string) for querying
+        _id: { $ne: post._id },
+      })
         .limit(2)
         .select('title slug coverImage createdAt')
         .lean();
     }
-
-    const canonicalUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
     res.render('post-detail', {
       title: post.title,
@@ -235,4 +211,4 @@ const postDetailPage = async (req, res, next) => {
   }
 };
 
-export { homePage, postDetailPage }
+export { homePage, postDetailPage };

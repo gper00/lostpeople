@@ -1,26 +1,26 @@
-import Post from '../models/post-model.js'
-import { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } from '../utils/helper.js'
-import { deletePostThumbnail } from '../utils/delete-file.js'
-import { parse } from 'marked'
+import Post from '../models/post-model.js';
+import { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } from '../utils/helper.js';
+import { deletePostThumbnail } from '../utils/delete-file.js';
+import { parse } from 'marked';
 
-const layout = 'layouts/dashboard'
-const pageActive = 'post'
+const layout = 'layouts/dashboard';
+const pageActive = 'post';
 
 const postsPage = async (req, res) => {
-  const successMessage = req.flash('success')
-  const errorMessage = req.flash('failed')
+  const successMessage = req.flash('success');
+  const errorMessage = req.flash('failed');
 
-  let posts
+  let posts;
   try {
     if(req.user.role === 'admin'){
       posts = await Post.find({ userId: req.user._id })
         .sort({ createdAt: -1 })
-        .exec()
+        .exec();
     } else {
       posts = await Post.find()
         .populate('userId', 'name image')
         .sort({ createdAt: -1 })
-        .exec()
+        .exec();
     }
 
     res.render('dashboard/posts/index', {
@@ -45,22 +45,22 @@ const postsPage = async (req, res) => {
       pageActive,
       capitalizeEachWord,
       formatDate
-    })
+    });
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
 
 const createPostPage = async (req, res) => {
   try {
-    const errors = req.flash('errors')[0] ?? {}
-    const postData = req.flash('postData')[0] ?? {}
-    const posts = await Post.find()
+    const errors = req.flash('errors')[0] ?? {};
+    const postData = req.flash('postData')[0] ?? {};
+    const posts = await Post.find();
     const postCategories = posts
-      .filter((x, i, self) => x.category && x.category !== undefined)
+      .filter(x => x.category && x.category !== undefined)
       .map(x => x.category)
-      .filter((x, i, self) => self.indexOf(x) === i)
+      .filter((x, i, self) => self.indexOf(x) === i);
 
     res.render('dashboard/posts/create', {
       layout,
@@ -69,22 +69,22 @@ const createPostPage = async (req, res) => {
       pageActive,
       postCategories,
       capitalizeEachWord
-    })
+    });
   } catch (err) {
-    console.error(err)
-    req.flash('failed', err.message || 'Something went wrong')
-    res.redirect('/dashboard/posts')
+    console.error(err);
+    req.flash('failed', err.message || 'Something went wrong');
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 const storePost = async (req, res) => {
   try {
-    let { title, category, newCategory, tags, excerpt, status, content } = req.body
+    let { title, category, newCategory, tags, excerpt, status, content } = req.body;
 
-    if (category) category = category.toLowerCase()
-    else if (newCategory) category = newCategory.toLowerCase()
-    else category = null
+    if (category) category = category.toLowerCase();
+    else if (newCategory) category = newCategory.toLowerCase();
+    else category = null;
 
     const post = new Post({
       title,
@@ -96,37 +96,37 @@ const storePost = async (req, res) => {
       excerpt,
       content,
       status
-    })
+    });
 
-    await post.save()
+    await post.save();
 
-    req.flash('success', 'Post created successfully!')
-    res.redirect('/dashboard/posts')
+    req.flash('success', 'Post created successfully!');
+    res.redirect('/dashboard/posts');
   } catch (err) {
-    console.error(err)
+    console.error(err);
     // Handle validation errors from Mongoose
     if (err.name === 'ValidationError') {
-      const errors = {}
+      const errors = {};
       for (const field in err.errors) {
-        errors[field] = { msg: err.errors[field].message }
+        errors[field] = { msg: err.errors[field].message };
       }
-      req.flash('errors', errors)
-      req.flash('postData', req.body)
-      return res.redirect('/dashboard/posts/create')
+      req.flash('errors', errors);
+      req.flash('postData', req.body);
+      return res.redirect('/dashboard/posts/create');
     }
 
-    req.flash('failed', err.message || 'Something went wrong')
-    res.redirect('/dashboard/posts')
+    req.flash('failed', err.message || 'Something went wrong');
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 const postDetailPage = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
       .populate('userId', 'name image') // ✅ Field yang aman digunakan
-      .exec()
-    post.content = parse(post.content, { sanitize: true, gfm: true, breaks: true, smartLists: true, smartypants: true })
+      .exec();
+    post.content = parse(post.content, { sanitize: true, gfm: true, breaks: true, smartLists: true, smartypants: true });
 
     res.render('dashboard/posts/detail', {
       layout,
@@ -135,35 +135,35 @@ const postDetailPage = async (req, res) => {
       formatDate,
       timeSince,
       capitalizeEachWord
-    })
+    });
   } catch (err) {
-    console.error(err)
+    console.error(err);
     req.flash(
       'failed',
       err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-    )
-    res.redirect('/dashboard/posts')
+    );
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 const editPostPage = async (req, res) => {
-  const errors = req.flash('errors')[0] ?? {}
-  const postData = req.flash('postData')[0] ?? {}
+  const errors = req.flash('errors')[0] ?? {};
+  const postData = req.flash('postData')[0] ?? {};
 
   try {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
-      req.flash('failed', 'Post not found')
-      return res.redirect('/dashboard/posts')
+      req.flash('failed', 'Post not found');
+      return res.redirect('/dashboard/posts');
     }
 
-    const posts = await Post.find()
+    const posts = await Post.find();
     const postCategories = posts
-      .filter((x, i, self) => x.category && x.category !== undefined)
+      .filter(x => x.category && x.category !== undefined)
       .map(x => x.category)
-      .filter((x, i, self) => self.indexOf(x) === i)
+      .filter((x, i, self) => self.indexOf(x) === i);
 
     res.render('dashboard/posts/edit', {
       layout,
@@ -173,33 +173,33 @@ const editPostPage = async (req, res) => {
       postCategories,
       pageActive,
       capitalizeEachWord
-    })
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     req.flash(
       'failed',
       err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-    )
-    res.redirect('/dashboard/posts')
+    );
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 const updatePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
-      req.flash('failed', 'Post not found')
-      return res.redirect('/dashboard/posts')
+      req.flash('failed', 'Post not found');
+      return res.redirect('/dashboard/posts');
     }
 
     let { title, category, newCategory, tags, excerpt, status, content } =
-            req.body
+            req.body;
 
-    if (category) category = category.toLowerCase()
-    else if (newCategory) category = newCategory.toLowerCase()
-    else category = null
+    if (category) category = category.toLowerCase();
+    else if (newCategory) category = newCategory.toLowerCase();
+    else category = null;
 
     const updatedFields = {
       title,
@@ -208,97 +208,97 @@ const updatePost = async (req, res) => {
       excerpt,
       content,
       status
-    }
+    };
 
     if (title && title !== post.title) {
-      updatedFields.slug = await generateUniqueSlug(title)
+      updatedFields.slug = await generateUniqueSlug(title);
     }
 
     if (req.file) {
-      updatedFields.thumbnail = req.file.path
+      updatedFields.thumbnail = req.file.path;
       if (post.thumbnail) {
         deletePostThumbnail(post.thumbnail)
-          .catch(err => console.eror(err.message))
+          .catch(err => console.eror(err.message));
       }
     }
 
-    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields }, { runValidators: true })
+    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields }, { runValidators: true });
 
-    req.flash('success', 'Post updated successfully!')
-    res.redirect('/dashboard/posts')
+    req.flash('success', 'Post updated successfully!');
+    res.redirect('/dashboard/posts');
   } catch (err) {
-    console.log(err)
+    console.log(err);
     // Handle validation errors from Mongoose
     if (err.name === 'ValidationError') {
-      const errors = {}
+      const errors = {};
       for (const field in err.errors) {
-        errors[field] = { msg: err.errors[field].message }
+        errors[field] = { msg: err.errors[field].message };
       }
-      req.flash('errors', errors)
-      req.flash('postData', req.body)
-      return res.redirect(`/dashboard/posts/${req.params.id}/edit`)
+      req.flash('errors', errors);
+      req.flash('postData', req.body);
+      return res.redirect(`/dashboard/posts/${req.params.id}/edit`);
     }
 
     req.flash(
       'failed',
       err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-    )
-    res.redirect('/dashboard/posts')
+    );
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 const removePostThumbnail = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
-      req.flash('failed', 'Post not found')
-      return res.redirect('/dashboard/posts')
+      req.flash('failed', 'Post not found');
+      return res.redirect('/dashboard/posts');
     }
 
     const updatedFields = {
       thumbnail: null
-    }
+    };
 
     deletePostThumbnail(post.thumbnail)
-      .catch(err => console.error(err.message))
+      .catch(err => console.error(err.message));
 
-    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields })
+    await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields });
 
-    res.redirect(`/dashboard/posts/${req.params.id}/edit`)
+    res.redirect(`/dashboard/posts/${req.params.id}/edit`);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
 
 const deletePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
-      req.flash('failed', 'Post not found')
-      res.redirect('/dashboard/posts')
+      req.flash('failed', 'Post not found');
+      res.redirect('/dashboard/posts');
     }
 
     if (post.thumbnail) {
       deletePostThumbnail(post.thumbnail)
-        .catch(err => console.eror(err.message))
+        .catch(err => console.eror(err.message));
     }
 
-    await Post.findByIdAndDelete(req.params.id)
-    req.flash('success', 'Post deleted successfully')
-    res.redirect('/dashboard/posts')
+    await Post.findByIdAndDelete(req.params.id);
+    req.flash('success', 'Post deleted successfully');
+    res.redirect('/dashboard/posts');
   } catch (err) {
-    console.error(err)
+    console.error(err);
     req.flash(
       'failed',
       err.name === 'CastError' ? 'Post not found' : 'Something went wrong'
-    )
-    res.redirect('/dashboard/posts')
+    );
+    res.redirect('/dashboard/posts');
   }
-}
+};
 
 
 export {
@@ -310,4 +310,4 @@ export {
   editPostPage,
   updatePost,
   removePostThumbnail
-}
+};

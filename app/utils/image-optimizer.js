@@ -33,14 +33,14 @@ export const shouldLazyLoad = (position) => {
 // Get appropriate size attribute for img tag
 export const getSizeAttribute = (imageType) => {
   switch (imageType) {
-    case 'thumbnail':
-      return '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
-    case 'banner':
-      return '100vw';
-    case 'avatar':
-      return '80px';
-    default:
-      return '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw';
+  case 'thumbnail':
+    return '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+  case 'banner':
+    return '100vw';
+  case 'avatar':
+    return '80px';
+  default:
+    return '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw';
   }
 };
 

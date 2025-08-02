@@ -24,7 +24,7 @@ async function connectDB() {
     };
 
     mongoose.set('strictQuery', false);
-    
+
     console.log('=> creating new database connection');
     cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then(async (mongooseInstance) => {
       console.log('Database connected successfully');
