@@ -7,10 +7,10 @@ const validateData = require('../middlewares/validators/login-validator.js')
 const router = express.Router()
 
 // router.get('/', homePage)
-// router.get('/about', aboutPage)
 // router.get('/posts', postsPage)
 // router.get('/posts/:slug', postDetailPage)
 router.get('/', postsPage)
+router.get('/about', aboutPage)
 router.get('/login', checkAuthenticated, loginPage)
 router.post('/login', validateData, loginAction)
 

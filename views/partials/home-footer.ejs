@@ -1,13 +1,36 @@
-<!-- <footer class="bg-dark mt-5 pt-2 pb-3 mt-4">
-  <div class="container col-lg-7 px-lg-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
-      <p class="col-md-6 mb-0 text-light">&copy; 2022 MyBlog</p>
+<!-- Footer -->
+<footer class="my-5">
+  <div class="container-md col-lg-10 col-xl-9 col-xxl-8">
+      <hr class="my-4">
 
-      <ul class="nav col-md-6 justify-content-end">
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-light">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-light">Blog</a></li>
-        <li class="nav-item"><a href="#" class="nav-link ps-2 pe-0 text-light">About me</a></li>
-      </ul>
-    </div>
+      <!-- Copyright -->
+      <div class="row align-items-center">
+          <div class="col-md-6">
+              <p class="text-body-secondary small mb-md-0 mb-2">
+                  &copy; <%= new Date().getFullYear() %> Lostpeople. Made with
+                  <i class="bi bi-heart-fill text-danger"></i> by
+                  <a href="https://github.com/gper00" class="text-body-secondary" target="_blank">Umam Alfarizi</a>
+              </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+              <p class="text-body-secondary small mb-0">
+                  Built with
+                  <a href="https://nodejs.org/" class="text-body-secondary" target="_blank">Node.js</a> &
+                  <a href="https://getbootstrap.com/" class="text-body-secondary" target="_blank">Bootstrap</a>
+              </p>
+          </div>
+      </div>
   </div>
-</footer> -->
+</footer>
+
+<!-- Back to Top Button -->
+<button
+  type="button"
+  class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4 d-none"
+  id="backToTop"
+  style="width: 50px; height: 50px; z-index: 1000;"
+  onclick="scrollToTop()"
+  aria-label="Back to top"
+>
+  <i class="bi bi-arrow-up"></i>
+</button>

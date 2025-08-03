@@ -310,3 +310,94 @@ body {
         margin-left: 0;
     }
 }
+
+
+/* Additional styles for header and footer */
+.navbar-nav .nav-link {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  /* background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary) !important; */
+
+  background-color: rgba(
+      var(--bs-secondary-bg-rgb),
+      var(--bs-bg-opacity)
+  ) !important;
+  border-radius: 50px;
+  color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+}
+
+.navbar-nav .nav-link.active {
+  /* background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary) !important; */
+
+  background-color: rgba(
+      var(--bs-secondary-bg-rgb),
+      var(--bs-bg-opacity)
+  ) !important;
+  border-radius: 50px;
+  color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+/* Footer Styles */
+footer {
+  margin-top: auto;
+}
+
+footer ul li a {
+  transition: all 0.2s ease;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  margin-left: -0.5rem;
+}
+
+footer ul li a:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary) !important;
+}
+
+/* Back to Top Button */
+#backToTop {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#backToTop:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme specific adjustments */
+[data-bs-theme="dark"] .navbar-light {
+  background-color: var(--bs-dark) !important;
+  border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] footer {
+  background-color: var(--bs-dark) !important;
+  border-color: var(--bs-border-color) !important;
+}
+
+/* Smooth transitions for theme changes */
+.navbar,
+footer,
+footer a {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* navbar brand */
+/* Elegant Professional */ .navbar-brand { font-weight: 500; font-size: 1.2rem; color: #1a1a1a !important; text-decoration: none; letter-spacing: 0.02em; transition: all 0.3s ease; position: relative; } .navbar-brand::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #1a1a1a; transition: width 0.3s ease; } .navbar-brand:hover { color: #1a1a1a !important; } .navbar-brand:hover::after { width: 100%; }
+
+.post-pagination:hover {
+  margin: 0 2px;
+  font-weight: 425;
+}

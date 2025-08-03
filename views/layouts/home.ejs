@@ -52,18 +52,25 @@
         <!-- Cannonical -->
         <link rel="canonical" href="<%= locale.url %>" />
 
+
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
         <!-- Styles -->
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"/>
         <link rel="stylesheet" href="/css/style.css" />
+
     </head>
 
     <body class="bg-light">
         <!-- Header -->
-        <%- //include('../partials/home-header.ejs') %>
+        <%- include('../partials/home-header.ejs') %>
 
         <!-- Page content -->
         <%- body %>
+
+        <%- include('../partials/home-footer.ejs') %>
 
         <!-- Scripts -->
         <script src="/js/bootstrap.bundle.min.js"></script>

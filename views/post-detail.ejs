@@ -1,5 +1,5 @@
 <!-- Page content-->
-<div class="container-md col-lg-9 col-xxl-8 my-5">
+<div class="container-md col-lg-9 col-xxl-8 mt-4">
     <div class="row">
         <!-- Side widget 1 -->
         <div class="col-lg-2 align-items-center d-none d-lg-block share">
@@ -56,17 +56,20 @@
 
         <!-- Main content -->
         <div class="col-lg-8 p-0-lg">
-            <nav style="--bs-breadcrumb-divider: '/'" aria-label="breadcrumb" class="small-4">
+            <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="small-4">
                 <ol class="breadcrumb">
-                    <a href="#" class="text-reset me-2" onclick="return history.go(-1)">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
                     <li class="breadcrumb-item">
-                        <a href="/" class="nav-link breadcrumb-link">Home</a>
+                        <a href="/" class="breadcrumb-link nav-link d-inline">Home</a>
                     </li>
-                    <li class="breadcrumb-item active d-none d-md-block" aria-current="page"><%= post.title %></li>
+                    <li class="breadcrumb-item">
+                        <a href="/?category=<%= post.category.toLowerCase() %>" class="breadcrumb-link nav-link d-inline"><%= capitalizeEachWord(post.category) %></a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      <span class="d-none d-md-inline"><%= post.title %></span>
+                    </li>
                 </ol>
             </nav>
+
             <main>
                 <article class="bg-white rounded-4 border">
                     <header class="mt-4 mt-lg-5 px-3 px-md-4 px-lg-5">
@@ -140,45 +143,42 @@
                             <%- post.content %>
                         </section>
                     </div>
-                </article>
+                    <div class="d-lg-none card-footer px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4">
+                      <section class="d-flex justify-content-between border-top pt-4">
+                        <span>Share</span>
+                        <span>
 
-                <!-- Share -->
-                <section class="d-lg-none mt-5 mb-5 pb-5">
-                    <div class="text-center pb-4">Share</div>
-                    <div class="text-center">
-                        <span
-                            class="bg-white px-2 py-3 fs-5 rounded-4 text-body-secondary border"
-                        >
-                            <a
-                                class="share-link facebook-sm text-body-secondary p-2 mx-2"
+                          <a
+                                class="share-link facebook-sm text-body-secondary p-1 mx-1"
                                 href="#"
                                 ><i class="bi bi-facebook"></i
                             ></a>
                             <a
-                                class="share-link linkedin-sm text-body-secondary p-2 mx-2"
+                                class="share-link linkedin-sm text-body-secondary p-1 mx-1"
                                 href="#"
                                 ><i class="bi bi-linkedin"></i
                             ></a>
                             <a
-                                class="share-link twitter-sm text-body-secondary p-2 mx-2"
+                                class="share-link twitter-sm text-body-secondary p-1 mx-1"
                                 href="#"
                                 ><i class="bi bi-twitter"></i
                             ></a>
                             <a
-                                class="share-link telegram-sm text-body-secondary p-2 mx-2"
+                                class="share-link telegram-sm text-body-secondary p-1 mx-1"
                                 href="#"
                                 ><i class="bi bi-telegram"></i
                             ></a>
                             <a
-                                class="share-link whatsapp-sm text-body-secondary p-2 mx-2"
+                                class="share-link whatsapp-sm text-body-secondary p-1 mx-1"
                                 href="#"
                                 ><i class="bi bi-whatsapp"></i
                             ></a>
                         </span>
+                      </section>
                     </div>
-                </section>
+                </article>
 
-                <section id="comments" class="bg-white rounded-4 border p-lg-4 px-3 py-4 my-5">
+                <section id="comments" class="bg-white rounded-4 border p-lg-4 px-3 py-4 mt-5">
                     <script src="https://giscus.app/client.js"
                         data-repo="devChampl00/blog-comments"
                         data-repo-id="R_kgDONr94rA"
@@ -197,29 +197,32 @@
                 </section>
 
                 <!-- Pagination -->
-                <!-- <div class="row mt-5">
+                <div class="row mt-5">
                     <nav aria-label="Page navigation">
-                        <div class="text-center mb-2">Go to :</div>
                         <ul
-                            class="pagination justify-content-center align-items-center"
+                            class="pagination justify-content-between align-items-center"
                         >
                             <li class="page-item">
                                 <a
-                                    class="page-link rounded-start-4 shadow-sm text-body-secondary px-4 py-2"
+                                    class="text-dark text-decoration-none di p-0 border-0 post-pagination"
                                     href="#"
-                                    >Prev post</a
+                                    >
+                                    <i class="bi bi-arrow-left"></i>
+                                    <span class="large-2">Prev post</span></a
                                 >
                             </li>
                             <li class="page-item">
                                 <a
-                                    class="page-link rounded-end-4 shadow-sm text-body-secondary px-4 py-2"
+                                    class="text-dark text-decoration-none di p-0 border-0 post-pagination"
                                     href="#"
-                                    >Next post</a
+                                    ><span class="large-2">Next post</span>
+                                    <i class="bi bi-arrow-right"></i></a
                                 >
                             </li>
                         </ul>
                     </nav>
-                </div> -->
+                </div>
+
             </main>
         </div>
     </div>
