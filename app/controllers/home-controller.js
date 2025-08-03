@@ -31,6 +31,17 @@ const homePage = async (req, res) => {
 
 
 const aboutPage = async (req, res) => {
+    const locale = {
+        title: 'Lostpeople',
+        description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
+        keywords: "lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev",
+        author: 'devChampl000',
+        image: null,
+        icon: '/assets/favicon.svg',
+        name: 'Lostpeople',
+        url: 'https://lostpeople.vercel.app'
+    }
+
     try {
         res.render('about', {
             layout,
