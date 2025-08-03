@@ -1,4 +1,3 @@
-// require('dotenv/config') // environment variables
 require('dotenv').config()
 
 const express = require('express')
@@ -15,8 +14,11 @@ const adminRoutes = require('./app/routes/admin-routes.js')
 const { authenticateToken } = require('./app/middlewares/auth-middleware.js')
 const { routeErrorHandler } = require('./app/utils/error-handler.js')
 const morgan = require('morgan')
+const compression = require('compression')
 
 const app = express()
+
+app.use(compression())
 const PORT = process.env.PORT || 5000
 const csrfProtection = csrf({ cookie: true })
 

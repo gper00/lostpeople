@@ -43,7 +43,6 @@
         <meta property="article:section" content="<%= post.category %>" />
         <meta property="article:published_time" content="<%= post.createdAt.toISOString() %>" />
         <meta property="article:modified_time" content="<%= post.updatedAt.toISOString() %>" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
         <% } %>
 
         <!-- Favicon -->
@@ -52,14 +51,22 @@
         <!-- Cannonical -->
         <link rel="canonical" href="<%= locale.url %>" />
 
+        <!-- tes -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap"></noscript>
 
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"></noscript>
+
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"></noscript>
 
         <!-- Styles -->
-        <link rel="stylesheet" href="/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/assets/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"/>
-        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/dist/style.bundle.min.css" />
 
     </head>
 
@@ -72,8 +79,6 @@
 
         <%- include('../partials/home-footer.ejs') %>
 
-        <!-- Scripts -->
-        <script src="/js/bootstrap.bundle.min.js"></script>
-        <script src="/js/script.js"></script>
+        <script src="/dist/script.bundle.min.js"></script>
     </body>
 </html>

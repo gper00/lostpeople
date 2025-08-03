@@ -1,25 +1,29 @@
-const express = require('express')
-const { aboutPage, homePage, postDetailPage, postsPage } = require('../controllers/home-controller.js')
-const { checkAuthenticated } = require('../middlewares/auth-middleware.js')
-const { loginPage, loginAction } = require('../controllers/auth-controller.js')
-const validateData = require('../middlewares/validators/login-validator.js')
+const router = require('express').Router()
+const {
+    aboutPage,
+    homePage,
+    postDetailPage,
+    postsPage
+} = require('../controllers/home-controller')
+const { checkAuthenticated } = require('../middlewares/auth-middleware')
+const { loginPage, loginAction } = require('../controllers/auth-controller')
+const validateData = require('../middlewares/validators/login-validator')
 
-const router = express.Router()
-
-// router.get('/', homePage)
-// router.get('/posts', postsPage)
-// router.get('/posts/:slug', postDetailPage)
-router.get('/', postsPage)
+// Rute yang lebih spesifik harus selalu didefinisikan pertama.
+router.get('/', postsPage) // Mengarahkan halaman utama ke halaman postingan
 router.get('/about', aboutPage)
 router.get('/login', checkAuthenticated, loginPage)
 router.post('/login', validateData, loginAction)
 
-router.get('/:slug([^/]*)', (req, res, next) => {
-    const excludedPaths = ['login', 'logout', 'dashboard'];
-    if (excludedPaths.includes(req.params.slug)) {
-      return next('route');
-    }
-    postDetailPage(req, res, next);
-});
+// Rute '/posts' jika Anda ingin memiliki URL kanonis untuk daftar postingan
+// Jika tidak, baris ini bisa dihapus jika '/' sudah cukup.
+router.get('/posts', postsPage)
+
+// Rute slug ini sekarang berada di urutan terakhir.
+// Express akan mencoba mencocokkan semua rute di atas terlebih dahulu.
+// Jika tidak ada yang cocok, baru ia akan menganggap permintaan ini sebagai slug postingan.
+// Ini secara otomatis akan mengabaikan permintaan untuk /favicon.ico atau aset lainnya
+// karena itu akan ditangani oleh express.static sebelum mencapai titik ini.
+router.get('/:slug', postDetailPage)
 
 module.exports = router

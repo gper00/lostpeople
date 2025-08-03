@@ -13,7 +13,8 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            trim: true
+            trim: true,
+            index: true
         },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -61,6 +62,9 @@ const postSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+// Indeks gabungan untuk query yang sering digunakan di halaman postingan
+postSchema.index({ status: 1, createdAt: -1 });
 
 const Post = mongoose.model('Post', postSchema)
 module.exports = Post

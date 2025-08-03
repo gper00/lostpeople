@@ -1,7 +1,8 @@
 const Post = require('../models/post-model.js')
 const { capitalizeEachWord, generateUniqueSlug, formatDate, timeSince } = require('../utils/helper.js')
 const { deletePostThumbnail } = require('../utils/delete-file.js')
-const marked = require('marked');
+const marked = require('../utils/markdown-parser.js');
+const cache = require('../utils/cache.js');
 
 const layout = 'layouts/dashboard'
 const pageActive = 'post'
@@ -85,6 +86,9 @@ const storePost = async (req, res) => {
         })
 
         await post.save()
+
+        cache.flushAll();
+        console.log('Cache flushed after new post creation.');
 
         req.flash('success', 'Post created successfully!')
         res.redirect('/dashboard/posts')
@@ -197,6 +201,9 @@ const updatePost = async (req, res) => {
 
         await Post.findByIdAndUpdate(req.params.id, { $set: updatedFields })
 
+        cache.flushAll();
+        console.log(`Cache flushed after post ${req.params.id} update.`);
+
         req.flash('success', 'Post updated successfully!')
         res.redirect('/dashboard/posts')
     } catch (err) {
@@ -250,6 +257,10 @@ const deletePost = async (req, res) => {
         }
 
         await Post.findByIdAndDelete(req.params.id)
+
+        cache.flushAll();
+        console.log(`Cache flushed after post ${req.params.id} deletion.`);
+
         req.flash('success', 'Post deleted successfully')
         res.redirect('/dashboard/posts')
     } catch (err) {

@@ -83,6 +83,7 @@
                                     class="rounded-circle author-post-thumbnail"
                                     itemprop="image"
                                     alt="Foto profil <%= post.userId.fullname %>"
+                                    loading="lazy"
                                 />
                                 <figcaption class="d-none"><%= post.title %></figcaption>
                             </div>
@@ -130,6 +131,7 @@
                             class="post-thumbnail rounded-4"
                             src="<%= post.thumbnail %>"
                             alt="<%= post.title %>"
+                            loading="lazy"
                         />
                     </figure>
                     <% } %>
@@ -144,27 +146,27 @@
                         <span>
 
                           <a
-                                class="share-link facebook-sm text-body-secondary p-1 mx-1"
+                                class="share-link facebook-sm text-body-secondary p-2"
                                 href="#"
                                 ><i class="bi bi-facebook"></i
                             ></a>
                             <a
-                                class="share-link linkedin-sm text-body-secondary p-1 mx-1"
+                                class="share-link linkedin-sm text-body-secondary p-2"
                                 href="#"
                                 ><i class="bi bi-linkedin"></i
                             ></a>
                             <a
-                                class="share-link twitter-sm text-body-secondary p-1 mx-1"
+                                class="share-link twitter-sm text-body-secondary p-2"
                                 href="#"
                                 ><i class="bi bi-twitter"></i
                             ></a>
                             <a
-                                class="share-link telegram-sm text-body-secondary p-1 mx-1"
+                                class="share-link telegram-sm text-body-secondary p-2"
                                 href="#"
                                 ><i class="bi bi-telegram"></i
                             ></a>
                             <a
-                                class="share-link whatsapp-sm text-body-secondary p-1 mx-1"
+                                class="share-link whatsapp-sm text-body-secondary p-2"
                                 href="#"
                                 ><i class="bi bi-whatsapp"></i
                             ></a>
@@ -175,7 +177,7 @@
 
                 <section id="comments" class="bg-white rounded-4 border p-lg-4 px-3 py-4 mt-5">
                     <script src="https://giscus.app/client.js"
-                        data-repo="devChampl00/blog-comments"
+                        data-repo="gper00/blog-comments"
                         data-repo-id="R_kgDONr94rA"
                         data-category="General"
                         data-category-id="DIC_kwDONr94rM4CmIHN"
