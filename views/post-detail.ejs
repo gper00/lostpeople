@@ -226,67 +226,26 @@
 </div>
 
 <script>
-    document
-        .querySelector('.facebook-lg')
-        .setAttribute(
-            'href',
-            `https://www.facebook.com/sharer/sharer.php?u=${document.URL}/?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=user-share`
-        )
-    document
-        .querySelector('.twitter-lg')
-        .setAttribute(
-            'href',
-            `https://twitter.com/intent/tweet?text=Judul%20Postingan ${document.URL}`
-        )
-    document
-        .querySelector('.linkedin-lg')
-        .setAttribute(
-            'href',
-            `http://www.linkedin.com/shareArticle?mini=true&amp;url=${document.URL}&amp;title=Judul%20Postingan`
-        )
-    document
-        .querySelector('.telegram-lg')
-        .setAttribute(
-            'href',
-            `https://t.me/share/url?url=${document.URL}&text=Judul%20Postingan`
-        )
-    document
-        .querySelector('.whatsapp-lg')
-        .setAttribute(
-            'href',
-            `https://api.whatsapp.com/send/?text=${document.URL}&type=custom_url&app_absent=0`
-        )
+    const postTitle = "<%= JSON.stringify(post.title) %>"
+    const postUrl = "<%= JSON.stringify(locale.url) %>"
+    const encodedTitle = encodeURIComponent(postTitle)
+    const encodedUrl = encodeURIComponent(postUrl)
 
-    document
-        .querySelector('.facebook-sm')
-        .setAttribute(
-            'href',
-            `https://www.facebook.com/sharer/sharer.php?u=${document.URL}/?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=user-share`
-        )
-    document
-        .querySelector('.twitter-sm')
-        .setAttribute(
-            'href',
-            `https://twitter.com/intent/tweet?text=Judul%20Postingan ${document.URL}`
-        )
-    document
-        .querySelector('.linkedin-sm')
-        .setAttribute(
-            'href',
-            `http://www.linkedin.com/shareArticle?mini=true&amp;url=${document.URL}&amp;title=Judul%20Postingan`
-        )
-    document
-        .querySelector('.telegram-sm')
-        .setAttribute(
-            'href',
-            `https://t.me/share/url?url=${document.URL}&text=Judul%20Postingan`
-        )
-    document
-        .querySelector('.whatsapp-sm')
-        .setAttribute(
-            'href',
-            `https://api.whatsapp.com/send/?text=${document.URL}&type=custom_url&app_absent=0`
-        )
+    const shareTargets = {
+        twitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+        linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        whatsapp: `https://api.whatsapp.com/send/?text=${encodedTitle}%20${encodedUrl}`,
+        telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`
+    };
+
+    document.querySelectorAll('.share-link').forEach(link => {
+        for (const service in shareTargets) {
+            if (link.classList.contains(`${service}-lg`) || link.classList.contains(`${service}-sm`)) {
+                link.setAttribute('href', shareTargets[service]);
+            }
+        }
+    });
 </script>
 
 <script type="application/ld+json">

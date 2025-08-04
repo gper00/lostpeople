@@ -1,7 +1,8 @@
-const Post = require('../models/post-model.js')
-const { capitalizeEachWord } = require('../utils/helper.js')
-const marked = require('../utils/markdown-parser.js')
-const cache = require('../utils/cache.js');
+const Post = require('../models/post-model')
+const { capitalizeEachWord } = require('../utils/helper')
+const marked = require('../utils/markdown-parser')
+const cache = require('../utils/cache')
+const siteConfig = require('../config/site-config')
 
 const layout = 'layouts/home'
 
@@ -15,14 +16,9 @@ const homePage = async (req, res) => {
             .exec()
 
         const locale = {
-            title: 'Lostpeople',
-            description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
-            keywords: "lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev",
-            author: 'devChampl000',
-            image: null,
-            icon: '/assets/favicon.svg',
-            name: 'Lostpeople',
-            url: 'https://lostpeople.vercel.app'
+            ...siteConfig,
+            title: `Home | ${siteConfig.name}`,
+            image: null
         }
 
         res.render('index', {
@@ -34,22 +30,18 @@ const homePage = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
+        res.status(500).send('Internal Server Error')
     }
 }
 
 const aboutPage = async (req, res) => {
-    const locale = {
-        title: 'Lostpeople',
-        description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
-        keywords: "lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev",
-        author: 'devChampl000',
-        image: null,
-        icon: '/assets/favicon.svg',
-        name: 'Lostpeople',
-        url: 'https://lostpeople.vercel.app'
-    }
-
     try {
+        const locale = {
+            ...siteConfig,
+            title: `About | ${siteConfig.name}`,
+            image: null
+        }
+
         res.render('about', {
             layout,
             locale,
@@ -57,20 +49,21 @@ const aboutPage = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
+        res.status(500).send('Internal Server Error')
     }
 }
 
 const postsPage = async (req, res) => {
     try {
-        const cacheKey = `posts-page-${JSON.stringify(req.query)}`;
-        let cachedData = cache.get(cacheKey);
+        const cacheKey = `posts-page-${JSON.stringify(req.query)}`
+        let cachedData = cache.get(cacheKey)
 
         if (cachedData) {
-            console.log(`Serving posts page from cache for query: ${JSON.stringify(req.query)}`);
-            return res.render('posts', { ...cachedData, pageActive: 'blog' });
+            console.log(`Serving posts page from cache for query: ${JSON.stringify(req.query)}`)
+            return res.render('posts', { ...cachedData, pageActive: 'blog' })
         }
 
-        console.log(`Fetching posts page from DB for query: ${JSON.stringify(req.query)}`);
+        console.log(`Fetching posts page from DB for query: ${JSON.stringify(req.query)}`)
         let perPage = 10
         let page = req.query.page || 1
 
@@ -86,42 +79,37 @@ const postsPage = async (req, res) => {
         const pageUrl = `${tag ? 'tag=' + tag + '&' : ''}${order ? 'order=' + order + '&' : ''}${category ? 'category=' + category + '&' : ''}${search ? 'search=' + search + '&' : ''}`
 
         let match = { status: 'published' }
-        if (category) match.category = category;
-        if (tag) match.tags = tag;
+        if (category) match.category = category
+        if (tag) match.tags = tag
 
-        let query = {};
+        let query = {}
         if (search) {
-            const searchNoSpecialChar = search.replace(/[^a-zA-Z0-9 ]/g, '');
+            const searchNoSpecialChar = search.replace(/[^a-zA-Z0-9 ]/g, '')
             query.$or = [
                 { title: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
                 { category: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
                 { tags: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
                 { excerpt: { $regex: new RegExp(searchNoSpecialChar, 'i') } }
-            ];
+            ]
         }
 
-        const finalQuery = { ...query, ...match };
+        const finalQuery = { ...query, ...match }
 
-        const count = await Post.countDocuments(finalQuery);
+        const count = await Post.countDocuments(finalQuery)
         const posts = await Post.find(finalQuery)
             .sort({ createdAt: order === 'asc' ? 1 : -1 })
             .skip(perPage * page - perPage)
             .limit(perPage)
-            .lean();
+            .lean()
 
         const postCategories = await Post.find({ status: 'published', category: { $ne: null } })
             .distinct('category')
-            .lean();
+            .lean()
 
         const locale = {
-            title: 'Lostpeople',
-            description: 'Lostpeople adalah blog inspiratif yang menyajikan cerita, tips, dan informasi seputar kehidupan serta teknologi.',
-            keywords: "lostpeople, blog, inspirasi, teknologi, devchamploo, gper, umam alfarizi, lost, people, dev",
-            author: 'devChampl000',
-            image: null,
-            icon: '/assets/favicon.svg',
-            name: 'Lostpeople',
-            url: 'https://lostpeople.vercel.app'
+            ...siteConfig,
+            title: `Blog | ${siteConfig.name}`,
+            image: null
         }
 
         const pageData = {
@@ -137,55 +125,54 @@ const postsPage = async (req, res) => {
             prevPage: (page > 1) ? parseInt(page) - 1 : null,
             nextPage: (page * perPage) < count ? parseInt(page) + 1 : null,
             order, category, tag, search, locale
-        };
+        }
 
-        cache.set(cacheKey, pageData);
+        cache.set(cacheKey, pageData)
 
-        res.render('posts', { ...pageData, pageActive: 'blog' });
+        res.render('posts', { ...pageData, pageActive: 'blog' })
 
     } catch (err) {
         console.error(err)
-        res.status(500).send("Internal Server Error");
+        res.status(500).send('Internal Server Error')
     }
 }
 
 const postDetailPage = async (req, res, next) => {
     try {
-        const slug = req.params.slug;
-        const cacheKey = `post-${slug}`;
-        let post = cache.get(cacheKey);
+        const slug = req.params.slug
+        const cacheKey = `post-${slug}`
+        let post = cache.get(cacheKey)
 
         if (post) {
-            console.log(`Serving post ${slug} from cache...`);
+            console.log(`Serving post ${slug} from cache...`)
         } else {
-            console.log(`Fetching post ${slug} from DB and caching...`);
+            console.log(`Fetching post ${slug} from DB and caching...`)
             const postFromDb = await Post.findOneAndUpdate(
                 { slug: slug, status: 'published' },
                 { $inc: { viewsCount: 1 } },
                 { new: true }
-            ).populate('userId');
+            ).populate('userId')
 
             if (postFromDb) {
-                post = postFromDb.toObject();
-                cache.set(cacheKey, post);
+                post = postFromDb.toObject()
+                cache.set(cacheKey, post)
             }
         }
 
         if (!post) {
-            return next();
+            return next()
         }
 
-        post.content = marked.parse(post.content);
+        post.content = marked.parse(post.content)
 
         const locale = {
-            title: `${post.title} | Lostpeople`,
+            ...siteConfig,
+            title: `${post.title} | ${siteConfig.name}`,
             description: post.excerpt,
-            keywords: `${post.tags.join(', ')}, lostpeople, blog, devchamploo, gper, blog, umam alfarizi, lost, people, dev`,
-            author: post.userId.name || 'Umam Alfarizi',
-            image: `${post.thumbnail}`,
-            icon: '/assets/favicon.svg',
-            name: 'Lostpeople',
-            url: `https://lostpeople.vercel.app/${post.slug}`
+            keywords: `${post.tags.join(', ')}, ${siteConfig.keywords}`,
+            author: post.userId.name || siteConfig.author,
+            image: post.thumbnail || siteConfig.icon,
+            url: `${siteConfig.url}/${post.slug}`
         }
 
         res.render('post-detail', {
