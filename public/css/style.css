@@ -602,3 +602,538 @@ footer a {
     color: var(--bs-body-color) !important;
     border-bottom-color: var(--bs-body-color) !important;
 }
+/* Modern Documentation-Style Markdown */
+.markdown-body {
+    font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    line-height: 1.7 !important;
+    font-size: 16px !important;
+    max-width: none !important;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    scroll-margin-top: 5rem;
+}
+
+.markdown-body h1 {
+    font-size: 2.25rem !important;
+    border-bottom: 2px solid var(--bs-border-color) !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.markdown-body h2 {
+    font-size: 1.875rem !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+    padding-bottom: 0.3rem !important;
+}
+
+.markdown-body h3 {
+    font-size: 1.5rem !important;
+}
+
+.markdown-body h4 {
+    font-size: 1.25rem !important;
+}
+
+.markdown-body p {
+    margin-bottom: 1.25rem !important;
+    text-align: justify;
+}
+
+.markdown-body blockquote {
+    border-left: 4px solid var(--bs-primary) !important;
+    background: var(--bs-secondary-bg) !important;
+    margin: 1.5rem 0 !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 0 8px 8px 0 !important;
+    font-style: italic;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+    margin-bottom: 1.25rem !important;
+    padding-left: 2rem !important;
+}
+
+.markdown-body li {
+    margin-bottom: 0.5rem !important;
+}
+
+.markdown-body table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 1.5rem 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.markdown-body th,
+.markdown-body td {
+    padding: 12px 16px !important;
+    text-align: left !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+}
+
+.markdown-body th {
+    background: var(--bs-secondary-bg) !important;
+    font-weight: 600 !important;
+}
+
+.markdown-body tr:hover {
+    background: var(--bs-tertiary-bg) !important;
+}
+
+.markdown-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    margin: 1.5rem 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.markdown-body hr {
+    border: none !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, var(--bs-border-color), transparent) !important;
+    margin: 2rem 0 !important;
+}
+
+.markdown-body pre {
+    background: #1e1e1e !important;
+    border: 1px solid var(--bs-border-color) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin: 1.5rem 0 !important;
+    overflow-x: auto !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+}
+
+.markdown-body pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+}
+
+.markdown-body :not(pre) > code {
+    background: var(--bs-secondary-bg) !important;
+    color: var(--bs-danger) !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 6px !important;
+    font-size: 0.9em !important;
+    font-weight: 500 !important;
+    border: 1px solid var(--bs-border-color) !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+}
+
+.markdown-body strong {
+    font-weight: 600 !important;
+    color: var(--bs-emphasis-color) !important;
+}
+
+.markdown-body em {
+    font-style: italic !important;
+    color: var(--bs-secondary-color) !important;
+}
+
+.markdown-body a {
+    color: var(--bs-primary) !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+}
+
+.markdown-body a:hover {
+    border-bottom-color: var(--bs-primary) !important;
+    color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body :not(pre) > code {
+    background: #2d3748 !important;
+    color: #f56565 !important;
+    border-color: #4a5568 !important;
+}
+
+[data-bs-theme="dark"] .markdown-body blockquote {
+    background: #2d3748 !important;
+    border-left-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body img {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body table {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+/* Enhanced table theming */
+[data-bs-theme="dark"] .markdown-body table {
+    background: var(--bs-body-bg) !important;
+    border: 1px solid var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body th {
+    background: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body td {
+    color: var(--bs-body-color) !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body tr:hover {
+    background: var(--bs-tertiary-bg) !important;
+}
+
+/* Third-party comment system theme support */
+.comments-container {
+    transition: all 0.3s ease;
+}
+
+/* Disqus theme support */
+#disqus_thread {
+    color-scheme: light dark;
+}
+
+[data-bs-theme="dark"] #disqus_thread {
+    color-scheme: dark;
+}
+
+/* Utterances theme support */
+.utterances {
+    max-width: 100%;
+}
+
+[data-bs-theme="dark"] .utterances-frame {
+    color-scheme: dark;
+}
+/* Compact & Enhanced Markdown Styling */
+.markdown-body {
+    font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    line-height: 1.6 !important;
+    font-size: 15px !important;
+    max-width: none !important;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.markdown-body h1 {
+    font-size: 2rem !important;
+    border-bottom: 2px solid var(--bs-border-color) !important;
+    padding-bottom: 0.4rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.markdown-body h2 {
+    font-size: 1.6rem !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+    padding-bottom: 0.25rem !important;
+}
+
+.markdown-body h3 { font-size: 1.3rem !important; }
+.markdown-body h4 { font-size: 1.1rem !important; }
+
+.markdown-body p {
+    margin-bottom: 1rem !important;
+    text-align: justify;
+}
+
+.markdown-body ul, .markdown-body ol {
+    margin-bottom: 1rem !important;
+    padding-left: 1.5rem !important;
+}
+
+.markdown-body li { margin-bottom: 0.25rem !important; }
+
+.markdown-body blockquote {
+    border-left: 3px solid var(--bs-primary) !important;
+    background: var(--bs-secondary-bg) !important;
+    margin: 1rem 0 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0 6px 6px 0 !important;
+    font-style: italic;
+}
+
+/* Enhanced Code Blocks with Copy */
+.code-block-wrapper {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.markdown-body pre {
+    background: #1e1e1e !important;
+    border: 1px solid var(--bs-border-color) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    overflow-x: auto !important;
+    position: relative !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #888;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.copy-btn.copied {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.markdown-body :not(pre) > code {
+    background: var(--bs-secondary-bg) !important;
+    color: var(--bs-danger) !important;
+    padding: 0.15em 0.3em !important;
+    border-radius: 4px !important;
+    font-size: 0.85em !important;
+    font-weight: 500 !important;
+    border: 1px solid var(--bs-border-color) !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+}
+
+/* Compact Tables */
+.markdown-body table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 1rem 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    font-size: 14px !important;
+}
+
+.markdown-body th, .markdown-body td {
+    padding: 8px 12px !important;
+    text-align: left !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+}
+
+.markdown-body th {
+    background: var(--bs-secondary-bg) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+}
+
+.markdown-body hr {
+    border: none !important;
+    height: 1px !important;
+    background: var(--bs-border-color) !important;
+    margin: 1.5rem 0 !important;
+}
+
+.markdown-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    margin: 1rem 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+/* Performance optimizations */
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    loading: lazy;
+}
+
+/* Optimize animations */
+.navbar,
+footer,
+.btn,
+.form-control,
+.dropdown-toggle,
+*::before,
+*::after {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Reduce paint operations */
+.post:hover,
+.btn:hover,
+.page-link:hover,
+.tag-link:hover {
+    transform: translateZ(0);
+    will-change: box-shadow;
+}
+
+/* Optimize scrolling */
+.position-sticky {
+    will-change: transform;
+}
+
+/* Reduce layout thrashing */
+.markdown-body pre {
+    contain: layout style;
+}
+
+.code-block-wrapper {
+    contain: layout;
+}
+/* SEO and Accessibility Optimizations */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Focus indicators for accessibility */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* Skip to content link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--bs-primary);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1000;
+    border-radius: 4px;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
+/* Semantic heading hierarchy */
+h1, h2, h3, h4, h5, h6 {
+    scroll-margin-top: 5rem;
+}
+
+/* Image optimization for SEO */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+img:not([alt]) {
+    outline: 2px solid red;
+}
+
+/* Print styles for better SEO */
+@media print {
+    .navbar,
+    .btn,
+    .dropdown,
+    .copy-btn {
+        display: none !important;
+    }
+    
+    .markdown-body {
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 10pt;
+        color: #666;
+    }
+}
+/* Mobile-optimized post detail layout */
+@media (max-width: 768px) {
+    .post-detail-card {
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+    }
+    
+    .post-detail-header {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .post-detail-content {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .post-detail-footer {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .comments-section {
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+/* Navbar active link styling - no background, bold text */
+.navbar-nav .nav-link.active {
+    background-color: transparent !important;
+    font-weight: 700 !important;
+    color: var(--bs-body-color) !important;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: transparent !important;
+    font-weight: 600 !important;
+    color: var(--bs-body-color) !important;
+}

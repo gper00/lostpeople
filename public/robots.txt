@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lostpeople.vercel.app/sitemap.xml
+
+# Disallow admin areas
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /posts/
+Allow: /about
+Allow: /
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /

@@ -1,50 +1,71 @@
 <!-- Header Navigation -->
-<header class="navbar navbar-expand-lg bg-body border-bottom sticky-top">
+<header class="navbar navbar-expand-lg bg-body border-bottom sticky-top" role="banner">
   <div class="container-md col-lg-10 col-xl-9 col-xxl-8">
       <!-- Brand Logo -->
-      <a class="navbar-brand" href="/">
+      <a class="navbar-brand" href="/" aria-label="Lostpeople Homepage">
           <!-- <img src="<%= locale.icon %>" alt="<%= locale.name %>" width="28" height="28" class="me-2"> -->
           Lostpeople.
       </a>
 
-      <!-- Mobile Menu Toggle -->
-      <button
-          class="navbar-toggler border-0 mx-0 px-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-      >
-          <span class="navbar-toggler-icon"></span>
-      </button>
+      <!-- Mobile controls (Theme toggle + Hamburger) -->
+      <div class="d-flex d-lg-none align-items-center">
+          <!-- Theme Toggle for Mobile -->
+          <button
+              class="btn border-0 bg-transparent text-body-secondary me-2"
+              type="button"
+              onclick="toggleTheme()"
+              aria-label="Toggle dark/light theme"
+              title="Switch theme"
+          >
+              <i class="bi bi-sun-fill" id="theme-icon-mobile" aria-hidden="true"></i>
+          </button>
+          
+          <!-- Mobile Menu Toggle -->
+          <button
+              class="navbar-toggler border-0 mx-0 px-0"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation menu"
+          >
+              <span class="navbar-toggler-icon"></span>
+          </button>
+      </div>
 
       <!-- Navigation Menu -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <nav class="collapse navbar-collapse" id="navbarNav" role="navigation">
           <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                  <a class="nav-link text-body-secondary <%= pageActive === 'blog' ? 'active fw-semibold' : '' %>" href="/">
-                      <i class="bi bi-house"></i> Home
+                  <a class="nav-link text-body-secondary <%= pageActive === 'blog' ? 'active fw-semibold' : '' %>" 
+                     href="/" 
+                     aria-label="Home page"
+                     <% if(pageActive === 'blog'){ %>aria-current="page"<% } %>>
+                      <i class="bi bi-house" aria-hidden="true"></i> Home
                   </a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link text-body-secondary <%= pageActive === 'about' ? 'active fw-semibold' : '' %>" href="/about">
-                      <i class="bi bi-person"></i> About
+                  <a class="nav-link text-body-secondary <%= pageActive === 'about' ? 'active fw-semibold' : '' %>" 
+                     href="/about" 
+                     aria-label="About page"
+                     <% if(pageActive === 'about'){ %>aria-current="page"<% } %>>
+                      <i class="bi bi-person" aria-hidden="true"></i> About
                   </a>
               </li>
-              <!-- Theme Toggle -->
-              <li class="nav-item">
+              <!-- Theme Toggle for Desktop -->
+              <li class="nav-item d-none d-lg-block">
                   <button
                       class="nav-link btn border-0 bg-transparent text-body-secondary"
                       type="button"
                       onclick="toggleTheme()"
-                      aria-label="Toggle theme"
+                      aria-label="Toggle dark/light theme"
+                      title="Switch theme"
                   >
-                      <i class="bi bi-sun-fill" id="theme-icon"></i>
+                      <i class="bi bi-sun-fill" id="theme-icon-desktop" aria-hidden="true"></i>
                   </button>
               </li>
           </ul>
-      </div>
+      </nav>
   </div>
 </header>

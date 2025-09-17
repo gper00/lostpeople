@@ -66,8 +66,8 @@
             </nav>
 
             <main>
-                <article class="bg-white rounded-4 border">
-                    <header class="mt-4 mt-lg-5 px-3 px-md-4 px-lg-5">
+                <article class="bg-body rounded-4 border post-detail-card">
+                    <header class="mt-4 mt-lg-5 px-3 px-md-4 px-lg-5 post-detail-header">
                         <h1 class="post-title">
                             <%= post.title %>
                         </h1>
@@ -135,12 +135,12 @@
                         />
                     </figure>
                     <% } %>
-                    <div class="card-body px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4">
+                    <div class="card-body px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4 post-detail-content">
                         <section class="post-body markdown-body">
                             <%- post.content %>
                         </section>
                     </div>
-                    <div class="d-lg-none card-footer px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4">
+                    <div class="d-lg-none card-footer px-3 px-md-4 px-lg-5 pb-4 pb-lg-5 mt-4 post-detail-footer">
                       <section class="d-flex justify-content-between border-top pt-4">
                         <span>Share</span>
                         <span>
@@ -175,7 +175,7 @@
                     </div>
                 </article>
 
-                <section id="comments" class="bg-white rounded-4 border p-lg-4 px-3 py-4 mt-5">
+                <section id="comments" class="bg-body rounded-4 border p-lg-4 px-3 py-4 mt-5 comments-section">
                     <script src="https://giscus.app/client.js"
                         data-repo="gper00/blog-comments"
                         data-repo-id="R_kgDONr94rA"

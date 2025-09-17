@@ -7,11 +7,19 @@
 
         <title><%= locale.title %></title>
 
-        <!-- Primary Meta Tags -->
+        <!-- Enhanced SEO Meta Tags -->
         <meta name="title" content="<%= locale.title %>" />
         <meta name="description" content="<%= locale.description %>" />
         <meta name="author" content="<%= locale.author %>" />
         <meta name="keywords" content="<%= locale.keywords %>" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="googlebot" content="index, follow" />
+        <meta name="bingbot" content="index, follow" />
+        <meta name="language" content="Indonesian" />
+        <meta name="geo.region" content="ID" />
+        <meta name="geo.country" content="Indonesia" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
 
         <!-- Google / Search Engine Tags -->
         <meta itemprop="name" content="<%= locale.name %>" />
@@ -24,19 +32,24 @@
         <meta property="og:title" content="<%= locale.title %>" />
         <meta property="og:description" content="<%= locale.description %>" />
         <meta property="og:image" content="<%= locale.image || locale.icon %>" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="<%= locale.name %>" />
+        <meta property="og:locale" content="id_ID" />
 
         <!-- Twitter -->
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="<%= locale.url %>" />
-        <meta property="twitter:title" content="<%= locale.title %>" />
-        <meta
-            property="twitter:description" content="<%= locale.description %>"
-        />
-        <meta property="twitter:image" content="<%= locale.image || locale.icon %>" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="<%= locale.url %>" />
+        <meta name="twitter:title" content="<%= locale.title %>" />
+        <meta name="twitter:description" content="<%= locale.description %>" />
+        <meta name="twitter:image" content="<%= locale.image || locale.icon %>" />
+        <meta name="twitter:creator" content="@<%= locale.author %>" />
+        <meta name="twitter:site" content="@<%= locale.name %>" />
 
         <% if(pageActive == 'post-detail'){ %>
-        <!-- Article -->
+        <!-- Article Meta Tags -->
         <meta property="article:publisher" content="<%= locale.name %>" />
+        <meta property="article:author" content="<%= locale.author %>" />
         <% post.tags.forEach(tag => { %>
         <meta property="article:tag" content="<%= tag %>" />
         <% }) %>
@@ -45,28 +58,85 @@
         <meta property="article:modified_time" content="<%= post.updatedAt.toISOString() %>" />
         <% } %>
 
-        <!-- Favicon -->
-        <!-- <link rel="icon" type="image/svg+xml" href="<%= locale.icon %>" /> -->
-
-        <!-- Cannonical -->
+        <!-- Canonical URL -->
         <link rel="canonical" href="<%= locale.url %>" />
 
-        <!-- Preconnect for performance -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+        <!-- Favicon and Icons -->
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
 
+        <!-- Performance optimizations -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+        <!-- Critical CSS inline for faster rendering -->
+        <style>
+            body{font-family:'Inter',sans-serif;margin:0;padding:0}
+            .navbar{transition:background-color 0.2s ease}
+            img{max-width:100%;height:auto;loading:lazy}
+        </style>
+
+        <!-- Optimized font loading -->
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap"></noscript>
 
+        <!-- Non-critical CSS -->
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"></noscript>
 
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"></noscript>
 
-        <!-- Styles -->
+        <!-- Main styles -->
         <link rel="stylesheet" href="/dist/style.bundle.min.css" />
+
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "<%= pageActive == 'post-detail' ? 'BlogPosting' : 'WebSite' %>",
+            "name": "<%= locale.name %>",
+            "url": "<%= locale.url %>",
+            "description": "<%= locale.description %>",
+            <% if(pageActive == 'post-detail'){ %>
+            "headline": "<%= post.title %>",
+            "image": "<%= post.thumbnail || locale.image %>",
+            "author": {
+                "@type": "Person",
+                "name": "<%= locale.author %>"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "<%= locale.name %>",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "<%= locale.icon %>"
+                }
+            },
+            "datePublished": "<%= post.createdAt.toISOString() %>",
+            "dateModified": "<%= post.updatedAt.toISOString() %>",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "<%= locale.url %>"
+            },
+            "keywords": "<%= post.tags.join(', ') %>",
+            "articleSection": "<%= post.category %>",
+            <% } else { %>
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "<%= locale.url %>/posts?search={search_term_string}",
+                "query-input": "required name=search_term_string"
+            },
+            <% } %>
+            "inLanguage": "id-ID"
+        }
+        </script>
 
         <!-- Initialize theme before page render -->
         <script>
@@ -86,6 +156,7 @@
 
         <%- include('../partials/home-footer.ejs') %>
 
-        <script src="/dist/script.bundle.min.js"></script>
+        <!-- Optimized script loading -->
+        <script src="/dist/script.bundle.min.js" defer></script>
     </body>
 </html>

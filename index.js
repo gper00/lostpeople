@@ -18,35 +18,62 @@ const compression = require('compression')
 
 const app = express()
 
-app.use(compression())
+// Performance optimizations
+app.use(compression({ level: 6, threshold: 1024 }))
+app.set('trust proxy', 1)
+app.disable('x-powered-by')
+
 const PORT = process.env.PORT || 5000
 const csrfProtection = csrf({ cookie: true })
 
 connectDB() // connect to database
 
-// Setup EJS
+// Setup EJS with caching
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
+if (process.env.NODE_ENV === 'production') {
+    app.set('view cache', true)
+}
 
-app.use(express.urlencoded({ extended: true }))
+// Optimized middleware order
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, '/public')))
+
+// Static files with caching
+app.use(express.static(path.join(__dirname, '/public'), {
+    maxAge: process.env.NODE_ENV === 'production' ? '1y' : '0',
+    etag: true,
+    lastModified: true
+}))
+
 app.use(expressEjsLayouts)
 app.use(methodOverride('_method'))
+
+// Session with optimized settings
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production'
+        }
     })
 )
+
 app.use(flash())
 app.use(csrfProtection)
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken()
     next()
 })
-app.use(morgan('dev'))
+
+// Conditional logging
+if (process.env.NODE_ENV !== 'production') {
+    app.use(morgan('dev'))
+}
 
 // Routes
 app.use(visitorRoutes)
@@ -54,5 +81,5 @@ app.use('/dashboard', authenticateToken, adminRoutes)
 app.use(routeErrorHandler)
 
 app.listen(PORT, () =>
-    console.log(`Listening on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 )
