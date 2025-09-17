@@ -4,5 +4,5 @@ node_modules/
 # Ignore .env file
 .env
 
-# Ignore .crush directory
-.crush/
+# Ignore project meta data
+PROJECT_METADATA.md

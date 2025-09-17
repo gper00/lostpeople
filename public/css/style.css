@@ -436,3 +436,169 @@ footer a {
     /* line-height: 1.7; */
     font-family: "Source Sans 3", serif;
 }
+
+/* Enhanced Dark Theme Support */
+[data-bs-theme="dark"] .markdown-body :not(pre) > code {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+}
+
+[data-bs-theme="dark"] .post:hover {
+    box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .btn:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .page-link:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .tag-link:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .form-select:focus {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .header-shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] #backToTop {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] #backToTop:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+[data-bs-theme="dark"] .navbar-brand::after {
+    background: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] .navbar-brand {
+    color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] .navbar-brand:hover {
+    color: var(--bs-light) !important;
+}
+
+/* Enhanced Smooth Transitions */
+*,
+*::before,
+*::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Fix hardcoded background colors for theme compatibility */
+[data-bs-theme="dark"] .bg-light {
+    background-color: var(--bs-dark) !important;
+}
+
+[data-bs-theme="dark"] .bg-white {
+    background-color: var(--bs-body-bg) !important;
+}
+
+[data-bs-theme="dark"] .border {
+    border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .dropdown-toggle {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+    background-color: var(--bs-body-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .social-link a {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .img-thumbnail {
+    border-color: var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg) !important;
+}
+
+/* Fix icon backgrounds in dark theme */
+[data-bs-theme="dark"] .bg-dark {
+    background-color: var(--bs-light) !important;
+    color: var(--bs-dark) !important;
+}
+
+[data-bs-theme="dark"] .btn-dark {
+    background-color: var(--bs-light) !important;
+    border-color: var(--bs-light) !important;
+    color: var(--bs-dark) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-dark {
+    border-color: var(--bs-light) !important;
+    color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-dark:hover {
+    background-color: var(--bs-light) !important;
+    color: var(--bs-dark) !important;
+}
+/* Fix dropdown button transparency and active states */
+[data-bs-theme="dark"] .dropdown-toggle {
+    background-color: transparent !important;
+    color: var(--bs-body-color) !important;
+    border: none !important;
+}
+
+/* Light theme active dropdown items */
+[data-bs-theme="light"] .dropdown-item.active {
+    background-color: var(--bs-dark) !important;
+    color: var(--bs-white) !important;
+}
+
+/* Dark theme active dropdown items */
+[data-bs-theme="dark"] .dropdown-item.active {
+    background-color: var(--bs-light) !important;
+    color: var(--bs-dark) !important;
+}
+
+/* Fix post body text color in dark theme */
+[data-bs-theme="dark"] .markdown-body {
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body h1,
+[data-bs-theme="dark"] .markdown-body h2,
+[data-bs-theme="dark"] .markdown-body h3,
+[data-bs-theme="dark"] .markdown-body h4,
+[data-bs-theme="dark"] .markdown-body h5,
+[data-bs-theme="dark"] .markdown-body h6 {
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .markdown-body p,
+[data-bs-theme="dark"] .markdown-body li,
+[data-bs-theme="dark"] .markdown-body blockquote {
+    color: var(--bs-body-color) !important;
+}
+
+/* Fix about page active nav text color */
+[data-bs-theme="dark"] .contact-nav .active {
+    color: var(--bs-body-color) !important;
+    border-bottom-color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .contact-nav .nav-link:hover {
+    color: var(--bs-body-color) !important;
+    border-bottom-color: var(--bs-body-color) !important;
+}

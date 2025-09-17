@@ -1,5 +1,3 @@
-// Additional JavaScript for header and footer functionality
-
 // Theme Toggle Function
 function toggleTheme() {
     const html = document.documentElement;
@@ -23,8 +21,7 @@ function initializeTheme() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = savedTheme || (prefersDark ? 'dark' : 'light');
 
-    // document.documentElement.setAttribute('data-bs-theme', theme);
-    document.documentElement.setAttribute('data-bs-theme', 'light'); // need to fix later
+    document.documentElement.setAttribute('data-bs-theme', theme);
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) {
         themeIcon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
