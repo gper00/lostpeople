@@ -80,24 +80,52 @@ function initializeTheme() {
     setTimeout(() => updateCommentTheme(theme), 1000);
 }
 
-// Optimized scroll handling with throttling
-let scrollTimeout;
-function initializeBackToTop() {
+// Reading progress with circular back-to-top button
+function initializeReadingProgress() {
     const backToTopButton = document.getElementById('backToTop');
     if (!backToTopButton) return;
 
-    const throttledScroll = () => {
-        if (scrollTimeout) return;
-        
-        scrollTimeout = setTimeout(() => {
-            const shouldShow = window.pageYOffset > 300;
-            backToTopButton.classList.toggle('d-none', !shouldShow);
-            backToTopButton.classList.toggle('d-block', shouldShow);
-            scrollTimeout = null;
-        }, 100);
+    const updateProgress = () => {
+        const article = document.querySelector('.post-body');
+        if (!article) return;
+
+        const articleTop = article.offsetTop;
+        const articleHeight = article.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset;
+
+        const articleBottom = articleTop + articleHeight;
+        const windowBottom = scrollTop + windowHeight;
+
+        let progress = 0;
+        if (scrollTop >= articleTop) {
+            if (windowBottom >= articleBottom) {
+                progress = 100;
+            } else {
+                const visibleHeight = windowBottom - articleTop;
+                progress = (visibleHeight / articleHeight) * 100;
+            }
+        }
+
+        // Convert progress to degrees (0-360)
+        const progressAngle = (progress / 100) * 360;
+        backToTopButton.style.setProperty('--progress-angle', `${progressAngle}deg`);
+
+        // Show/hide button based on scroll position
+        const shouldShow = window.pageYOffset > 300;
+        backToTopButton.classList.toggle('d-none', !shouldShow);
+        backToTopButton.classList.toggle('d-block', shouldShow);
     };
 
-    window.addEventListener('scroll', throttledScroll, { passive: true });
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress(); // Initial call
+}
+
+// Simplified back-to-top initialization
+function initializeBackToTop() {
+    // Functionality now handled by initializeReadingProgress
+    return;
 }
 
 // Optimized code block initialization
@@ -154,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeTheme();
         initializeBackToTop();
         initializeCodeBlocks();
+        initializeReadingProgress();
     });
 
     // Critical path optimizations
