@@ -1,0 +1,175 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Literary Minimalist Colors */
+  --color-background: #faf9fb;
+  --color-primary: #000000;
+  --color-secondary: #5e5e5e;
+  --color-accent-highlight: #E5C100;
+  --color-border-subtle: #E5E5E5;
+  --color-on-surface: #1a1c1d;
+  --color-on-surface-variant: #4c4546;
+
+  /* Typography */
+  --font-display-lg: 'EB Garamond', serif;
+  --font-headline-lg: 'EB Garamond', serif;
+  --font-headline-md: 'EB Garamond', serif;
+  --font-body-lg: 'Inter', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-meta-italic: 'EB Garamond', serif;
+  --font-label-sm: 'Inter', sans-serif;
+
+  /* Font Sizes */
+  --text-display-lg: 48px;
+  --text-headline-lg: 32px;
+  --text-headline-md: 24px;
+  --text-body-lg: 18px;
+  --text-body-md: 16px;
+  --text-meta-italic: 15px;
+  --text-label-sm: 13px;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --spacing-gutter: 24px;
+  --spacing-margin-page: 64px;
+  --spacing-stack-lg: 48px;
+  --spacing-stack-md: 24px;
+  --spacing-stack-sm: 12px;
+}
+
+/* Base typography */
+body {
+  font-family: var(--font-body-md);
+  line-height: 1.6;
+  background-color: var(--color-background);
+  color: var(--color-primary);
+}
+
+/* Prose overrides for editorial feel */
+.prose {
+  font-family: var(--font-body-md);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 65ch;
+  color: var(--color-on-surface);
+}
+
+.prose h2 {
+  font-family: var(--font-headline-md);
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.prose h3 {
+  font-family: var(--font-headline-md);
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+}
+
+.prose p {
+  font-family: var(--font-headline-md);
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 1.5em;
+  font-weight: 400;
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-decoration-color: var(--color-border-subtle);
+  text-underline-offset: 4px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-primary);
+}
+
+.prose blockquote {
+  font-family: var(--font-headline-md);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.6;
+  border-left: 1px solid var(--color-border-subtle);
+  padding-left: 24px;
+  margin: 2em 0;
+  color: var(--color-on-surface-variant);
+}
+
+.prose pre {
+  background-color: #f4f3f5;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0;
+  padding: 1.5em;
+  overflow-x: auto;
+  margin: 2em 0;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  color: var(--color-on-surface);
+}
+
+.prose p code, .prose li code {
+  background-color: #f4f3f5;
+  padding: 0.2em 0.4em;
+  font-size: 0.85em;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.prose ul, .prose ol {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+  padding-left: 24px;
+  font-family: var(--font-headline-md);
+  font-size: 20px;
+  line-height: 1.8;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+/* Drop cap for first paragraph */
+.drop-cap:first-letter {
+  float: left;
+  font-size: 5.5em;
+  line-height: 0.75;
+  padding-top: 0.05em;
+  padding-right: 0.1em;
+  padding-left: 0.05em;
+  font-family: var(--font-headline-md);
+  font-weight: 700;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent-highlight);
+  color: var(--color-primary);
+}

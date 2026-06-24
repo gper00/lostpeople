@@ -1,0 +1,90 @@
+---
+export const prerender = true;
+
+import type { GetStaticPaths } from 'astro';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import { connectDB } from '@/lib/db';
+import Post from '@/models/Post';
+import marked from '@/lib/markdown';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    await connectDB();
+    const posts = await Post.find({ status: 'published' })
+      .populate('userId', 'fullname username image')
+      .lean();
+
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch (e) {
+    console.warn('Could not connect to database during build:', e);
+    return [];
+  }
+};
+
+const { post } = Astro.props;
+const author = typeof post.userId === 'object' ? post.userId : null;
+const content = marked.parse(post.content);
+const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BlogLayout
+  title={`${post.title} | Lostpeople`}
+  description={post.excerpt}
+  image={post.thumbnail || undefined}
+  keywords={post.tags.join(', ')}
+>
+  <article>
+    <!-- Back to Posts -->
+    <a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors mb-stack-md group" href="/">
+      <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
+      BACK TO POSTS
+    </a>
+
+    <!-- Article Header -->
+    <header class="mb-stack-lg">
+      <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm md:text-[56px] leading-[1.05] tracking-tight">
+        {post.title}
+      </h1>
+      <div class="flex flex-wrap items-center gap-4 border-b border-border-subtle pb-6 mt-6">
+        <time class="font-meta-italic text-meta-italic text-secondary italic" datetime={post.createdAt.toString()}>
+          {formattedDate}
+        </time>
+        {post.category && (
+          <>
+            <span class="text-border-subtle px-1">•</span>
+            <span class="font-meta-italic text-meta-italic text-secondary">{post.category}</span>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- Article Hero Image -->
+    {post.thumbnail && (
+      <figure class="my-stack-lg">
+        <img
+          alt={post.title}
+          class="object-cover w-full"
+          src={post.thumbnail}
+        />
+        {post.excerpt && (
+          <figcaption class="font-label-sm text-label-sm text-on-secondary-container text-center mt-3">
+            {post.excerpt}
+          </figcaption>
+        )}
+      </figure>
+    )}
+
+    <!-- Article Content -->
+    <article class="prose prose-lg" set:html={content} />
+
+    <!-- Horizontal Divider -->
+    <div class="w-full h-px bg-border-subtle my-stack-lg"></div>
+  </article>
+</BlogLayout>

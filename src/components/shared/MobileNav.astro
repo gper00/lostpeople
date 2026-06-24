@@ -1,0 +1,95 @@
+---
+const navLinks = [
+  { href: '/', label: 'Posts' },
+  { href: '/tags', label: 'Tags' },
+  { href: '/about', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!-- Mobile Header -->
+<header class="fixed top-0 w-full z-40 md:hidden bg-background/90 backdrop-blur-md border-b border-border-subtle flex justify-between items-center px-gutter py-4">
+  <a class="font-headline-lg-mobile text-headline-lg-mobile italic text-primary" href="/">
+    Lostpeople
+  </a>
+  <div class="flex items-center gap-stack-sm">
+    <button class="text-primary cursor-pointer" id="menu-btn" aria-label="Open menu">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Menu Overlay -->
+<div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[50] hidden opacity-0 transition-opacity duration-300 md:hidden" id="menu-overlay"></div>
+
+<!-- Mobile Navigation Menu -->
+<div class="fixed inset-y-0 right-0 z-[60] w-64 bg-background shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col px-gutter py-margin-page" id="mobile-menu">
+  <div class="flex justify-end mb-8">
+    <button class="text-primary cursor-pointer text-[24px]" id="close-menu" aria-label="Close menu">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <nav class="flex flex-col gap-stack-md">
+    {navLinks.map(({ href, label }) => (
+      <a
+        href={href}
+        class:list={[
+          'text-secondary hover:text-primary transition-colors w-max font-headline-md text-headline-md italic',
+          currentPath === href
+            ? 'text-primary border-b-4 border-accent-highlight pb-1 font-bold'
+            : '',
+        ]}
+      >
+        {label}
+      </a>
+    ))}
+  </nav>
+  <div class="mt-auto border-t border-border-subtle pt-stack-md">
+    <div class="flex gap-4 mb-6">
+      <a aria-label="RSS" class="text-secondary hover:text-primary" href="/rss.xml">
+        <span class="material-symbols-outlined">rss_feed</span>
+      </a>
+      <button aria-label="Toggle Dark Mode" class="text-secondary hover:text-primary" id="mobile-theme-toggle">
+        <span class="material-symbols-outlined">dark_mode</span>
+      </button>
+    </div>
+    <p class="font-label-sm text-label-sm text-on-secondary-container">
+      © 2025-2026 Lostpeople.
+    </p>
+  </div>
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menu-btn');
+  const closeMenuBtn = document.getElementById('close-menu');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+
+  function openMenu() {
+    mobileMenu?.classList.remove('translate-x-full');
+    menuOverlay?.classList.remove('hidden');
+    void menuOverlay?.offsetWidth;
+    menuOverlay?.classList.remove('opacity-0');
+  }
+
+  function closeMenu() {
+    mobileMenu?.classList.add('translate-x-full');
+    menuOverlay?.classList.add('opacity-0');
+    setTimeout(() => {
+      menuOverlay?.classList.add('hidden');
+    }, 300);
+  }
+
+  menuBtn?.addEventListener('click', openMenu);
+  closeMenuBtn?.addEventListener('click', closeMenu);
+  menuOverlay?.addEventListener('click', closeMenu);
+
+  mobileThemeToggle?.addEventListener('click', () => {
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`;
+  });
+</script>

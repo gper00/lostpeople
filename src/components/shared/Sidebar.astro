@@ -1,0 +1,78 @@
+---
+const navLinks = [
+  { href: '/', label: 'Posts' },
+  { href: '/tags', label: 'Tags' },
+  { href: '/about', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<aside class="hidden md:flex flex-col justify-center py-margin-page px-gutter h-screen max-w-[350px] sticky top-0 w-[30%] border-l border-border-subtle bg-background z-10">
+  <div class="mb-stack-lg">
+    <a class="text-display-lg font-display-lg italic text-primary block mb-unit" href="/">
+      Lostpeople
+    </a>
+    <p class="font-meta-italic text-meta-italic text-secondary">
+      Revive the beauty of typography
+    </p>
+  </div>
+
+  <nav class="flex flex-col gap-stack-md mb-stack-lg">
+    {navLinks.map(({ href, label }) => (
+      <a
+        href={href}
+        class:list={[
+          'text-secondary hover:text-primary transition-colors w-max font-headline-md text-headline-md italic',
+          currentPath === href
+            ? 'text-primary border-b-4 border-accent-highlight pb-1 font-bold'
+            : '',
+        ]}
+      >
+        {label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="flex items-center gap-stack-sm mb-stack-lg text-secondary">
+    <button
+      id="font-size-toggle"
+      class="hover:text-primary cursor-pointer transition-colors"
+      aria-label="Toggle font size"
+    >
+      <span class="material-symbols-outlined">format_size</span>
+    </button>
+    <button
+      id="theme-toggle"
+      class="hover:text-primary cursor-pointer transition-colors"
+      aria-label="Toggle theme"
+    >
+      <span class="material-symbols-outlined">contrast</span>
+    </button>
+  </div>
+
+  <div class="mt-auto">
+    <p class="font-label-sm text-label-sm text-secondary mb-2">
+      RSS / GitHub / Email
+    </p>
+    <p class="font-label-sm text-label-sm text-on-tertiary-container">
+      © 2025-2026 Lostpeople.<br />
+      Powered by Astro and Retypeset.
+    </p>
+  </div>
+</aside>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    if (isDark) {
+      html.classList.remove('dark');
+      document.cookie = 'theme=light; path=/; max-age=31536000';
+    } else {
+      html.classList.add('dark');
+      document.cookie = 'theme=dark; path=/; max-age=31536000';
+    }
+  });
+</script>

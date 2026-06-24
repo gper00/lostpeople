@@ -1,0 +1,35 @@
+---
+export const prerender = true;
+
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import PostItem from '@/components/blog/PostItem.astro';
+import { connectDB } from '@/lib/db';
+import Post from '@/models/Post';
+
+let posts: any[] = [];
+try {
+  await connectDB();
+  posts = await Post.find({ status: 'published' })
+    .sort({ createdAt: -1 })
+    .populate('userId', 'fullname username image')
+    .lean();
+} catch (e) {
+  console.warn('Could not connect to database during build:', e);
+}
+---
+
+<BlogLayout
+  title="Posts | Lostpeople"
+  description="Artikel inspiratif tentang kehidupan dan teknologi"
+>
+  <div class="flex flex-col gap-stack-lg">
+    {posts.length > 0 ? (
+      posts.map((post) => <PostItem post={post} />)
+    ) : (
+      <p class="font-body-md text-secondary">Belum ada artikel.</p>
+    )}
+    {posts.length > 0 && (
+      <div class="w-full h-px bg-border-subtle my-stack-lg"></div>
+    )}
+  </div>
+</BlogLayout>

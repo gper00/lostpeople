@@ -1,0 +1,27 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '@/components/shared/Sidebar.astro';
+import MobileNav from '@/components/shared/MobileNav.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  keywords?: string;
+}
+
+const { title, description, image, url, keywords } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image} url={url} keywords={keywords}>
+  <MobileNav />
+  <div class="max-w-[1100px] mx-auto min-h-screen relative md:flex justify-between pt-24 md:pt-0">
+    <!-- Left: Main Content Canvas (70%) -->
+    <main class="w-full md:w-[70%] px-gutter md:px-margin-page py-margin-page mt-[80px] md:mt-0">
+      <slot />
+    </main>
+    <!-- Right: SideNavBar (30%) - Fixed position on Web -->
+    <Sidebar />
+  </div>
+</BaseLayout>
