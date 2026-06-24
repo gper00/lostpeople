@@ -9,8 +9,8 @@ const siteConfig = {
         github: 'https://github.com/gper00',
         linkedin: 'https://id.linkedin.com/in/umam-alfarizi',
         twitter: 'https://twitter.com/gper00',
-        facebook: 'https://facebook.com/ummalfarizi',
-        instagram: 'https://instagram.com/ummalfarizi'
+        facebook: 'https://facebook.com/umamalfarizii',
+        instagram: 'https://instagram.com/umamalfarizii'
     }
 }
 

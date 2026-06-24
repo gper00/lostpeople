@@ -1,7 +1,7 @@
 # Lostpeople - Personal Blog Platform
 
 <div align="center">
-  <img src="lostpeople-home.png" alt="Lostpeople Homepage" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+  <img src="ss/lostpeople-home.png" alt="Lostpeople Homepage" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
 </div>
 
 <p align="center">
@@ -21,11 +21,31 @@
 
 Lostpeople offers a comprehensive blogging experience with modern UI/UX design that adapts seamlessly to both dark and light themes. The platform provides a rich content editor supporting Markdown with syntax highlighting, making it easy to create and format blog posts with professional appearance.
 
+<div align="center">
+  <img src="ss/admin-post.png" alt="markdown writing" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+</div>
+
 Security is implemented through JWT-based authentication with CSRF protection, ensuring user data remains safe. The responsive design delivers an optimal experience across all devices, from desktop computers to mobile phones.
 
 Performance optimization includes efficient loading mechanisms and smooth user interactions. The platform is SEO-ready with structured data, proper meta tags, and search engine optimization features built-in.
 
 Additional functionality includes a circular reading progress indicator that tracks scroll position, an integrated comment system powered by Giscus for reader discussions, comprehensive content management with categories and tags, plus search functionality. Media files are handled through Cloudinary integration for reliable cloud storage.
+
+### Multi-User Management
+
+Lostpeople supports multiple authenticated users, making it suitable for collaborative blogging environments. Administrators can manage user accounts and control who has access to create and publish content.
+
+<div align="center"> <img src="ss/admin-users.png" alt="User management dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"> </div>
+
+This feature enables teams, contributors, or guest writers to participate in content creation while maintaining secure access control and centralized administration.
+
+### Authentication System
+
+The platform includes a secure authentication system with login and account management features, ensuring that only authorized users can access administrative functionality.
+
+<div align="center"> <img src="ss/login.png" alt="Login page" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"> </div>
+
+The authentication flow is designed to be both secure and user-friendly, providing a straightforward experience for administrators and content contributors alike.
 
 ## Tech Stack
 
@@ -126,6 +146,6 @@ This project is open source and available under the [MIT License](LICENSE).
   <p>
     <a href="https://github.com/gper00">GitHub</a> •
     <a href="https://linkedin.com/in/umam-alfarizi">LinkedIn</a> •
-    <a href="mailto:alfariziuchiha@gmail.com">Email</a>
+    <a href="mailto:oemamalfarizi@gmail.com">Email</a>
   </p>
 </div>
