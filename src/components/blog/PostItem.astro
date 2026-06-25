@@ -9,12 +9,12 @@ const { post } = Astro.props;
 const formattedDate = new Date(post.createdAt).toISOString().split('T')[0];
 ---
 
-<article class="group cursor-pointer">
+<article class="group cursor-pointer mb-stack-md">
   <a href={`/posts/${post.slug}`} class="block">
-    <h2 class="font-headline-lg text-headline-lg text-primary mb-2 group-hover:text-secondary transition-colors">
+    <h2 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-secondary transition-colors">
       {post.title}
     </h2>
-    <div class="flex items-center gap-2 font-meta-italic text-meta-italic text-secondary mb-4">
+    <div class="flex items-center gap-2 font-meta-italic text-meta-italic text-secondary mb-2">
       <time datetime={formattedDate}>{formattedDate}</time>
       {post.category && (
         <>
@@ -23,9 +23,8 @@ const formattedDate = new Date(post.createdAt).toISOString().split('T')[0];
         </>
       )}
     </div>
-    <p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">
+    <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
       {post.excerpt}
     </p>
   </a>
 </article>
-<div class="w-10 h-px bg-border-subtle"></div>

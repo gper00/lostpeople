@@ -45,16 +45,16 @@ const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
   <article>
     <!-- Back to Posts -->
     <a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors mb-stack-md group" href="/">
-      <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
+      <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
       BACK TO POSTS
     </a>
 
     <!-- Article Header -->
     <header class="mb-stack-lg">
-      <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm md:text-[56px] leading-[1.05] tracking-tight">
+      <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm md:text-[40px] leading-[1.1] tracking-tight">
         {post.title}
       </h1>
-      <div class="flex flex-wrap items-center gap-4 border-b border-border-subtle pb-6 mt-6">
+      <div class="flex flex-wrap items-center gap-3 border-b border-border-subtle pb-4 mt-4">
         <time class="font-meta-italic text-meta-italic text-secondary italic" datetime={post.createdAt.toString()}>
           {formattedDate}
         </time>
@@ -76,7 +76,7 @@ const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
           src={post.thumbnail}
         />
         {post.excerpt && (
-          <figcaption class="font-label-sm text-label-sm text-on-secondary-container text-center mt-3">
+          <figcaption class="font-label-sm text-label-sm text-on-secondary-container text-center mt-2">
             {post.excerpt}
           </figcaption>
         )}

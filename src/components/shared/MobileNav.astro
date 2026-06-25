@@ -10,7 +10,7 @@ const currentPath = Astro.url.pathname;
 
 <!-- Mobile Header -->
 <header class="fixed top-0 w-full z-40 md:hidden bg-background/90 backdrop-blur-md border-b border-border-subtle flex justify-between items-center px-gutter py-4">
-  <a class="font-headline-lg-mobile text-headline-lg-mobile italic text-primary" href="/">
+  <a class="font-headline-lg text-headline-lg italic text-primary" href="/">
     Lostpeople
   </a>
   <div class="flex items-center gap-stack-sm">
@@ -24,9 +24,9 @@ const currentPath = Astro.url.pathname;
 <div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[50] hidden opacity-0 transition-opacity duration-300 md:hidden" id="menu-overlay"></div>
 
 <!-- Mobile Navigation Menu -->
-<div class="fixed inset-y-0 right-0 z-[60] w-64 bg-background shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col px-gutter py-margin-page" id="mobile-menu">
-  <div class="flex justify-end mb-8">
-    <button class="text-primary cursor-pointer text-[24px]" id="close-menu" aria-label="Close menu">
+  <div class="fixed inset-y-0 right-0 z-[60] w-64 bg-background shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col px-gutter py-margin-page" id="mobile-menu">
+  <div class="flex justify-end mb-6">
+    <button class="text-primary cursor-pointer text-[20px]" id="close-menu" aria-label="Close menu">
       <span class="material-symbols-outlined">close</span>
     </button>
   </div>
@@ -37,7 +37,7 @@ const currentPath = Astro.url.pathname;
         class:list={[
           'text-secondary hover:text-primary transition-colors w-max font-headline-md text-headline-md italic',
           currentPath === href
-            ? 'text-primary border-b-4 border-accent-highlight pb-1 font-bold'
+            ? 'text-primary border-b-2 border-accent-highlight pb-1 font-bold'
             : '',
         ]}
       >
