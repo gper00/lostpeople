@@ -3,6 +3,8 @@ export const prerender = true;
 
 import type { GetStaticPaths } from 'astro';
 import BlogLayout from '@/layouts/BlogLayout.astro';
+import ReadingProgress from '@/components/shared/ReadingProgress.astro';
+import Giscus from '@/components/shared/Giscus.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
 import marked from '@/lib/markdown';
@@ -85,5 +87,11 @@ const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
 
     <!-- Horizontal Divider -->
     <div class="w-full h-px bg-border-subtle my-stack-lg"></div>
+
+    <!-- Giscus Comments -->
+    <Giscus />
   </article>
+
+  <!-- Reading Progress Bar -->
+  <ReadingProgress />
 </BlogLayout>

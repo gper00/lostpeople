@@ -1,0 +1,26 @@
+---
+/**
+ * Reading progress bar — shows a thin gold bar at the top of the page
+ * that fills as the user scrolls through an article.
+ */
+---
+
+<div id="reading-progress" class="fixed top-0 left-0 right-0 h-[3px] bg-transparent z-[9999] pointer-events-none">
+  <div id="reading-progress-bar" class="h-full bg-[#E5C100] w-0 transition-[width] duration-150"></div>
+</div>
+
+<script>
+  function updateProgress() {
+    const bar = document.getElementById('reading-progress-bar');
+    if (!bar) return;
+
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = `${Math.min(progress, 100)}%`;
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress, { passive: true });
+  updateProgress();
+</script>

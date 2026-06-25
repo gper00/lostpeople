@@ -1,0 +1,52 @@
+---
+export const prerender = true;
+
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import { connectDB } from '@/lib/db';
+import Post from '@/models/Post';
+
+let allTags: { name: string; count: number }[] = [];
+
+try {
+  await connectDB();
+  const posts = await Post.find({ status: 'published' }).lean();
+  const tagMap = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of post.tags || []) {
+      tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+    }
+  }
+  allTags = Array.from(tagMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+} catch (e) {
+  console.warn('Could not connect to database during build:', e);
+}
+---
+
+<BlogLayout title="Tags | Lostpeople" description="Browse posts by tag">
+  <div class="mb-stack-lg">
+    <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm">Tags</h1>
+    <div class="w-full h-px bg-border-subtle"></div>
+  </div>
+
+  {allTags.length > 0 ? (
+    <div class="flex flex-wrap gap-3">
+      {allTags.map(({ name, count }) => (
+        <a
+          href={`/tags/${encodeURIComponent(name)}`}
+          class="inline-flex items-center gap-2 px-4 py-2 border border-border-subtle hover:border-primary hover:bg-primary/5 transition-colors no-underline group"
+        >
+          <span class="font-meta-italic text-meta-italic text-primary group-hover:text-primary">
+            {name}
+          </span>
+          <span class="font-label-sm text-label-sm text-secondary">
+            ({count})
+          </span>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <p class="font-meta-italic text-meta-italic text-secondary">No tags yet.</p>
+  )}
+</BlogLayout>
