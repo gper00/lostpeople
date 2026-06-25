@@ -1,0 +1,177 @@
+---
+export const prerender = false;
+
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import TipTapEditor from '@/components/dashboard/TipTapEditor';
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect('/login');
+}
+---
+
+<DashboardLayout title="Create Post | Lostpeople Dashboard">
+  <div class="mb-stack-lg">
+    <a href="/dashboard/posts" class="inline-flex items-center gap-2 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors mb-stack-md group no-underline">
+      <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
+      BACK TO POSTS
+    </a>
+    <h1 class="font-headline-lg text-headline-lg text-primary">Create Post</h1>
+  </div>
+
+  <form id="create-post-form" class="flex flex-col gap-stack-md max-w-3xl">
+    <!-- Title -->
+    <div>
+      <label for="title" class="font-label-sm text-label-sm text-secondary block mb-1">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        required
+        minlength={10}
+        maxlength={255}
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-headline-md text-headline-md focus:outline-none focus:border-primary transition-colors"
+        placeholder="Post title"
+      />
+    </div>
+
+    <!-- Excerpt -->
+    <div>
+      <label for="excerpt" class="font-label-sm text-label-sm text-secondary block mb-1">Excerpt</label>
+      <textarea
+        id="excerpt"
+        name="excerpt"
+        required
+        minlength={30}
+        maxlength={500}
+        rows={3}
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors resize-y"
+        placeholder="Brief description of the post"
+      ></textarea>
+    </div>
+
+    <!-- Content -->
+    <div>
+      <label class="font-label-sm text-label-sm text-secondary block mb-1">Content</label>
+      <TipTapEditor client:load content="" onChange={(html: string) => {
+        (document.getElementById('content') as HTMLInputElement).value = html;
+      }} />
+      <input type="hidden" id="content" name="content" />
+    </div>
+
+    <!-- Category -->
+    <div>
+      <label for="category" class="font-label-sm text-label-sm text-secondary block mb-1">Category</label>
+      <input
+        type="text"
+        id="category"
+        name="category"
+        maxlength={25}
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        placeholder="e.g., Technology, Life, Philosophy"
+      />
+    </div>
+
+    <!-- Tags -->
+    <div>
+      <label for="tags" class="font-label-sm text-label-sm text-secondary block mb-1">Tags (comma separated)</label>
+      <input
+        type="text"
+        id="tags"
+        name="tags"
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        placeholder="e.g., javascript, react, web"
+      />
+    </div>
+
+    <!-- Thumbnail -->
+    <div>
+      <label for="thumbnail" class="font-label-sm text-label-sm text-secondary block mb-1">Thumbnail URL</label>
+      <input
+        type="url"
+        id="thumbnail"
+        name="thumbnail"
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        placeholder="https://..."
+      />
+    </div>
+
+    <!-- Status -->
+    <div>
+      <label for="status" class="font-label-sm text-label-sm text-secondary block mb-1">Status</label>
+      <select
+        id="status"
+        name="status"
+        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+      >
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+      </select>
+    </div>
+
+    <!-- Error message -->
+    <div id="error-message" class="text-red-600 font-label-sm text-label-sm hidden"></div>
+
+    <!-- Submit -->
+    <div class="flex items-center gap-stack-sm mt-stack-md">
+      <button
+        type="submit"
+        id="submit-btn"
+        class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0"
+      >
+        Create Post
+      </button>
+      <a
+        href="/dashboard/posts"
+        class="px-6 py-3 border border-border-subtle text-primary font-label-sm text-label-sm tracking-wider uppercase hover:bg-primary/5 transition-colors no-underline"
+      >
+        Cancel
+      </a>
+    </div>
+  </form>
+</DashboardLayout>
+
+<script>
+  const form = document.getElementById('create-post-form') as HTMLFormElement;
+  const errorMsg = document.getElementById('error-message')!;
+  const submitBtn = document.getElementById('submit-btn')!;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add('hidden');
+    submitBtn.textContent = 'Creating...';
+    (submitBtn as HTMLButtonElement).disabled = true;
+
+    const formData = new FormData(form);
+    const title = formData.get('title') as string;
+    const content = (document.getElementById('content') as HTMLInputElement).value;
+    const excerpt = formData.get('excerpt') as string;
+    const category = formData.get('category') as string;
+    const tagsStr = formData.get('tags') as string;
+    const thumbnail = formData.get('thumbnail') as string;
+    const status = formData.get('status') as string;
+
+    const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content, excerpt, category, tags, thumbnail, status }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create post');
+      }
+
+      window.location.href = `/dashboard/posts/${data._id}`;
+    } catch (err: any) {
+      errorMsg.textContent = err.message || 'An error occurred';
+      errorMsg.classList.remove('hidden');
+      submitBtn.textContent = 'Create Post';
+      (submitBtn as HTMLButtonElement).disabled = false;
+    }
+  });
+</script>
