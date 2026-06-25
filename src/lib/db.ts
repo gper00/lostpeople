@@ -1,18 +1,15 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  throw new Error('MONGO_URI environment variable is not set');
-}
-
-const uri: string = MONGO_URI;
-
 let isConnected = false;
 
 export async function connectDB(): Promise<typeof mongoose> {
   if (isConnected) {
     return mongoose;
+  }
+
+  const uri = import.meta.env.MONGO_URI;
+  if (!uri) {
+    throw new Error('MONGO_URI environment variable is not set');
   }
 
   try {

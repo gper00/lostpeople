@@ -7,6 +7,7 @@ import ReadingProgress from '@/components/shared/ReadingProgress.astro';
 import Giscus from '@/components/shared/Giscus.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
+import '@/models/User';
 import marked from '@/lib/markdown';
 
 export const getStaticPaths: GetStaticPaths = async () => {

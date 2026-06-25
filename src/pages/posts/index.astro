@@ -5,6 +5,7 @@ import BlogLayout from '@/layouts/BlogLayout.astro';
 import PostItem from '@/components/blog/PostItem.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
+import '@/models/User';
 
 let posts: any[] = [];
 try {
