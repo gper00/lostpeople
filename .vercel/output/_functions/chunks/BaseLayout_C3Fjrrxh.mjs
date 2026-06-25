@@ -1,0 +1,13 @@
+import { C as renderTemplate, D as renderHead, M as createComponent, O as addAttribute, S as renderSlot, j as createAstro } from "./render_C3nYDF00.mjs";
+import "./compiler_0PBYMGTh.mjs";
+//#region src/layouts/BaseLayout.astro
+createAstro("https://astro.build");
+var $$BaseLayout = createComponent(($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$BaseLayout;
+	const { title, description = "Lostpeople - Blog inspiratif tentang kehidupan dan teknologi", image, url, keywords } = Astro.props;
+	const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://lostpeople.vercel.app");
+	return renderTemplate`<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator"${addAttribute(Astro.generator, "content")}><!-- SEO --><title>${title}</title><meta name="description"${addAttribute(description, "content")}>${keywords && renderTemplate`<meta name="keywords"${addAttribute(keywords, "content")}>`}<link rel="canonical"${addAttribute(url || canonicalURL.href, "href")}><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:title"${addAttribute(title, "content")}><meta property="og:description"${addAttribute(description, "content")}><meta property="og:url"${addAttribute(url || canonicalURL.href, "content")}>${image && renderTemplate`<meta property="og:image"${addAttribute(image, "content")}>`}<!-- Twitter --><meta name="twitter:card"${addAttribute(image ? "summary_large_image" : "summary", "content")}><meta name="twitter:title"${addAttribute(title, "content")}><meta name="twitter:description"${addAttribute(description, "content")}>${image && renderTemplate`<meta name="twitter:image"${addAttribute(image, "content")}>`}<!-- Fonts: EB Garamond (headlines/body-serif) + Inter (UI/labels) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300..700&display=swap" rel="stylesheet"><!-- Material Symbols for icons --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"><!-- Favicon --><link rel="icon" type="image/svg+xml" href="/favicon.svg">${renderHead($$result)}</head><body class="min-h-screen bg-background text-on-background antialiased">${renderSlot($$result, $$slots["default"])}</body></html>`;
+}, "/home/gper/Desktop/webdev/lostpeople/src/layouts/BaseLayout.astro", void 0);
+//#endregion
+export { $$BaseLayout as t };
