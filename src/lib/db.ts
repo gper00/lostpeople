@@ -6,6 +6,8 @@ if (!MONGO_URI) {
   throw new Error('MONGO_URI environment variable is not set');
 }
 
+const uri: string = MONGO_URI;
+
 let isConnected = false;
 
 export async function connectDB(): Promise<typeof mongoose> {
@@ -14,7 +16,7 @@ export async function connectDB(): Promise<typeof mongoose> {
   }
 
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(uri);
     isConnected = true;
     console.log('Database connected:', mongoose.connection.host);
     return mongoose;

@@ -1,0 +1,118 @@
+---
+export const prerender = false;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const user = Astro.locals.user;
+if (user) {
+  return Astro.redirect('/dashboard');
+}
+---
+
+<BaseLayout title="Login | Lostpeople">
+  <div class="min-h-screen flex items-center justify-center px-gutter">
+    <div class="w-full max-w-md">
+      <!-- Branding -->
+      <div class="mb-stack-lg text-center">
+        <a href="/" class="font-display-lg text-display-lg text-primary italic">
+          Lostpeople
+        </a>
+        <p class="font-meta-italic text-meta-italic text-secondary mt-2">
+          Revive the beauty of typography
+        </p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="border border-border-subtle p-stack-lg">
+        <h1 class="font-headline-lg text-headline-lg text-primary mb-stack-md">
+          Sign In
+        </h1>
+
+        <form id="login-form" class="flex flex-col gap-stack-md">
+          <div>
+            <label for="email" class="font-label-sm text-label-sm text-secondary block mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="font-label-sm text-label-sm text-secondary block mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              minlength={8}
+              class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+
+          <div id="error-message" class="text-red-600 font-label-sm text-label-sm hidden"></div>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0"
+          >
+            Sign In
+          </button>
+        </form>
+      </div>
+
+      <!-- Back to site -->
+      <div class="mt-stack-md text-center">
+        <a href="/" class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors">
+          ← Back to Lostpeople
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const errorMsg = document.getElementById('error-message')!;
+  const submitBtn = document.getElementById('submit-btn')!;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add('hidden');
+    submitBtn.textContent = 'Signing in...';
+    (submitBtn as HTMLButtonElement).disabled = true;
+
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const password = (document.getElementById('password') as HTMLInputElement).value;
+
+    try {
+      const { createAuthClient } = await import('better-auth/react');
+      const { signIn } = createAuthClient({ baseURL: window.location.origin });
+
+      const { error } = await signIn.email({
+        email,
+        password,
+        callbackURL: '/dashboard',
+      });
+
+      if (error) {
+        errorMsg.textContent = error.message || 'Invalid email or password';
+        errorMsg.classList.remove('hidden');
+        submitBtn.textContent = 'Sign In';
+        (submitBtn as HTMLButtonElement).disabled = false;
+      }
+    } catch (err) {
+      errorMsg.textContent = 'An error occurred. Please try again.';
+      errorMsg.classList.remove('hidden');
+      submitBtn.textContent = 'Sign In';
+      (submitBtn as HTMLButtonElement).disabled = false;
+    }
+  });
+</script>

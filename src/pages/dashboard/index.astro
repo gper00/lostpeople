@@ -1,0 +1,123 @@
+---
+export const prerender = false;
+
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { connectDB } from '@/lib/db';
+import Post from '@/models/Post';
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+let posts: any[] = [];
+let totalPosts = 0;
+let publishedPosts = 0;
+let draftPosts = 0;
+
+try {
+  await connectDB();
+  posts = await Post.find({ userId: user.id })
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .lean();
+  totalPosts = await Post.countDocuments({ userId: user.id });
+  publishedPosts = await Post.countDocuments({ userId: user.id, status: 'published' });
+  draftPosts = await Post.countDocuments({ userId: user.id, status: 'draft' });
+} catch (e) {
+  console.warn('Could not connect to database:', e);
+}
+---
+
+<DashboardLayout title="Dashboard | Lostpeople">
+  <div class="mb-stack-lg">
+    <h1 class="font-headline-lg text-headline-lg text-primary mb-2">
+      Dashboard
+    </h1>
+    <p class="font-meta-italic text-meta-italic text-secondary">
+      Welcome back, {user?.name || user?.email}
+    </p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+    <div class="border border-border-subtle p-stack-md">
+      <p class="font-label-sm text-label-sm text-secondary mb-1">Total Posts</p>
+      <p class="font-headline-lg text-headline-lg text-primary">{totalPosts}</p>
+    </div>
+    <div class="border border-border-subtle p-stack-md">
+      <p class="font-label-sm text-label-sm text-secondary mb-1">Published</p>
+      <p class="font-headline-lg text-headline-lg text-primary">{publishedPosts}</p>
+    </div>
+    <div class="border border-border-subtle p-stack-md">
+      <p class="font-label-sm text-label-sm text-secondary mb-1">Drafts</p>
+      <p class="font-headline-lg text-headline-lg text-primary">{draftPosts}</p>
+    </div>
+  </div>
+
+  <!-- Recent Posts -->
+  <div class="mb-stack-lg">
+    <div class="flex items-center justify-between mb-stack-md">
+      <h2 class="font-headline-md text-headline-md text-primary">
+        Recent Posts
+      </h2>
+      <a
+        href="/dashboard/posts/create"
+        class="font-label-sm text-label-sm text-primary hover:text-secondary transition-colors flex items-center gap-1 no-underline"
+      >
+        <span class="material-symbols-outlined text-[16px]">add</span>
+        New Post
+      </a>
+    </div>
+
+    {posts.length > 0 ? (
+      <div class="border border-border-subtle divide-y divide-border-subtle">
+        {posts.map((post) => (
+          <div class="flex items-center justify-between px-stack-md py-stack-sm hover:bg-primary/5 transition-colors">
+            <div class="flex-1 min-w-0">
+              <a
+                href={`/dashboard/posts/${post._id}`}
+                class="font-headline-md text-body-md text-primary hover:text-secondary transition-colors no-underline block truncate"
+              >
+                {post.title}
+              </a>
+              <p class="font-label-sm text-label-sm text-secondary mt-1">
+                {new Date(post.createdAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+                <span class:list={[
+                  'ml-2 px-2 py-0.5 text-[11px] uppercase tracking-wider',
+                  post.status === 'published'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-yellow-100 text-yellow-800',
+                ]}>
+                  {post.status}
+                </span>
+              </p>
+            </div>
+            <a
+              href={`/dashboard/posts/${post._id}`}
+              class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors no-underline ml-4"
+            >
+              Edit
+            </a>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="border border-border-subtle p-stack-lg text-center">
+        <p class="font-meta-italic text-meta-italic text-secondary mb-stack-sm">
+          No posts yet
+        </p>
+        <a
+          href="/dashboard/posts/create"
+          class="font-label-sm text-label-sm text-primary hover:text-secondary transition-colors no-underline"
+        >
+          Create your first post →
+        </a>
+      </div>
+    )}
+  </div>
+</DashboardLayout>
