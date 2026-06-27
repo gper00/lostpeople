@@ -17,6 +17,9 @@ function getClient() {
 
 function getAuth() {
   if (!_auth) {
+    if (!import.meta.env.BETTER_AUTH_SECRET) {
+      throw new Error('BETTER_AUTH_SECRET env var is not set');
+    }
     const client = getClient();
     const db = client.db();
     _auth = betterAuth({
@@ -26,6 +29,11 @@ function getAuth() {
         import.meta.env.BETTER_AUTH_URL ||
         (import.meta.env.VERCEL_URL && `https://${import.meta.env.VERCEL_URL}`) ||
         undefined,
+      trustedOrigins: [
+        'https://nyobanulis.vercel.app',
+        'https://*.vercel.app',
+        'http://localhost:*',
+      ],
       database: mongodbAdapter(db, { client }),
       emailAndPassword: {
         enabled: true,
