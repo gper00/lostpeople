@@ -22,7 +22,10 @@ function getAuth() {
     _auth = betterAuth({
       appName: 'Lostpeople',
       secret: import.meta.env.BETTER_AUTH_SECRET,
-      baseURL: import.meta.env.BETTER_AUTH_URL,
+      baseURL:
+        import.meta.env.BETTER_AUTH_URL ||
+        (import.meta.env.VERCEL_URL && `https://${import.meta.env.VERCEL_URL}`) ||
+        undefined,
       database: mongodbAdapter(db, { client }),
       emailAndPassword: {
         enabled: true,
