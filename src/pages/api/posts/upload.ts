@@ -1,67 +1,69 @@
 import type { APIRoute } from 'astro';
 import { auth } from '@/lib/auth';
+import { v2 as cloudinary } from 'cloudinary';
+import { postLimiter, getClientIp } from '@/lib/rate-limit';
+
+const ALLOWED_MIMES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'];
+const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 export const POST: APIRoute = async (ctx) => {
-  const session = await auth.api.getSession({
-    headers: ctx.request.headers,
-  });
+  const session = await auth.api.getSession({ headers: ctx.request.headers });
+  if (!session) return json({ error: 'Unauthorized' }, 401);
 
-  if (!session) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  const rl = postLimiter.check(getClientIp(ctx.request));
+  if (!rl.allowed) {
+    return json({ error: 'Too many uploads. Please wait.' }, 429);
   }
+
+  const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = import.meta.env.CLOUDINARY_API_KEY;
+  const apiSecret = import.meta.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    return json({ error: 'Cloudinary not configured' }, 500);
+  }
+
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+  });
 
   try {
     const formData = await ctx.request.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get('file') as File | null;
+    if (!file || file.size === 0) return json({ error: 'No file provided' }, 400);
 
-    if (!file) {
-      return new Response(JSON.stringify({ error: 'No file provided' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // --- Validate image type ---
+    if (!ALLOWED_MIMES.includes(file.type)) {
+      const allowed = ALLOWED_MIMES.map((m) => m.split('/')[1].toUpperCase()).join(', ');
+      return json({ error: `Invalid file type. Allowed: ${allowed}` }, 400);
     }
 
-    const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = import.meta.env.CLOUDINARY_UPLOAD_PRESET;
-
-    if (!cloudName || !uploadPreset) {
-      return new Response(JSON.stringify({ error: 'Cloudinary not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // --- Validate file size ---
+    if (file.size > MAX_SIZE) {
+      const mb = (MAX_SIZE / (1024 * 1024)).toFixed(0);
+      return json({ error: `File too large. Maximum size: ${mb} MB` }, 400);
     }
 
-    const uploadFormData = new FormData();
-    uploadFormData.append('file', file);
-    uploadFormData.append('upload_preset', uploadPreset);
+    // Signed server-side upload — no upload preset required.
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      {
-        method: 'POST',
-        body: uploadFormData,
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      return new Response(JSON.stringify({ error: result.error?.message || 'Upload failed' }), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    return new Response(JSON.stringify({ url: result.secure_url }), {
-      headers: { 'Content-Type': 'application/json' },
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: 'lostpeople',
+      resource_type: 'image',
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Upload failed' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+
+    return json({ url: result.secure_url });
+  } catch (error: any) {
+    return json({ error: error?.message || 'Upload failed' }, 500);
   }
 };

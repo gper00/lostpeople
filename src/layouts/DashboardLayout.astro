@@ -13,21 +13,36 @@ const currentPath = Astro.url.pathname;
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
   { href: '/dashboard/posts', label: 'Posts', icon: 'article' },
-  { href: '/dashboard/users', label: 'Users', icon: 'people' },
-  { href: '/dashboard/categories', label: 'Categories', icon: 'category' },
+  // Users management is admin-only.
+  ...(user?.role === 'admin'
+    ? [{ href: '/dashboard/users', label: 'Users', icon: 'people' }]
+    : []),
+  { href: '/dashboard/account', label: 'Account', icon: 'lock' },
 ];
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="min-h-screen bg-background">
     <!-- Top bar -->
-    <header class="fixed top-0 left-0 right-0 h-16 border-b border-border-subtle bg-background z-50 flex items-center justify-between px-6">
-      <a href="/" class="font-display-lg text-headline-md italic text-primary">
-        Lostpeople
-      </a>
+    <header class="fixed top-0 left-0 right-0 h-16 border-b border-border-subtle bg-background z-50 flex items-center justify-between px-4 md:px-6">
+      <div class="flex items-center gap-2">
+        <!-- Hamburger (mobile only) -->
+        <button
+          id="nav-toggle"
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="dashboard-sidebar"
+          class="md:hidden -ml-1 p-2 text-primary hover:bg-primary/5 transition-colors cursor-pointer bg-transparent border-0"
+        >
+          <span class="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+        <a href="/" class="font-display-lg text-headline-md italic text-primary no-underline">
+          Lostpeople
+        </a>
+      </div>
 
       <div class="flex items-center gap-4">
-        <span class="font-label-sm text-label-sm text-secondary">
+        <span class="font-label-sm text-label-sm text-secondary hidden sm:inline">
           {user?.name || user?.email || 'Admin'}
         </span>
         <button
@@ -39,13 +54,23 @@ const navItems = [
       </div>
     </header>
 
+    <!-- Mobile backdrop -->
+    <div
+      id="nav-backdrop"
+      class="fixed inset-0 top-16 bg-primary/30 z-30 opacity-0 pointer-events-none transition-opacity md:hidden"
+    ></div>
+
     <div class="flex pt-16">
-      <!-- Sidebar -->
-      <aside class="fixed left-0 top-16 bottom-0 w-60 border-r border-border-subtle bg-background hidden md:block">
+      <!-- Sidebar / mobile drawer -->
+      <aside
+        id="dashboard-sidebar"
+        class="fixed left-0 top-16 bottom-0 w-60 border-r border-border-subtle bg-background z-40 -translate-x-full transition-transform duration-200 md:translate-x-0"
+      >
         <nav class="flex flex-col gap-1 p-4">
           {navItems.map(({ href, label, icon }) => (
             <a
               href={href}
+              data-nav-link
               class:list={[
                 'flex items-center gap-3 px-3 py-2 font-label-sm text-label-sm transition-colors no-underline',
                 currentPath === href || (href !== '/dashboard' && currentPath.startsWith(href))
@@ -60,7 +85,7 @@ const navItems = [
         </nav>
 
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-border-subtle">
-          <a href="/" class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center gap-2 no-underline">
+          <a href="/" data-nav-link class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center gap-2 no-underline">
             <span class="material-symbols-outlined text-[16px]">arrow_back</span>
             View Site
           </a>
@@ -76,15 +101,56 @@ const navItems = [
 </BaseLayout>
 
 <script>
-  const logoutBtn = document.getElementById('logout-btn');
-  logoutBtn?.addEventListener('click', async () => {
-    try {
-      const { createAuthClient } = await import('better-auth/react');
-      const { signOut } = createAuthClient({ baseURL: window.location.origin });
-      await signOut();
-      window.location.href = '/login';
-    } catch {
-      window.location.href = '/login';
+  function initDashboardChrome() {
+    // --- Sign out ---
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn && !logoutBtn.dataset.bound) {
+      logoutBtn.dataset.bound = '1';
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          const { signOut } = await import('@/lib/auth-client');
+          await signOut();
+          window.location.href = '/login';
+        } catch {
+          window.location.href = '/login';
+        }
+      });
     }
-  });
+
+    // --- Mobile drawer ---
+    const toggle = document.getElementById('nav-toggle');
+    const sidebar = document.getElementById('dashboard-sidebar');
+    const backdrop = document.getElementById('nav-backdrop');
+    if (!toggle || !sidebar || !backdrop) return;
+
+    const open = () => {
+      sidebar.classList.remove('-translate-x-full');
+      backdrop.classList.remove('opacity-0', 'pointer-events-none');
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+    const close = () => {
+      sidebar.classList.add('-translate-x-full');
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    if (!toggle.dataset.bound) {
+      toggle.dataset.bound = '1';
+      toggle.addEventListener('click', () =>
+        toggle.getAttribute('aria-expanded') === 'true' ? close() : open()
+      );
+      backdrop.addEventListener('click', close);
+      sidebar.querySelectorAll('[data-nav-link]').forEach((l) =>
+        l.addEventListener('click', close)
+      );
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close();
+      });
+    }
+    // Always reset to closed state on (re)load — drawer is mobile-only.
+    close();
+  }
+
+  initDashboardChrome();
+  document.addEventListener('astro:page-load', initDashboardChrome);
 </script>

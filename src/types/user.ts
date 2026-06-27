@@ -1,10 +1,13 @@
+export type UserRole = 'admin' | 'user';
+
 export interface User {
   _id: string;
   fullname: string;
   username: string;
   email: string;
-  password: string;
-  role: 'super-admin' | 'admin';
+  /** Optional: Better Auth stores credentials in the `account` collection, not here. */
+  password?: string;
+  role: UserRole;
   bio: string | null;
   image: string | null;
   socialMedia: SocialMedia;

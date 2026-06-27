@@ -41,11 +41,11 @@ try {
   {posts.length > 0 ? (
     <div class="border border-border-subtle divide-y divide-border-subtle">
       {posts.map((post) => (
-        <div class="flex items-center justify-between px-stack-md py-stack-sm hover:bg-primary/5 transition-colors">
+        <div class="relative flex items-center justify-between gap-3 px-stack-md py-stack-sm hover:bg-primary/5 transition-colors">
           <div class="flex-1 min-w-0">
             <a
               href={`/dashboard/posts/${post._id}`}
-              class="font-headline-md text-body-md text-primary hover:text-secondary transition-colors no-underline block truncate"
+              class="font-headline-md text-body-md text-primary hover:text-secondary transition-colors no-underline block truncate before:absolute before:inset-0 before:content-['']"
             >
               {post.title}
             </a>
@@ -68,24 +68,49 @@ try {
                 {post.status}
               </span>
               {post.category && (
-                <span class="font-label-sm text-label-sm text-secondary">
+                <span class="font-label-sm text-label-sm text-secondary hidden sm:inline">
                   {post.category}
                 </span>
               )}
+              <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary" title="Views">
+                <span class="material-symbols-outlined text-[14px]">visibility</span>
+                {post.viewsCount || 0}
+              </span>
+              <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary" title="Likes">
+                <span class="material-symbols-outlined text-[14px]">favorite</span>
+                {post.likesCount || 0}
+              </span>
             </div>
           </div>
-          <div class="flex items-center gap-2 ml-4">
+          <div class="relative z-10 flex items-center gap-0.5 shrink-0">
+            {post.status === 'published' && post.slug && (
+              <a
+                href={`/posts/${post.slug}`}
+                target="_blank"
+                rel="noopener"
+                title="View live post"
+                aria-label="View live post"
+                class="p-2 text-secondary hover:text-primary hover:bg-primary/10 transition-colors no-underline flex items-center"
+              >
+                <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+              </a>
+            )}
             <a
               href={`/dashboard/posts/${post._id}`}
-              class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors no-underline"
+              title="Edit post"
+              aria-label="Edit post"
+              class="p-2 text-secondary hover:text-primary hover:bg-primary/10 transition-colors no-underline flex items-center"
             >
-              Edit
+              <span class="material-symbols-outlined text-[18px]">edit</span>
             </a>
             <button
-              class="delete-btn font-label-sm text-label-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer bg-transparent border-0"
+              class="delete-btn p-2 text-secondary hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 flex items-center"
               data-id={post._id}
+              data-title={post.title}
+              title="Delete post"
+              aria-label="Delete post"
             >
-              Delete
+              <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
           </div>
         </div>
@@ -107,17 +132,29 @@ try {
 </DashboardLayout>
 
 <script>
+  import { toast, confirmDialog } from '@/lib/ui';
+
   document.querySelectorAll('.delete-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      const id = (btn as HTMLElement).dataset.id;
-      if (!confirm('Are you sure you want to delete this post?')) return;
+      const el = btn as HTMLElement;
+      const id = el.dataset.id;
+      const title = el.dataset.title || 'this post';
+
+      const ok = await confirmDialog({
+        title: 'Delete post',
+        message: `Delete “${title}”? This cannot be undone.`,
+        confirmLabel: 'Delete',
+        danger: true,
+      });
+      if (!ok) return;
 
       try {
         const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          window.location.reload();
-        }
+        if (!res.ok) throw new Error('Request failed');
+        toast('Post deleted', 'success');
+        setTimeout(() => window.location.reload(), 600);
       } catch (err) {
+        toast('Failed to delete post', 'error');
         console.error('Delete failed:', err);
       }
     });

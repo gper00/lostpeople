@@ -1,5 +1,6 @@
 # build output
 dist/
+.vercel/output/
 # generated types
 .astro/
 
@@ -22,3 +23,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# OpenCode runtime files
+.omo/
+.playwright-mcp/
+
+# local development artifacts
+backup/
+ss/
+PROGRESS.md

@@ -8,73 +8,63 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
-<aside class="hidden md:flex flex-col justify-center py-margin-page px-gutter h-screen max-w-[280px] sticky top-0 w-[28%] border-l border-border-subtle bg-background z-10">
-  <div class="mb-stack-md">
-    <a class="text-headline-lg font-headline-lg italic text-primary block mb-unit" href="/">
+<aside class="hidden lg:flex flex-col h-screen sticky top-0 w-[14rem] shrink-0 bg-background z-10">
+  <div class="pt-16">
+    <a class="font-brand text-[2.5rem] font-bold leading-tight text-primary block mb-1" href="/">
       Lostpeople
     </a>
-    <p class="font-meta-italic text-meta-italic text-secondary">
+    <p class="font-meta-italic text-meta-italic italic text-secondary">
       Revive the beauty of typography
     </p>
   </div>
 
-  <nav class="flex flex-col gap-stack-sm mb-stack-md">
-    {navLinks.map(({ href, label }) => (
-      <a
-        href={href}
-        class:list={[
-          'text-secondary hover:text-primary transition-colors w-max font-headline-md text-headline-md italic',
-          currentPath === href
-            ? 'text-primary border-b-2 border-accent-highlight pb-1 font-bold'
-            : '',
-        ]}
-      >
-        {label}
-      </a>
-    ))}
-  </nav>
+  <div class="flex-1 flex flex-col items-start justify-center gap-4">
+    <nav class="flex flex-col gap-3 items-start">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={[
+            'text-secondary font-headline-md text-headline-md italic highlight-hover transition-colors hover:text-primary',
+            currentPath === href
+              ? 'highlight-static text-primary font-medium'
+              : '',
+          ]}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
 
-  <!-- Search -->
-  <div class="mb-stack-md">
-    <form action="/search" method="GET" class="flex items-center border border-border-subtle">
-      <input
-        type="text"
-        name="q"
-        placeholder="Search..."
-        class="flex-1 px-2 py-1.5 bg-transparent text-primary font-body-md text-body-md focus:outline-none border-0"
-      />
-      <button
-        type="submit"
-        class="px-2 py-1.5 hover:bg-primary/5 transition-colors cursor-pointer border-0 bg-transparent"
+    <div class="flex items-center gap-4 text-secondary">
+      <a
+        href="/search"
+        class="hover:text-primary transition-colors"
         aria-label="Search"
       >
-        <span class="material-symbols-outlined text-[16px] text-secondary">search</span>
+        <span class="material-symbols-outlined text-[18px] leading-none">search</span>
+      </a>
+      <button
+        id="font-size-toggle"
+        class="hover:text-primary cursor-pointer transition-colors font-body-md text-[18px] leading-none"
+        aria-label="Toggle font size"
+      >
+        A
       </button>
-    </form>
+      <button
+        id="theme-toggle"
+        class="hover:text-primary cursor-pointer transition-colors font-body-md text-[18px] leading-none"
+        aria-label="Toggle theme"
+      >
+        O
+      </button>
+    </div>
   </div>
 
-  <div class="flex items-center gap-stack-sm mb-stack-md text-secondary">
-    <button
-      id="font-size-toggle"
-      class="hover:text-primary cursor-pointer transition-colors"
-      aria-label="Toggle font size"
-    >
-      <span class="material-symbols-outlined text-[18px]">format_size</span>
-    </button>
-    <button
-      id="theme-toggle"
-      class="hover:text-primary cursor-pointer transition-colors"
-      aria-label="Toggle theme"
-    >
-      <span class="material-symbols-outlined text-[18px]">contrast</span>
-    </button>
-  </div>
-
-  <div class="mt-auto">
+  <div class="mt-auto pb-10">
     <p class="font-label-sm text-label-sm text-secondary mb-1">
       RSS / GitHub / Email
     </p>
-    <p class="font-label-sm text-label-sm text-on-tertiary-container">
+    <p class="font-label-sm text-label-sm text-secondary italic">
       © 2025-2026 Lostpeople.<br />
       Powered by Astro and Retypeset.
     </p>
@@ -82,16 +72,14 @@ const currentPath = Astro.url.pathname;
 </aside>
 
 <script>
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle?.addEventListener('click', () => {
-    const html = document.documentElement;
-    const isDark = html.classList.contains('dark');
-    if (isDark) {
-      html.classList.remove('dark');
-      document.cookie = 'theme=light; path=/; max-age=31536000';
-    } else {
-      html.classList.add('dark');
-      document.cookie = 'theme=dark; path=/; max-age=31536000';
-    }
-  });
+  // Re-bind after every view transition (ClientRouter doesn't re-run module scripts)
+  function initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle?.addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`;
+    });
+  }
+  document.addEventListener('astro:page-load', initThemeToggle);
 </script>

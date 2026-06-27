@@ -36,13 +36,13 @@ if (query.trim()) {
   title={query ? `Search: ${query} | Lostpeople` : 'Search | Lostpeople'}
   description={query ? `Search results for "${query}"` : 'Search posts on Lostpeople'}
 >
-  <div class="mb-stack-lg">
-    <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm">Search</h1>
-    <div class="w-full h-px bg-border-subtle"></div>
+  <div class="mb-10">
+    <h1 class="font-display-lg text-[36px] text-primary mb-2 font-bold">
+      Search
+    </h1>
   </div>
 
-  <!-- Search Form -->
-  <form action="/search" method="GET" class="mb-stack-lg">
+  <form action="/search" method="GET" class="mb-10">
     <div class="flex items-center border border-border-subtle">
       <input
         type="text"
@@ -63,12 +63,12 @@ if (query.trim()) {
 
   {query.trim() ? (
     <>
-      <p class="font-meta-italic text-meta-italic text-secondary mb-stack-md">
+      <p class="font-meta-italic text-meta-italic text-secondary mb-6">
         {posts.length} result{posts.length !== 1 ? 's' : ''} for "{query}"
       </p>
 
       {posts.length > 0 ? (
-        <div class="flex flex-col gap-stack-lg">
+        <div class="flex flex-col">
           {posts.map((post) => <PostItem post={post} />)}
         </div>
       ) : (

@@ -7,24 +7,28 @@ interface Props {
 
 const { post } = Astro.props;
 const formattedDate = new Date(post.createdAt).toISOString().split('T')[0];
+const words = post.content ? post.content.trim().split(/\s+/).length : 0;
+const readingTime = words ? Math.max(1, Math.round(words / 200)) : 0;
 ---
 
-<article class="group cursor-pointer mb-stack-md">
-  <a href={`/posts/${post.slug}`} class="block">
-    <h2 class="font-headline-md text-headline-md text-primary mb-1 group-hover:text-secondary transition-colors">
-      {post.title}
+<div class="mb-5.5 lg:mb-10">
+  <a href={`/posts/${post.slug}`} class="block group">
+    <h2 class="inline transition-colors hover:text-primary">
+      <span class="font-headline-md text-headline-md font-medium group-hover:text-primary">
+        {post.title}
+      </span>
     </h2>
-    <div class="flex items-center gap-2 font-meta-italic text-meta-italic text-secondary mb-2">
+
+    <div class="flex items-center gap-3 font-meta-italic text-meta-italic italic text-secondary mt-1 mb-2">
       <time datetime={formattedDate}>{formattedDate}</time>
-      {post.category && (
-        <>
-          <span class="text-border-subtle px-1">•</span>
-          <span>{post.category}</span>
-        </>
-      )}
+      {readingTime > 0 && <span>{readingTime} min</span>}
+      {post.category && <span>{post.category}</span>}
     </div>
-    <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
-      {post.excerpt}
-    </p>
+
+    {post.excerpt && (
+      <p class="text-secondary text-body-md leading-relaxed line-clamp-2">
+        {post.excerpt}
+      </p>
+    )}
   </a>
-</article>
+</div>

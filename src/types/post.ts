@@ -10,6 +10,7 @@ export interface Post {
   content: string;
   status: 'draft' | 'published' | 'archived';
   viewsCount: number;
+  likesCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,7 +22,7 @@ export interface UserRef {
   image: string | null;
 }
 
-export type CreatePostInput = Omit<Post, '_id' | 'createdAt' | 'updatedAt' | 'viewsCount' | 'userId'> & {
+export type CreatePostInput = Omit<Post, '_id' | 'createdAt' | 'updatedAt' | 'viewsCount' | 'likesCount' | 'userId'> & {
   userId: string;
 };
 

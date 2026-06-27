@@ -3,6 +3,7 @@ import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
 import { auth } from '@/lib/auth';
 import { generateUniqueSlug } from '@/lib/slug';
+import { postLimiter, getClientIp } from '@/lib/rate-limit';
 
 export const GET: APIRoute = async () => {
   try {
@@ -34,26 +35,83 @@ export const POST: APIRoute = async (ctx) => {
     });
   }
 
+  const rl = postLimiter.check(getClientIp(ctx.request));
+  if (!rl.allowed) {
+    return new Response(
+      JSON.stringify({ error: 'Too many requests. Please wait before creating another post.' }),
+      { status: 429, headers: { 'Content-Type': 'application/json' } },
+    );
+  }
+
   try {
     const body = await ctx.request.json();
     const { title, content, excerpt, category, tags, thumbnail, status } = body;
 
-    if (!title || !content || !excerpt) {
-      return new Response(JSON.stringify({ error: 'Title, content, and excerpt are required' }), {
+    // --- Validation ---
+    const errors: string[] = [];
+
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      errors.push('Title is required');
+    } else if (title.trim().length < 10) {
+      errors.push('Title must be at least 10 characters');
+    } else if (title.trim().length > 255) {
+      errors.push('Title must not exceed 255 characters');
+    }
+
+    if (!excerpt || typeof excerpt !== 'string' || !excerpt.trim()) {
+      errors.push('Excerpt is required');
+    } else if (excerpt.trim().length < 30) {
+      errors.push('Excerpt must be at least 30 characters');
+    } else if (excerpt.trim().length > 500) {
+      errors.push('Excerpt must not exceed 500 characters');
+    }
+
+    if (!content || typeof content !== 'string' || !content.trim()) {
+      errors.push('Content is required');
+    } else if (content.trim().length < 100) {
+      errors.push('Content must be at least 100 characters');
+    }
+
+    if (category !== undefined && category !== null && category !== '') {
+      if (typeof category !== 'string' || category.trim().length > 25) {
+        errors.push('Category must not exceed 25 characters');
+      }
+    }
+
+    if (tags !== undefined && Array.isArray(tags)) {
+      for (let i = 0; i < tags.length; i++) {
+        if (typeof tags[i] !== 'string' || tags[i].trim().length > 25) {
+          errors.push('Each tag must not exceed 25 characters');
+          break;
+        }
+      }
+    }
+
+    if (thumbnail !== undefined && thumbnail !== null && thumbnail !== '') {
+      if (typeof thumbnail !== 'string') {
+        errors.push('Invalid thumbnail URL');
+      } else {
+        try { new URL(thumbnail); } catch { errors.push('Thumbnail must be a valid URL'); }
+      }
+    }
+
+    if (errors.length > 0) {
+      return new Response(JSON.stringify({ error: errors.join('. ') }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
+    // --- Create ---
     await connectDB();
-    const slug = await generateUniqueSlug(title);
+    const slug = await generateUniqueSlug(title.trim());
 
     const post = await Post.create({
-      title,
+      title: title.trim(),
       slug,
       userId: session.user.id,
-      content,
-      excerpt,
+      content: content.trim(),
+      excerpt: excerpt.trim(),
       category: category || null,
       tags: tags || [],
       thumbnail: thumbnail || null,

@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -46,11 +47,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://lostpeop
     <meta name="twitter:description" content={description} />
     {image && <meta name="twitter:image" content={image} />}
 
-    <!-- Fonts: EB Garamond (headlines/body-serif) + Inter (UI/labels) -->
+    <!-- Fonts: EB Garamond (serif everywhere — Retypeset paper-book feel) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Pinyon+Script&display=swap"
       rel="stylesheet"
     />
 
@@ -59,8 +60,30 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://lostpeop
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Anti-FOUC: apply theme before first paint (works for SSR + prerender) -->
+    <script is:inline>
+      (() => {
+        const m = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        const stored = m && m[1];
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const dark = stored ? stored === 'dark' : prefersDark;
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
+
+    <!-- Smooth crossfade navigation -->
+    <ClientRouter />
+
+    <!-- Re-apply theme after each view transition (html class can reset on swap) -->
+    <script>
+      document.addEventListener('astro:after-swap', () => {
+        const m = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        document.documentElement.classList.toggle('dark', m ? m[1] === 'dark' : false);
+      });
+    </script>
   </head>
-  <body class="min-h-screen bg-background text-on-background antialiased">
+  <body class="min-h-screen bg-background antialiased">
     <slot />
   </body>
 </html>

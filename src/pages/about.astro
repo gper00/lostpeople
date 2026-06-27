@@ -2,6 +2,26 @@
 export const prerender = true;
 
 import BlogLayout from '@/layouts/BlogLayout.astro';
+import SocialLinks from '@/components/shared/SocialLinks.astro';
+import { connectDB } from '@/lib/db';
+import Post from '@/models/Post';
+import User from '@/models/User';
+
+try {
+  await connectDB();
+} catch (e) {
+  console.warn('Could not connect to database during build:', e);
+}
+
+let authors: any[] = [];
+
+try {
+  const authorIds = await Post.distinct('userId', { status: 'published' });
+  const users = await User.find({ _id: { $in: authorIds } }).lean();
+  authors = JSON.parse(JSON.stringify(users));
+} catch (e) {
+  console.warn('Could not fetch authors during build:', e);
+}
 ---
 
 <BlogLayout title="About | Lostpeople" description="Tentang Lostpeople">
@@ -31,5 +51,53 @@ import BlogLayout from '@/layouts/BlogLayout.astro';
         <li><a href="https://twitter.com/gper00" target="_blank">Twitter</a></li>
       </ul>
     </div>
+
+    <!-- Tim Kami -->
+    <section class="mt-stack-lg">
+      <div class="w-full h-px bg-border-subtle mb-stack-lg"></div>
+      <h2 class="font-headline-md text-headline-md text-primary font-bold mb-stack-md">
+        Tim Kami
+      </h2>
+
+      {authors.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {authors.map((author) => {
+            const displayName = author.fullname || author.username || 'Unknown';
+            const initial = displayName.charAt(0).toUpperCase();
+            return (
+              <div class="border border-border-subtle p-stack-md flex items-start gap-4">
+                <a href={`/authors/${author.username}`} class="shrink-0 no-underline">
+                  {author.image ? (
+                    <img
+                      src={author.image}
+                      alt={displayName}
+                      class="w-16 h-16 object-cover rounded-full"
+                    />
+                  ) : (
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span class="font-display-lg text-xl text-primary">{initial}</span>
+                    </div>
+                  )}
+                </a>
+                <div class="min-w-0 flex-1">
+                  <a
+                    href={`/authors/${author.username}`}
+                    class="font-headline-md text-headline-md text-primary font-bold hover:text-secondary transition-colors no-underline"
+                  >
+                    {displayName}
+                  </a>
+                  {author.bio && (
+                    <p class="text-sm text-secondary mt-1 leading-relaxed line-clamp-2">{author.bio}</p>
+                  )}
+                  <SocialLinks social={author.socialMedia} class="mt-2" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="text-secondary text-sm italic">Belum ada penulis.</p>
+      )}
+    </section>
   </article>
 </BlogLayout>

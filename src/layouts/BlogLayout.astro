@@ -16,12 +16,13 @@ const { title, description, image, url, keywords } = Astro.props;
 
 <BaseLayout title={title} description={description} image={image} url={url} keywords={keywords}>
   <MobileNav />
-  <div class="max-w-[1000px] mx-auto min-h-screen relative md:flex justify-between pt-20 md:pt-0">
-    <!-- Left: Main Content Canvas (72%) -->
-    <main class="w-full md:w-[72%] px-gutter md:px-margin-page py-margin-page mt-[70px] md:mt-0">
+  <div class="mx-auto max-w-[60rem] px-6 lg:px-8 lg:flex lg:gap-16">
+    <main
+      class="w-full min-w-0 lg:flex-1 pb-24 pt-[90px] lg:pt-16"
+      transition:animate="fade"
+    >
       <slot />
     </main>
-    <!-- Right: SideNavBar (28%) - Fixed position on Web -->
     <Sidebar />
   </div>
 </BaseLayout>

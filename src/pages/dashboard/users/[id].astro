@@ -1,0 +1,299 @@
+---
+export const prerender = false;
+
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
+import { requireAdminPage } from '@/lib/require-admin';
+import ImageUpload from '@/components/dashboard/ImageUpload.astro';
+
+const denied = requireAdminPage(Astro);
+if (denied) return denied;
+
+const { id } = Astro.params;
+const currentUserId = Astro.locals.user!.id;
+const isSelf = id === currentUserId;
+
+let target: any = null;
+try {
+  await connectDB();
+  target = await User.findById(id).lean();
+} catch (e) {
+  console.warn('Could not load user:', e);
+}
+
+if (!target) {
+  return Astro.redirect('/dashboard/users');
+}
+
+const social = target.socialMedia || {};
+const socialFields = ['facebook', 'instagram', 'twitter', 'whatsapp', 'telegram'];
+---
+
+<DashboardLayout title={`Edit ${target.fullname || target.email} | Lostpeople Dashboard`}>
+  <div class="max-w-xl" data-user-id={id} data-is-self={String(isSelf)} data-can-list={String(Astro.locals.user?.role === 'admin')}>
+    <div class="mb-stack-lg">
+      <a
+        href="/dashboard/users"
+        class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors no-underline mb-4"
+      >
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        Users
+      </a>
+      <h1 class="font-headline-lg text-headline-lg text-primary">{target.fullname || target.name || target.email}</h1>
+      <p class="font-meta-italic text-meta-italic text-secondary mt-1">{target.email}</p>
+    </div>
+
+    <!-- Role + status -->
+    <section class="border border-border-subtle p-stack-md mb-stack-lg">
+      <h2 class="font-headline-md text-body-md text-primary mb-stack-sm">Role &amp; access</h2>
+      <div class="flex items-center gap-4 flex-wrap">
+        <div>
+          <label for="role" class="font-label-sm text-label-sm text-secondary block mb-1">Role</label>
+          <select id="role" disabled={isSelf}
+            class="px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors disabled:opacity-50">
+            <option value="user" selected={target.role !== 'admin'}>user</option>
+            <option value="admin" selected={target.role === 'admin'}>admin</option>
+          </select>
+          {isSelf && <p class="font-label-sm text-label-sm text-secondary italic mt-1">You can't change your own role.</p>}
+        </div>
+        {!isSelf && (
+          <div class="flex items-end gap-2">
+            <button id="ban-btn"
+              class="px-4 py-2 border border-border-subtle font-label-sm text-label-sm text-secondary hover:text-primary hover:border-primary transition-colors cursor-pointer bg-transparent">
+              {target.banned ? 'Unban user' : 'Ban user'}
+            </button>
+          </div>
+        )}
+      </div>
+      <div id="role-status" class="font-label-sm text-label-sm mt-2 hidden"></div>
+    </section>
+
+    {!isSelf && (
+      <section class="border border-border-subtle p-stack-md mb-stack-lg">
+        <h2 class="font-headline-md text-body-md text-primary mb-1">Reset password</h2>
+        <p class="font-meta-italic text-meta-italic text-secondary mb-stack-sm">
+          Set a new password for this user. They can change it later from their account.
+        </p>
+        <div class="flex items-end gap-2 flex-wrap">
+          <div>
+            <label for="new-password" class="font-label-sm text-label-sm text-secondary block mb-1">New password</label>
+            <input type="password" id="new-password" minlength="8" autocomplete="new-password"
+              class="px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+          </div>
+          <button id="reset-pw-btn" type="button"
+            class="px-4 py-2 border border-border-subtle font-label-sm text-label-sm text-secondary hover:text-primary hover:border-primary transition-colors cursor-pointer bg-transparent">
+            Set password
+          </button>
+        </div>
+      </section>
+    )}
+
+    <!-- Profile -->
+    <form id="profile-form" class="flex flex-col gap-stack-md">
+      <h2 class="font-headline-md text-body-md text-primary">Profile</h2>
+      <div>
+        <label for="fullname" class="font-label-sm text-label-sm text-secondary block mb-1">Full name</label>
+        <input type="text" id="fullname" value={target.fullname || ''} minlength="5"
+          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <div>
+        <label for="username" class="font-label-sm text-label-sm text-secondary block mb-1">Username</label>
+        <input type="text" id="username" value={target.username || ''}
+          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <ImageUpload name="image" label="Profile photo" value={target.image || ''} />
+      <div>
+        <label for="bio" class="font-label-sm text-label-sm text-secondary block mb-1">Bio</label>
+        <textarea id="bio" rows="3" maxlength="400"
+          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors">{target.bio || ''}</textarea>
+      </div>
+
+      <fieldset class="border border-border-subtle p-stack-md">
+        <legend class="font-label-sm text-label-sm text-secondary px-2">Social media</legend>
+        <div class="flex flex-col gap-stack-sm">
+          {socialFields.map((key) => (
+            <div>
+              <label for={`social-${key}`} class="font-label-sm text-label-sm text-secondary block mb-1 capitalize">{key}</label>
+              <input type="text" id={`social-${key}`} data-social={key} value={social[key] || ''}
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+            </div>
+          ))}
+        </div>
+      </fieldset>
+
+      <div id="error-message" class="text-red-600 font-label-sm text-label-sm hidden"></div>
+      <div id="success-message" class="text-green-700 font-label-sm text-label-sm hidden">Profile saved.</div>
+
+      <div class="flex items-center justify-between">
+        <button type="submit" id="save-btn"
+          class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0">
+          Save profile
+        </button>
+        {!isSelf && (
+          <button type="button" id="delete-btn"
+            class="font-label-sm text-label-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer bg-transparent border-0">
+            Delete user
+          </button>
+        )}
+      </div>
+    </form>
+  </div>
+</DashboardLayout>
+
+<script>
+  import { authClient } from '@/lib/auth-client';
+  import { toast, confirmDialog } from '@/lib/ui';
+
+  const root = document.querySelector('[data-user-id]') as HTMLElement;
+  const userId = root.dataset.userId!;
+
+  // --- Profile save (rich fields via Mongoose API) ---
+  const form = document.getElementById('profile-form') as HTMLFormElement;
+  const errorMsg = document.getElementById('error-message')!;
+  const successMsg = document.getElementById('success-message')!;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add('hidden');
+    successMsg.classList.add('hidden');
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+
+    const socialMedia: Record<string, string | null> = {};
+    document.querySelectorAll('[data-social]').forEach((el) => {
+      const input = el as HTMLInputElement;
+      socialMedia[input.dataset.social!] = input.value.trim() || null;
+    });
+
+    const payload = {
+      fullname: (document.getElementById('fullname') as HTMLInputElement).value.trim(),
+      username: (document.getElementById('username') as HTMLInputElement).value.trim(),
+      image: (document.getElementById('image') as HTMLInputElement).value.trim(),
+      bio: (document.getElementById('bio') as HTMLTextAreaElement).value.trim(),
+      socialMedia,
+    };
+
+    try {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save');
+      successMsg.classList.remove('hidden');
+      toast('Profile saved', 'success');
+      // Admins (only role that can reach this page) go back to the users list.
+      // Anyone without list access falls back to the previous page / dashboard.
+      const canList = root.dataset.canList === 'true';
+      setTimeout(() => {
+        if (canList) {
+          window.location.href = '/dashboard/users';
+        } else if (history.length > 1) {
+          history.back();
+        } else {
+          window.location.href = '/dashboard';
+        }
+      }, 600);
+    } catch (err: any) {
+      errorMsg.textContent = err.message || 'Failed to save profile';
+      errorMsg.classList.remove('hidden');
+      toast(err.message || 'Failed to save profile', 'error');
+    } finally {
+      saveBtn.textContent = 'Save profile';
+      saveBtn.disabled = false;
+    }
+  });
+
+  // --- Role change (Better Auth admin) ---
+  const roleSelect = document.getElementById('role') as HTMLSelectElement | null;
+  const roleStatus = document.getElementById('role-status')!;
+  roleSelect?.addEventListener('change', async () => {
+    roleStatus.classList.add('hidden');
+    const { error } = await authClient.admin.setRole({
+      userId,
+      role: roleSelect.value as 'user' | 'admin',
+    });
+    if (error) {
+      toast(error.message || 'Failed to change role', 'error');
+    } else {
+      toast(`Role updated to ${roleSelect.value}`, 'success');
+    }
+  });
+
+  // --- Ban / Unban ---
+  const banBtn = document.getElementById('ban-btn') as HTMLButtonElement | null;
+  banBtn?.addEventListener('click', async () => {
+    const isBanning = banBtn.textContent?.trim().startsWith('Ban');
+    if (isBanning) {
+      const ok = await confirmDialog({
+        title: 'Ban user',
+        message: 'Banned users can no longer sign in. You can unban them later.',
+        confirmLabel: 'Ban',
+        danger: true,
+      });
+      if (!ok) return;
+    }
+    banBtn.disabled = true;
+    const { error } = isBanning
+      ? await authClient.admin.banUser({ userId })
+      : await authClient.admin.unbanUser({ userId });
+    banBtn.disabled = false;
+    if (error) {
+      toast(error.message || 'Action failed', 'error');
+      return;
+    }
+    toast(isBanning ? 'User banned' : 'User unbanned', 'success');
+    setTimeout(() => window.location.reload(), 600);
+  });
+
+  // --- Reset password (admin sets a new password for this user) ---
+  const resetPwBtn = document.getElementById('reset-pw-btn') as HTMLButtonElement | null;
+  const newPwInput = document.getElementById('new-password') as HTMLInputElement | null;
+  resetPwBtn?.addEventListener('click', async () => {
+    const newPassword = newPwInput?.value || '';
+    if (newPassword.length < 8) {
+      toast('Password must be at least 8 characters', 'error');
+      return;
+    }
+    const ok = await confirmDialog({
+      title: 'Reset password',
+      message: 'Set a new password for this user? Their current password will stop working.',
+      confirmLabel: 'Set password',
+      danger: true,
+    });
+    if (!ok) return;
+    resetPwBtn.disabled = true;
+    const { error } = await authClient.admin.setUserPassword({ userId, newPassword });
+    resetPwBtn.disabled = false;
+    if (error) {
+      toast(error.message || 'Failed to set password', 'error');
+      return;
+    }
+    if (newPwInput) newPwInput.value = '';
+    toast('Password updated', 'success');
+  });
+
+  // --- Delete ---
+  const deleteBtn = document.getElementById('delete-btn') as HTMLButtonElement | null;
+  deleteBtn?.addEventListener('click', async () => {
+    const ok = await confirmDialog({
+      title: 'Delete user',
+      message: 'Delete this user? This cannot be undone.',
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (!ok) return;
+    deleteBtn.disabled = true;
+    const { error } = await authClient.admin.removeUser({ userId });
+    if (error) {
+      toast(error.message || 'Failed to delete', 'error');
+      deleteBtn.disabled = false;
+      return;
+    }
+    toast('User deleted', 'success');
+    setTimeout(() => (window.location.href = '/dashboard/users'), 600);
+  });
+</script>

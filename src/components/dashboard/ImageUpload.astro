@@ -1,0 +1,113 @@
+---
+/**
+ * Reusable Cloudinary image-upload widget.
+ * Renders a file picker + live preview backed by a hidden input that holds the
+ * resulting secure_url. Submit handlers read the value via the hidden input id.
+ */
+interface Props {
+  name: string;          // hidden input name + id (e.g. "thumbnail", "image")
+  value?: string | null; // existing image url
+  label?: string;
+}
+const { name, value = '', label = 'Image' } = Astro.props;
+const url = value || '';
+---
+
+<div data-image-upload data-name={name}>
+  <span class="font-label-sm text-label-sm text-secondary block mb-1">{label}</span>
+
+  <input type="hidden" id={name} name={name} value={url} />
+
+  <div class="flex items-start gap-3">
+    <div
+      data-preview
+      class:list={[
+        'w-24 h-24 border border-border-subtle bg-primary/5 flex items-center justify-center shrink-0 overflow-hidden',
+        url ? '' : 'text-secondary',
+      ]}
+    >
+      {url ? (
+        <img src={url} alt="" class="w-full h-full object-cover" />
+      ) : (
+        <span class="material-symbols-outlined text-[28px] text-secondary/50">image</span>
+      )}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label
+        class="inline-flex items-center gap-2 px-4 py-2 border border-border-subtle text-primary font-label-sm text-label-sm tracking-wider uppercase hover:bg-primary/5 transition-colors cursor-pointer w-fit"
+      >
+        <span class="material-symbols-outlined text-[16px]">upload</span>
+        <span data-upload-label>Upload</span>
+        <input type="file" accept="image/*" data-file class="hidden" />
+      </label>
+      <button
+        type="button"
+        data-remove
+        class:list={[
+          'font-label-sm text-label-sm text-secondary hover:text-red-600 transition-colors cursor-pointer bg-transparent border-0 text-left w-fit',
+          url ? '' : 'hidden',
+        ]}
+      >
+        Remove
+      </button>
+      <p class="font-label-sm text-label-sm text-secondary/70">PNG, JPG, atau WEBP.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { toast } from '@/lib/ui';
+
+  function initImageUploads() {
+    document.querySelectorAll('[data-image-upload]').forEach((root) => {
+      const el = root as HTMLElement;
+      if (el.dataset.bound) return;
+      el.dataset.bound = 'true';
+
+      const name = el.dataset.name!;
+      const hidden = el.querySelector(`#${CSS.escape(name)}`) as HTMLInputElement;
+      const fileInput = el.querySelector('[data-file]') as HTMLInputElement;
+      const preview = el.querySelector('[data-preview]') as HTMLElement;
+      const removeBtn = el.querySelector('[data-remove]') as HTMLButtonElement;
+      const uploadLabel = el.querySelector('[data-upload-label]') as HTMLElement;
+
+      const render = (url: string) => {
+        hidden.value = url;
+        if (url) {
+          preview.innerHTML = `<img src="${url}" alt="" class="w-full h-full object-cover" />`;
+          removeBtn.classList.remove('hidden');
+        } else {
+          preview.innerHTML =
+            '<span class="material-symbols-outlined text-[28px] text-secondary/50">image</span>';
+          removeBtn.classList.add('hidden');
+        }
+      };
+
+      fileInput?.addEventListener('change', async () => {
+        const file = fileInput.files?.[0];
+        if (!file) return;
+        const fd = new FormData();
+        fd.append('file', file);
+        uploadLabel.textContent = 'Uploading…';
+        try {
+          const res = await fetch('/api/posts/upload', { method: 'POST', body: fd });
+          const data = await res.json();
+          if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+          render(data.url);
+          toast('Image uploaded', 'success');
+        } catch (err: any) {
+          toast(err.message || 'Upload failed', 'error');
+        } finally {
+          uploadLabel.textContent = 'Upload';
+          fileInput.value = '';
+        }
+      });
+
+      removeBtn?.addEventListener('click', () => render(''));
+    });
+  }
+
+  initImageUploads();
+  document.addEventListener('astro:page-load', initImageUploads);
+</script>

@@ -1,0 +1,219 @@
+---
+export const prerender = false;
+
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import ImageUpload from '@/components/dashboard/ImageUpload.astro';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+await connectDB();
+const profile = await User.findById(user.id)
+  .select('fullname username bio image socialMedia')
+  .lean();
+
+const social = (profile?.socialMedia ?? {}) as unknown as Record<string, string | null>;
+const smFb = social.facebook ?? '';
+const smIg = social.instagram ?? '';
+const smTw = social.twitter ?? '';
+const smWa = social.whatsapp ?? '';
+const smTg = social.telegram ?? '';
+---
+
+<DashboardLayout title="Account | Lostpeople Dashboard">
+  <div class="max-w-xl">
+    <div class="mb-stack-lg">
+      <h1 class="font-headline-lg text-headline-lg text-primary">Account</h1>
+      <p class="font-meta-italic text-meta-italic text-secondary mt-1">{user.email}</p>
+    </div>
+
+    <!-- Profile -->
+    <section class="border border-border-subtle p-stack-md mb-stack-md">
+      <h2 class="font-headline-md text-body-md text-primary mb-1">Profile</h2>
+      <p class="font-meta-italic text-meta-italic text-secondary mb-stack-md">
+        Update your public profile information.
+      </p>
+
+      <form id="profile-form" class="flex flex-col gap-stack-md">
+        <div>
+          <label for="fullname" class="font-label-sm text-label-sm text-secondary block mb-1">Full name</label>
+          <input type="text" id="fullname" value={profile?.fullname ?? ''} required minlength="5" maxlength="100"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+        </div>
+
+        <div>
+          <label for="username" class="font-label-sm text-label-sm text-secondary block mb-1">Username</label>
+          <input type="text" id="username" value={profile?.username ?? ''} maxlength="25" pattern="[a-zA-Z0-9_-]+"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+          <p class="text-xs text-secondary mt-1">Letters, numbers, hyphens, underscores. Leave empty to remove.</p>
+        </div>
+
+        <div>
+          <label for="bio" class="font-label-sm text-label-sm text-secondary block mb-1">Bio</label>
+          <textarea id="bio" maxlength="400" rows="3"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors resize-y">{(profile?.bio as string) ?? ''}</textarea>
+        </div>
+
+        <ImageUpload name="image" value={profile?.image} label="Avatar" />
+
+        <div>
+          <span class="font-label-sm text-label-sm text-secondary block mb-2">Social media links</span>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-secondary w-20 shrink-0">Facebook</span>
+              <input type="url" id="sm-facebook" value={smFb} maxlength="150" placeholder="https://facebook.com/..."
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md text-sm focus:outline-none focus:border-primary transition-colors" />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-secondary w-20 shrink-0">Instagram</span>
+              <input type="url" id="sm-instagram" value={smIg} maxlength="150" placeholder="https://instagram.com/..."
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md text-sm focus:outline-none focus:border-primary transition-colors" />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-secondary w-20 shrink-0">Twitter / X</span>
+              <input type="url" id="sm-twitter" value={smTw} maxlength="150" placeholder="https://twitter.com/..."
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md text-sm focus:outline-none focus:border-primary transition-colors" />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-secondary w-20 shrink-0">WhatsApp</span>
+              <input type="url" id="sm-whatsapp" value={smWa} maxlength="150" placeholder="https://wa.me/..."
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md text-sm focus:outline-none focus:border-primary transition-colors" />
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-secondary w-20 shrink-0">Telegram</span>
+              <input type="url" id="sm-telegram" value={smTg} maxlength="150" placeholder="https://t.me/..."
+                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md text-sm focus:outline-none focus:border-primary transition-colors" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" id="profile-submit"
+            class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0">
+            Save profile
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="border border-border-subtle p-stack-md">
+      <h2 class="font-headline-md text-body-md text-primary mb-1">Change password</h2>
+      <p class="font-meta-italic text-meta-italic text-secondary mb-stack-md">
+        Enter your current password, then choose a new one. This signs you out of other devices.
+      </p>
+
+      <form id="password-form" class="flex flex-col gap-stack-md">
+        <div>
+          <label for="current" class="font-label-sm text-label-sm text-secondary block mb-1">Current password</label>
+          <input type="password" id="current" required autocomplete="current-password"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+        </div>
+        <div>
+          <label for="next" class="font-label-sm text-label-sm text-secondary block mb-1">New password</label>
+          <input type="password" id="next" required minlength="8" autocomplete="new-password"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+        </div>
+        <div>
+          <label for="confirm" class="font-label-sm text-label-sm text-secondary block mb-1">Confirm new password</label>
+          <input type="password" id="confirm" required minlength="8" autocomplete="new-password"
+            class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+        </div>
+
+        <div>
+          <button type="submit" id="pw-submit"
+            class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0">
+            Update password
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</DashboardLayout>
+
+<script>
+  import { authClient } from '@/lib/auth-client';
+  import { toast } from '@/lib/ui';
+
+  const form = document.getElementById('password-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('pw-submit') as HTMLButtonElement;
+
+  // Profile form
+  const profileForm = document.getElementById('profile-form') as HTMLFormElement;
+  const profileSubmit = document.getElementById('profile-submit') as HTMLButtonElement;
+
+  const getVal = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value ?? '';
+
+  profileForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    profileSubmit.textContent = 'Saving...';
+    profileSubmit.disabled = true;
+
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullname: getVal('fullname'),
+          username: getVal('username'),
+          bio: getVal('bio'),
+          image: getVal('image'),
+          socialMedia: {
+            facebook: getVal('sm-facebook'),
+            instagram: getVal('sm-instagram'),
+            twitter: getVal('sm-twitter'),
+            whatsapp: getVal('sm-whatsapp'),
+            telegram: getVal('sm-telegram'),
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save profile');
+      toast('Profile saved', 'success');
+    } catch (err: any) {
+      toast(err.message || 'Failed to save profile', 'error');
+    } finally {
+      profileSubmit.textContent = 'Save profile';
+      profileSubmit.disabled = false;
+    }
+  });
+
+  // Password form
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const currentPassword = (document.getElementById('current') as HTMLInputElement).value;
+    const newPassword = (document.getElementById('next') as HTMLInputElement).value;
+    const confirm = (document.getElementById('confirm') as HTMLInputElement).value;
+
+    if (newPassword.length < 8) {
+      toast('New password must be at least 8 characters', 'error');
+      return;
+    }
+    if (newPassword !== confirm) {
+      toast('New passwords do not match', 'error');
+      return;
+    }
+
+    submitBtn.textContent = 'Updating...';
+    submitBtn.disabled = true;
+
+    const { error } = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: true,
+    });
+
+    submitBtn.textContent = 'Update password';
+    submitBtn.disabled = false;
+
+    if (error) {
+      toast(error.message || 'Failed to change password', 'error');
+      return;
+    }
+    form.reset();
+    toast('Password updated', 'success');
+  });
+</script>

@@ -1,2 +1,0 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/react.BkhoqiMM.js","_astro/react.C1VktWof.js"])))=>i.map(i=>d[i]);
-import{t as e}from"./preload-helper.L5lOfJxi.js";document.getElementById(`logout-btn`)?.addEventListener(`click`,async()=>{try{let{createAuthClient:t}=await e(async()=>{let{createAuthClient:e}=await import(`./react.BkhoqiMM.js`);return{createAuthClient:e}},__vite__mapDeps([0,1])),{signOut:n}=t({baseURL:window.location.origin});await n(),window.location.href=`/login`}catch{window.location.href=`/login`}});

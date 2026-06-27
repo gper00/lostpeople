@@ -26,10 +26,10 @@ const userSchema = new Schema<UserDocument>(
       maxLength: 100,
       match: /^\S+@\S+\.\S+$/,
     },
+    // Credentials live in Better Auth's `account` collection — not required here.
     password: {
       type: String,
-      minLength: 8,
-      required: true,
+      required: false,
     },
     bio: {
       type: String,
@@ -38,9 +38,8 @@ const userSchema = new Schema<UserDocument>(
     },
     role: {
       type: String,
-      enum: ['super-admin', 'admin'],
-      default: 'admin',
-      required: true,
+      enum: ['admin', 'user', 'super-admin'],
+      default: 'user',
     },
     image: {
       type: String,

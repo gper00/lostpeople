@@ -2,23 +2,24 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Literary Minimalist Colors */
-  --color-background: #faf9fb;
-  --color-primary: #000000;
-  --color-secondary: #5e5e5e;
-  --color-accent-highlight: #E5C100;
-  --color-border-subtle: #E5E5E5;
-  --color-on-surface: #1a1c1d;
-  --color-on-surface-variant: #4c4546;
+  /* Retypeset print palette (OKLCH, near-neutral cool gray) — light mode */
+  --color-background: oklch(96% 0.005 298);
+  --color-primary: oklch(25% 0.005 298);          /* charcoal, not pure black */
+  --color-secondary: oklch(40% 0.005 298);
+  --color-accent-highlight: oklch(0.93 0.195089 103.2532 / 0.5); /* lemon highlight */
+  --color-border-subtle: oklch(40% 0.005 298 / 0.15);            /* secondary @15% */
+  --color-on-surface: oklch(25% 0.005 298);
+  --color-on-surface-variant: oklch(40% 0.005 298);
 
-  /* Typography */
+  /* Typography — serif everywhere (paper-book feel) */
   --font-display-lg: 'EB Garamond', serif;
   --font-headline-lg: 'EB Garamond', serif;
   --font-headline-md: 'EB Garamond', serif;
-  --font-body-lg: 'Inter', sans-serif;
-  --font-body-md: 'Inter', sans-serif;
+  --font-body-lg: 'EB Garamond', serif;
+  --font-body-md: 'EB Garamond', serif;
   --font-meta-italic: 'EB Garamond', serif;
-  --font-label-sm: 'Inter', sans-serif;
+  --font-label-sm: 'EB Garamond', serif;
+  --font-brand: 'Pinyon Script', cursive;   /* calligraphic brand (Snell-like) */
 
   /* Font Sizes - Scaled down to match reference */
   --text-display-lg: 36px;
@@ -38,12 +39,33 @@
   --spacing-stack-sm: 8px;
 }
 
+/* Dark mode — override the theme CSS variables; every bg-*/text-* utility
+   reads these vars, so the whole UI flips without per-utility dark: variants. */
+.dark {
+  --color-background: oklch(22% 0.005 298);
+  --color-primary: oklch(92% 0.005 298);
+  --color-secondary: oklch(77% 0.005 298);
+  --color-accent-highlight: oklch(0.93 0.195089 103.2532 / 0.2);
+  --color-border-subtle: oklch(77% 0.005 298 / 0.15);
+  --color-on-surface: oklch(92% 0.005 298);
+  --color-on-surface-variant: oklch(77% 0.005 298);
+}
+
 /* Base typography */
 body {
   font-family: var(--font-body-md);
-  line-height: 1.5;
+  line-height: 1.6;
   background-color: var(--color-background);
   color: var(--color-primary);
+}
+
+/* Signature — small decorative hairline under titles (Retypeset) */
+.decorative-line {
+  height: 1px;
+  width: 2.5rem;
+  background: var(--color-secondary);
+  opacity: 0.25;
+  margin: 1rem 0 1.5rem;
 }
 
 /* Prose overrides for editorial feel */
@@ -148,6 +170,34 @@ body {
   padding-left: 0.05em;
   font-family: var(--font-headline-md);
   font-weight: 700;
+}
+
+/* Highlight Hover Animation (Retypeset style) */
+.highlight-static,
+.highlight-hover {
+  position: relative;
+  display: inline-block;
+}
+.highlight-static::after,
+.highlight-hover::after {
+  position: absolute;
+  left: 0;
+  bottom: 0.1em;
+  z-index: -1;
+  height: 0.4em;
+  width: 100%;
+  background-color: var(--color-accent-highlight);
+  content: '';
+}
+.highlight-static::after,
+.highlight-hover:hover::after {
+  transform-origin: bottom left;
+  transform: scaleX(1);
+}
+.highlight-hover::after {
+  transform-origin: bottom right;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-out;
 }
 
 /* Custom scrollbar */

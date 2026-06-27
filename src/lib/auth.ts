@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth';
+import { admin } from 'better-auth/plugins';
 import { MongoClient } from 'mongodb';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 
@@ -19,6 +20,9 @@ function getAuth() {
     const client = getClient();
     const db = client.db();
     _auth = betterAuth({
+      appName: 'Lostpeople',
+      secret: import.meta.env.BETTER_AUTH_SECRET,
+      baseURL: import.meta.env.BETTER_AUTH_URL,
       database: mongodbAdapter(db, { client }),
       emailAndPassword: {
         enabled: true,
@@ -33,7 +37,20 @@ function getAuth() {
       },
       user: {
         modelName: 'users',
+        // Profile fields kept on the same user doc so Post.populate() reads them.
+        // socialMedia (nested) is handled via the Mongoose profile API, not here.
+        additionalFields: {
+          fullname: { type: 'string', required: false, input: true },
+          username: { type: 'string', required: false, input: true },
+          bio: { type: 'string', required: false, input: true },
+        },
       },
+      plugins: [
+        admin({
+          defaultRole: 'user',
+          adminRoles: ['admin'],
+        }),
+      ],
     });
   }
   return _auth;

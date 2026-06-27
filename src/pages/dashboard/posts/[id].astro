@@ -2,7 +2,8 @@
 export const prerender = false;
 
 import DashboardLayout from '@/layouts/DashboardLayout.astro';
-import TipTapEditor from '@/components/dashboard/TipTapEditor';
+import MarkdownEditor from '@/components/dashboard/MarkdownEditor';
+import ImageUpload from '@/components/dashboard/ImageUpload.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
 
@@ -35,7 +36,7 @@ try {
     <h1 class="font-headline-lg text-headline-lg text-primary">Edit Post</h1>
   </div>
 
-  <form id="edit-post-form" class="flex flex-col gap-stack-md max-w-3xl" data-id={post?._id}>
+  <form id="edit-post-form" class="flex flex-col gap-stack-md max-w-5xl" data-id={post?._id}>
     <!-- Title -->
     <div>
       <label for="title" class="font-label-sm text-label-sm text-secondary block mb-1">Title</label>
@@ -68,9 +69,7 @@ try {
     <!-- Content -->
     <div>
       <label class="font-label-sm text-label-sm text-secondary block mb-1">Content</label>
-      <TipTapEditor client:load content={post?.content || ''} onChange={(html: string) => {
-        (document.getElementById('content') as HTMLInputElement).value = html;
-      }} />
+      <MarkdownEditor client:load content={post?.content || ''} targetId="content" />
       <input type="hidden" id="content" name="content" value={post?.content || ''} />
     </div>
 
@@ -101,14 +100,7 @@ try {
 
     <!-- Thumbnail -->
     <div>
-      <label for="thumbnail" class="font-label-sm text-label-sm text-secondary block mb-1">Thumbnail URL</label>
-      <input
-        type="url"
-        id="thumbnail"
-        name="thumbnail"
-        value={post?.thumbnail || ''}
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
-      />
+      <ImageUpload name="thumbnail" label="Thumbnail" value={post?.thumbnail || ''} />
     </div>
 
     <!-- Status -->
@@ -148,6 +140,8 @@ try {
 </DashboardLayout>
 
 <script>
+  import { toast } from '@/lib/ui';
+
   const form = document.getElementById('edit-post-form') as HTMLFormElement;
   const errorMsg = document.getElementById('error-message')!;
   const submitBtn = document.getElementById('submit-btn')!;
@@ -183,7 +177,8 @@ try {
         throw new Error(data.error || 'Failed to update post');
       }
 
-      window.location.href = `/dashboard/posts/${postId}`;
+      toast('Post updated', 'success');
+      window.location.href = '/dashboard/posts';
     } catch (err: any) {
       errorMsg.textContent = err.message || 'An error occurred';
       errorMsg.classList.remove('hidden');
