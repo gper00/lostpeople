@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
 
@@ -24,30 +24,20 @@ try {
 }
 ---
 
-<BlogLayout title="Tags | Lostpeople" description="Browse posts by tag">
-  <div class="mb-10">
-    <h1 class="font-display-lg text-[36px] text-primary mb-2 font-bold">
-      Tags
-    </h1>
-  </div>
-
+<ListLayout title="Tags | Lostpeople" description="Semua topik di Lostpeople">
+  <span class="lp-section-label">Semua topik</span>
   {allTags.length > 0 ? (
-    <div class="flex flex-wrap gap-3">
+    <div class="lp-tag-grid">
       {allTags.map(({ name, count }) => (
-        <a
-          href={`/tags/${encodeURIComponent(name)}`}
-          class="inline-flex items-center gap-2 px-4 py-2 border border-border-subtle hover:border-primary hover:bg-primary/5 transition-colors no-underline group"
-        >
-          <span class="font-meta-italic text-meta-italic text-primary group-hover:text-primary">
-            {name}
-          </span>
-          <span class="font-label-sm text-label-sm text-secondary">
-            ({count})
-          </span>
+        <a href={`/tags/${encodeURIComponent(name)}`} class="lp-tag-card">
+          <span class="lp-tag-card__name">{name}</span>
+          <span class="lp-tag-card__count">{count} tulisan</span>
         </a>
       ))}
     </div>
   ) : (
-    <p class="font-meta-italic text-meta-italic text-secondary">No tags yet.</p>
+    <p style="font-family:var(--font-body); font-style:italic; color:var(--color-ink-ghost); font-size:var(--text-sm);">
+      Belum ada topik.
+    </p>
   )}
-</BlogLayout>
+</ListLayout>
