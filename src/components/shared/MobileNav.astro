@@ -4,90 +4,62 @@ const navLinks = [
   { href: '/tags', label: 'Tags' },
   { href: '/about', label: 'About' },
 ];
-
-const currentPath = Astro.url.pathname;
 ---
 
-<header class="fixed top-0 w-full z-40 lg:hidden bg-background/90 backdrop-blur-md border-b border-border-subtle flex justify-between items-center px-gutter py-4">
-  <a class="font-brand text-[2rem] leading-none text-primary" href="/">
-    Lostpeople
-  </a>
-  <div class="flex items-center gap-stack-sm">
-    <button class="text-primary cursor-pointer" id="menu-btn" aria-label="Open menu">
-      <span class="material-symbols-outlined">menu</span>
-    </button>
+<nav class="lp-nav lp-container lg:hidden">
+  <a href="/" class="lp-nav__logo">Lostpeople</a>
+  <div class="lp-nav__links">
+    <button class="lp-nav__icon material-symbols-outlined" id="mobile-theme-btn" aria-label="Toggle dark mode">light_mode</button>
+    <button class="lp-nav__hamburger material-symbols-outlined" id="menu-btn" aria-label="Open menu">menu</button>
   </div>
-</header>
+</nav>
 
-<div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[50] hidden opacity-0 transition-opacity duration-300 lg:hidden" id="menu-overlay"></div>
-
-<div class="fixed inset-y-0 right-0 z-[60] w-64 bg-background shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden flex flex-col px-gutter py-margin-page" id="mobile-menu">
-  <div class="flex justify-end mb-6">
-    <button class="text-primary cursor-pointer text-[20px]" id="close-menu" aria-label="Close menu">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-  </div>
-  <nav class="flex flex-col gap-4">
-    {navLinks.map(({ href, label }) => (
-      <a
-        href={href}
-        class:list={[
-          'text-secondary hover:text-primary transition-colors w-max font-headline-md text-headline-md italic highlight-hover',
-          currentPath === href
-            ? 'highlight-static text-primary font-medium'
-            : '',
-        ]}
-      >
-        {label}
-      </a>
-    ))}
-  </nav>
-  <div class="mt-auto border-t border-border-subtle pt-stack-md">
-    <div class="flex gap-4 mb-6">
-      <a aria-label="RSS" class="text-secondary hover:text-primary" href="/rss.xml">
-        <span class="material-symbols-outlined">rss_feed</span>
-      </a>
-      <button aria-label="Toggle Dark Mode" class="text-secondary hover:text-primary" id="mobile-theme-toggle">
-        <span class="material-symbols-outlined">dark_mode</span>
-      </button>
-    </div>
-    <p class="font-label-sm text-label-sm text-secondary italic">
-      © 2025-2026 Lostpeople.
-    </p>
+<!-- Mobile nav drawer -->
+<div id="lp-mobile-nav" class="lp-mobile-nav" aria-hidden="true">
+  <button class="material-symbols-outlined self-end" id="close-menu" aria-label="Close menu">close</button>
+  {navLinks.map(({ href, label }) => (
+    <a href={href}>{label}</a>
+  ))}
+  <div class="flex gap-4 mt-auto border-t border-dust pt-6">
+    <a href="/search" aria-label="Search">
+      <span class="material-symbols-outlined">search</span>
+    </a>
+    <button id="mobile-theme-btn-inside" class="lp-nav__icon material-symbols-outlined" aria-label="Toggle dark mode">light_mode</button>
   </div>
 </div>
 
 <script>
   function initMobileNav() {
     const menuBtn = document.getElementById('menu-btn');
-    const closeMenuBtn = document.getElementById('close-menu');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuOverlay = document.getElementById('menu-overlay');
-    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    const closeBtn = document.getElementById('close-menu');
+    const nav = document.getElementById('lp-mobile-nav');
 
-    function openMenu() {
-      mobileMenu?.classList.remove('translate-x-full');
-      menuOverlay?.classList.remove('hidden');
-      void menuOverlay?.offsetWidth;
-      menuOverlay?.classList.remove('opacity-0');
+    if (!menuBtn || !closeBtn || !nav) return;
+
+    function toggle() {
+      nav.classList.toggle('open');
+      nav.setAttribute('aria-hidden', nav.classList.contains('open') ? 'false' : 'true');
+    }
+    function closeNav() {
+      nav.classList.remove('open');
+      nav.setAttribute('aria-hidden', 'true');
     }
 
-    function closeMenu() {
-      mobileMenu?.classList.add('translate-x-full');
-      menuOverlay?.classList.add('opacity-0');
-      setTimeout(() => {
-        menuOverlay?.classList.add('hidden');
-      }, 300);
-    }
+    menuBtn.addEventListener('click', toggle);
+    closeBtn.addEventListener('click', closeNav);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNav(); });
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('open') && !nav.contains(e.target) && e.target !== menuBtn) closeNav();
+    });
 
-    menuBtn?.addEventListener('click', openMenu);
-    closeMenuBtn?.addEventListener('click', closeMenu);
-    menuOverlay?.addEventListener('click', closeMenu);
-
-    mobileThemeToggle?.addEventListener('click', () => {
-      const html = document.documentElement;
-      const isDark = html.classList.toggle('dark');
-      document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`;
+    // Theme toggles
+    document.querySelectorAll('#mobile-theme-btn, #mobile-theme-btn-inside').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isDark = html.dataset.theme === 'dark';
+        html.dataset.theme = isDark ? 'light' : 'dark';
+        localStorage.setItem('lp-theme', html.dataset.theme);
+      });
     });
   }
   document.addEventListener('astro:page-load', initMobileNav);
