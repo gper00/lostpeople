@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import PostItem from '@/components/blog/PostItem.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
@@ -19,18 +19,20 @@ try {
 }
 ---
 
-<BlogLayout
+<ListLayout
   title="Posts | Lostpeople"
   description="Artikel inspiratif tentang kehidupan dan teknologi"
 >
-  <div class="flex flex-col gap-stack-lg">
-    {posts.length > 0 ? (
-      posts.map((post) => <PostItem post={post} />)
-    ) : (
-      <p class="font-body-md text-secondary">Belum ada artikel.</p>
-    )}
-    {posts.length > 0 && (
-      <div class="w-full h-px bg-border-subtle my-stack-lg"></div>
-    )}
-  </div>
-</BlogLayout>
+  {posts.length > 0 ? (
+    <>
+      <span class="lp-section-label">Semua tulisan</span>
+      <div class="lp-post-list">
+        {posts.map((post) => <PostItem post={post} />)}
+      </div>
+    </>
+  ) : (
+    <p style="font-family:var(--font-body); font-style:italic; color:var(--color-ink-ghost); font-size:var(--text-sm);">
+      Belum ada artikel.
+    </p>
+  )}
+</ListLayout>

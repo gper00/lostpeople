@@ -1,5 +1,5 @@
 ---
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import PostItem from '@/components/blog/PostItem.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
@@ -18,18 +18,21 @@ try {
 }
 ---
 
-<BlogLayout
+<ListLayout
   title="Lostpeople"
   description="Blog inspiratif tentang kehidupan dan teknologi"
 >
   {posts.length > 0 ? (
     <>
-      <div class="decorative-line"></div>
-      <div class="flex flex-col gap-stack-lg">
+      <span class="lp-section-label">Tulisan terbaru</span>
+      <div class="lp-post-list">
         {posts.map((post) => <PostItem post={post} />)}
       </div>
     </>
   ) : (
-    <p class="font-body-md text-secondary italic">Belum ada artikel.</p>
+    <div style="padding:3rem 0; text-align:center; color:var(--color-ink-ghost);">
+      <p style="font-family:var(--font-display); font-style:italic; font-size:var(--text-xl); margin-bottom:0.5rem;">Belum ada tulisan.</p>
+      <p style="font-family:var(--font-ui); font-size:var(--text-sm);">Nantikan tulisan pertama.</p>
+    </div>
   )}
-</BlogLayout>
+</ListLayout>
