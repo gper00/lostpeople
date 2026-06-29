@@ -1,0 +1,25 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '@/components/shared/Sidebar.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  keywords?: string;
+}
+
+const { title, description, image, url, keywords } = Astro.props;
+---
+
+<BaseLayout {title} {description} {image} {url} {keywords}>
+  <div class="lp-container">
+    <div class="lp-layout">
+      <main class="lp-main">
+        <slot />
+      </main>
+      <Sidebar />
+    </div>
+  </div>
+</BaseLayout>
