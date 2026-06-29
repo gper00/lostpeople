@@ -4,82 +4,50 @@ const navLinks = [
   { href: '/tags', label: 'Tags' },
   { href: '/about', label: 'About' },
 ];
-
 const currentPath = Astro.url.pathname;
 ---
 
-<aside class="hidden lg:flex flex-col h-screen sticky top-0 w-[14rem] shrink-0 bg-background z-10">
-  <div class="pt-16">
-    <a class="font-brand text-[2.5rem] font-bold leading-tight text-primary block mb-1" href="/">
-      Lostpeople
-    </a>
-    <p class="font-meta-italic text-meta-italic italic text-secondary">
-      Revive the beauty of typography
-    </p>
-  </div>
-
-  <div class="flex-1 flex flex-col items-start justify-center gap-4">
-    <nav class="flex flex-col gap-3 items-start">
-      {navLinks.map(({ href, label }) => (
-        <a
-          href={href}
-          class:list={[
-            'text-secondary font-headline-md text-headline-md italic highlight-hover transition-colors hover:text-primary',
-            currentPath === href
-              ? 'highlight-static text-primary font-medium'
-              : '',
-          ]}
-        >
-          {label}
-        </a>
-      ))}
-    </nav>
-
-    <div class="flex items-center gap-4 text-secondary">
+<aside class="lp-sidebar">
+  <a href="/" class="lp-sidebar__logo">Lostpeople</a>
+  <span class="lp-sidebar__tagline">Revive the beauty of typography</span>
+  <hr class="lp-sidebar__divider" />
+  <nav class="lp-sidebar__nav">
+    {navLinks.map(({ href, label }) => (
       <a
-        href="/search"
-        class="hover:text-primary transition-colors"
-        aria-label="Search"
+        href={href}
+        class:list={['text-ink-muted', currentPath === href && 'text-accent']}
       >
-        <span class="material-symbols-outlined text-[18px] leading-none">search</span>
+        {label}
       </a>
-      <button
-        id="font-size-toggle"
-        class="hover:text-primary cursor-pointer transition-colors font-body-md text-[18px] leading-none"
-        aria-label="Toggle font size"
-      >
-        A
-      </button>
-      <button
-        id="theme-toggle"
-        class="hover:text-primary cursor-pointer transition-colors font-body-md text-[18px] leading-none"
-        aria-label="Toggle theme"
-      >
-        O
-      </button>
-    </div>
+    ))}
+  </nav>
+  <div class="lp-sidebar__actions">
+    <a href="/search" aria-label="Cari">
+      <span class="material-symbols-outlined" style="font-size:1.1rem">search</span>
+    </a>
+    <button id="sidebar-theme-toggle" class="lp-nav__icon material-symbols-outlined" aria-label="Toggle dark mode" style="font-size:1.1rem; background:none; border:none; padding:0; cursor:pointer;">
+      dark_mode
+    </button>
   </div>
-
-  <div class="mt-auto pb-10">
-    <p class="font-label-sm text-label-sm text-secondary mb-1">
-      RSS / GitHub / Email
-    </p>
-    <p class="font-label-sm text-label-sm text-secondary italic">
-      © 2025-2026 Lostpeople.<br />
-      Powered by Astro and Retypeset.
-    </p>
+  <div class="lp-sidebar__footer">
+    <a href="/rss.xml" class="text-ink-ghost hover:text-accent">RSS</a>
+    {' / '}
+    <a href="https://github.com/gper00" class="text-ink-ghost hover:text-accent" target="_blank">GitHub</a>
+    {' / '}
+    <a href="mailto:hi@lostpeople" class="text-ink-ghost hover:text-accent">Email</a>
+    <br />© 2025–2026 Lostpeople.<br />Powered by Astro and Retypeset.
   </div>
 </aside>
 
 <script>
-  // Re-bind after every view transition (ClientRouter doesn't re-run module scripts)
-  function initThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
+  function initSidebarToggle() {
+    const themeToggle = document.getElementById('sidebar-theme-toggle');
     themeToggle?.addEventListener('click', () => {
       const html = document.documentElement;
-      const isDark = html.classList.toggle('dark');
-      document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`;
+      const isDark = html.dataset.theme === 'dark';
+      html.dataset.theme = isDark ? 'light' : 'dark';
+      localStorage.setItem('lp-theme', html.dataset.theme);
     });
   }
-  document.addEventListener('astro:page-load', initThemeToggle);
+  document.addEventListener('astro:page-load', initSidebarToggle);
 </script>
