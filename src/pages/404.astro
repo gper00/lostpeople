@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Halaman tidak ditemukan | Lostpeople">
+  <div class="lp-container">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <span class="font-brand text-[6rem] text-ink-faint leading-none mb-4">404</span>
+      <h1 class="font-display text-2xl text-ink mb-2">
+        Halaman tidak ditemukan
+      </h1>
+      <p class="text-sm text-ink-muted mb-8 max-w-sm">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <a href="/" class="lp-btn-primary">
+        <span class="material-symbols-outlined" style="font-size:1rem">arrow_back</span>
+        Kembali ke beranda
+      </a>
+    </div>
+  </div>
+</BaseLayout>

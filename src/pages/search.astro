@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import PostItem from '@/components/blog/PostItem.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
@@ -32,54 +32,54 @@ if (query.trim()) {
 }
 ---
 
-<BlogLayout
+<ListLayout
   title={query ? `Search: ${query} | Lostpeople` : 'Search | Lostpeople'}
   description={query ? `Search results for "${query}"` : 'Search posts on Lostpeople'}
 >
   <div class="mb-10">
-    <h1 class="font-display-lg text-[36px] text-primary mb-2 font-bold">
+    <h1 class="font-display text-3xl text-ink mb-2 font-bold">
       Search
     </h1>
   </div>
 
   <form action="/search" method="GET" class="mb-10">
-    <div class="flex items-center border border-border-subtle">
+    <div class="flex items-center border border-dust rounded-lg overflow-hidden">
       <input
         type="text"
         name="q"
         value={query}
         placeholder="Search posts..."
-        class="flex-1 px-4 py-3 bg-transparent text-primary font-body-md text-body-lg focus:outline-none border-0"
+        class="flex-1 px-4 py-3 bg-transparent text-ink-body text-base focus:outline-none border-0"
         autofocus
       />
       <button
         type="submit"
-        class="px-4 py-3 hover:bg-primary/5 transition-colors cursor-pointer border-0 bg-transparent"
+        class="px-4 py-3 hover:bg-parchment transition-colors cursor-pointer border-0 bg-transparent"
       >
-        <span class="material-symbols-outlined text-[20px] text-secondary">search</span>
+        <span class="material-symbols-outlined text-[20px] text-ink-muted">search</span>
       </button>
     </div>
   </form>
 
   {query.trim() ? (
     <>
-      <p class="font-meta-italic text-meta-italic text-secondary mb-6">
+      <p class="text-sm text-ink-muted italic mb-6">
         {posts.length} result{posts.length !== 1 ? 's' : ''} for "{query}"
       </p>
 
       {posts.length > 0 ? (
-        <div class="flex flex-col">
+        <div class="lp-post-list">
           {posts.map((post) => <PostItem post={post} />)}
         </div>
       ) : (
-        <p class="font-meta-italic text-meta-italic text-secondary">
+        <p class="text-sm text-ink-muted italic">
           No posts found. Try a different search term.
         </p>
       )}
     </>
   ) : (
-    <p class="font-meta-italic text-meta-italic text-secondary">
+    <p class="text-sm text-ink-muted italic">
       Enter a search term to find posts.
     </p>
   )}
-</BlogLayout>
+</ListLayout>

@@ -138,17 +138,16 @@ export default function Comments({ postId }: Props) {
   const visibleCount = comments.filter((c) => !c.hidden).length;
 
   return (
-    <div className="mt-10">
-      <div className="w-full h-px bg-border-subtle mb-8"></div>
-      <h2 className="font-headline-md text-headline-md text-primary mb-6">
-        Comments {!loading && <span className="text-secondary">({visibleCount})</span>}
+    <div className="lp-comments">
+      <h2 className="lp-comments__title">
+        Komentar {!loading && <span className="text-ink-muted">({visibleCount})</span>}
       </h2>
 
       {/* Form */}
       <form onSubmit={submit} className="mb-10">
         {viewer ? (
-          <p className="text-sm text-secondary mb-2">
-            Commenting as <span className="text-primary font-bold">{viewer.name}</span>
+          <p className="text-sm text-ink-muted mb-2">
+            Commenting as <span className="text-ink font-bold">{viewer.name}</span>
           </p>
         ) : (
           <input
@@ -157,7 +156,7 @@ export default function Comments({ postId }: Props) {
             onChange={(e) => setGuestName(e.target.value)}
             placeholder="Your name"
             maxLength={60}
-            className="w-full px-3 py-2 mb-2 border border-border-subtle bg-transparent text-primary text-sm focus:outline-none focus:border-primary transition-colors"
+            className="lp-comments__input mb-2"
           />
         )}
         <textarea
@@ -166,19 +165,19 @@ export default function Comments({ postId }: Props) {
           placeholder="Write a comment…"
           rows={3}
           maxLength={2000}
-          className="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary text-sm focus:outline-none focus:border-primary transition-colors resize-y"
+          className="lp-comments__input"
         />
         <div className="mt-2 flex items-center gap-3">
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2 bg-primary text-background text-label-sm font-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0 disabled:opacity-50"
+            className="lp-btn-primary disabled:opacity-50"
           >
             {submitting ? 'Posting…' : 'Post comment'}
           </button>
           {!viewer && (
-            <span className="text-xs text-secondary italic">
-              Posting as a guest. <a href="/login" className="underline hover:text-primary">Log in</a> to comment with your account.
+            <span className="text-xs text-ink-muted italic">
+              Posting as a guest. <a href="/login" className="underline hover:text-accent">Log in</a> to comment with your account.
             </span>
           )}
         </div>
@@ -186,30 +185,30 @@ export default function Comments({ postId }: Props) {
 
       {/* List */}
       {loading ? (
-        <p className="text-secondary text-sm italic">Loading comments…</p>
+        <p className="text-ink-muted text-sm italic">Loading comments…</p>
       ) : comments.length === 0 ? (
-        <p className="text-secondary text-sm italic">No comments yet. Be the first.</p>
+        <p className="text-ink-muted text-sm italic">No comments yet. Be the first.</p>
       ) : (
-        <ul className="flex flex-col gap-6">
+        <ul>
           {comments.map((c) => (
             <li
               key={c._id}
-              className={`flex gap-3 ${c.hidden ? 'opacity-50' : ''}`}
+              className={'lp-comment' + (c.hidden ? ' opacity-50' : '')}
             >
               <div className="shrink-0">
                 {c.authorImage ? (
-                  <img src={c.authorImage} alt="" className="w-9 h-9 object-cover rounded-full" />
+                  <img src={c.authorImage} alt="" className="lp-comment__avatar" />
                 ) : (
-                  <div className="w-9 h-9 bg-primary/10 flex items-center justify-center text-primary text-sm font-bold rounded-full">
+                  <div className="lp-comment__avatar flex items-center justify-center text-ink-muted text-sm font-bold">
                     {initial(c.authorName)}
                   </div>
                 )}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-primary text-sm">{c.authorName}</span>
+              <div className="lp-comment__bubble">
+                <div className="lp-comment__header">
+                  <span className="lp-comment__author">{c.authorName}</span>
                   {!c.isRegistered && (
-                    <span className="text-[10px] uppercase tracking-wider text-secondary border border-border-subtle px-1.5 py-0.5">
+                    <span className="text-[10px] uppercase tracking-wider text-ink-muted border border-dust px-1.5 py-0.5">
                       Guest
                     </span>
                   )}
@@ -218,9 +217,9 @@ export default function Comments({ postId }: Props) {
                       Hidden
                     </span>
                   )}
-                  <span className="text-xs text-secondary">{formatDate(c.createdAt)}</span>
+                  <span className="lp-comment__time">{formatDate(c.createdAt)}</span>
                 </div>
-                <p className="text-sm text-primary mt-1 whitespace-pre-wrap break-words">{c.content}</p>
+                <p className="lp-comment__text">{c.content}</p>
 
                 {(c.canDelete || isAdmin) && (
                   <div className="flex items-center gap-3 mt-2">
@@ -228,7 +227,7 @@ export default function Comments({ postId }: Props) {
                       <button
                         type="button"
                         onClick={() => toggleHide(c)}
-                        className="text-xs text-secondary hover:text-primary transition-colors bg-transparent border-0 cursor-pointer p-0"
+                        className="text-xs text-ink-muted hover:text-accent transition-colors bg-transparent border-0 cursor-pointer p-0"
                       >
                         {c.hidden ? 'Unhide' : 'Hide'}
                       </button>
@@ -237,7 +236,7 @@ export default function Comments({ postId }: Props) {
                       <button
                         type="button"
                         onClick={() => remove(c)}
-                        className="text-xs text-secondary hover:text-red-600 transition-colors bg-transparent border-0 cursor-pointer p-0"
+                        className="text-xs text-ink-muted hover:text-red-600 transition-colors bg-transparent border-0 cursor-pointer p-0"
                       >
                         Delete
                       </button>

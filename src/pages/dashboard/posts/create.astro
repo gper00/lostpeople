@@ -12,18 +12,18 @@ if (!user) {
 ---
 
 <DashboardLayout title="Create Post | Lostpeople Dashboard">
-  <div class="mb-stack-lg">
-    <a href="/dashboard/posts" class="inline-flex items-center gap-2 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors mb-stack-md group no-underline">
-      <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
-      BACK TO POSTS
+  <div class="mb-8">
+    <a href="/dashboard/posts" class="lp-back">
+      <span class="material-symbols-outlined" style="font-size:0.875rem">arrow_back</span>
+      Posts
     </a>
-    <h1 class="font-headline-lg text-headline-lg text-primary">Create Post</h1>
+    <h1 class="font-display text-2xl text-ink">Create Post</h1>
   </div>
 
-  <form id="create-post-form" class="flex flex-col gap-stack-md max-w-5xl">
+  <form id="create-post-form" class="flex flex-col gap-5 max-w-5xl">
     <!-- Title -->
     <div>
-      <label for="title" class="font-label-sm text-label-sm text-secondary block mb-1">Title</label>
+      <label for="title" class="font-ui text-xs text-ink-muted block mb-1">Title</label>
       <input
         type="text"
         id="title"
@@ -31,14 +31,14 @@ if (!user) {
         required
         minlength={10}
         maxlength={255}
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-headline-md text-headline-md focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors"
         placeholder="Post title"
       />
     </div>
 
     <!-- Excerpt -->
     <div>
-      <label for="excerpt" class="font-label-sm text-label-sm text-secondary block mb-1">Excerpt</label>
+      <label for="excerpt" class="font-ui text-xs text-ink-muted block mb-1">Excerpt</label>
       <textarea
         id="excerpt"
         name="excerpt"
@@ -46,39 +46,39 @@ if (!user) {
         minlength={30}
         maxlength={500}
         rows={3}
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors resize-y"
+        class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors resize-y"
         placeholder="Brief description of the post"
       ></textarea>
     </div>
 
     <!-- Content -->
     <div>
-      <label class="font-label-sm text-label-sm text-secondary block mb-1">Content</label>
+      <label class="font-ui text-xs text-ink-muted block mb-1">Content</label>
       <MarkdownEditor client:load content="" targetId="content" />
       <input type="hidden" id="content" name="content" />
     </div>
 
     <!-- Category -->
     <div>
-      <label for="category" class="font-label-sm text-label-sm text-secondary block mb-1">Category</label>
+      <label for="category" class="font-ui text-xs text-ink-muted block mb-1">Category</label>
       <input
         type="text"
         id="category"
         name="category"
         maxlength={25}
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors"
         placeholder="e.g., Technology, Life, Philosophy"
       />
     </div>
 
     <!-- Tags -->
     <div>
-      <label for="tags" class="font-label-sm text-label-sm text-secondary block mb-1">Tags (comma separated)</label>
+      <label for="tags" class="font-ui text-xs text-ink-muted block mb-1">Tags (comma separated)</label>
       <input
         type="text"
         id="tags"
         name="tags"
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors"
         placeholder="e.g., javascript, react, web"
       />
     </div>
@@ -90,11 +90,11 @@ if (!user) {
 
     <!-- Status -->
     <div>
-      <label for="status" class="font-label-sm text-label-sm text-secondary block mb-1">Status</label>
+      <label for="status" class="font-ui text-xs text-ink-muted block mb-1">Status</label>
       <select
         id="status"
         name="status"
-        class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors"
       >
         <option value="draft">Draft</option>
         <option value="published">Published</option>
@@ -102,21 +102,14 @@ if (!user) {
     </div>
 
     <!-- Error message -->
-    <div id="error-message" class="text-red-600 font-label-sm text-label-sm hidden"></div>
+    <div id="error-message" class="text-red-600 font-ui text-xs hidden"></div>
 
     <!-- Submit -->
-    <div class="flex items-center gap-stack-sm mt-stack-md">
-      <button
-        type="submit"
-        id="submit-btn"
-        class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0"
-      >
+    <div class="flex items-center gap-3 mt-5">
+      <button type="submit" id="submit-btn" class="lp-btn-primary">
         Create Post
       </button>
-      <a
-        href="/dashboard/posts"
-        class="px-6 py-3 border border-border-subtle text-primary font-label-sm text-label-sm tracking-wider uppercase hover:bg-primary/5 transition-colors no-underline"
-      >
+      <a href="/dashboard/posts" class="lp-btn-ghost">
         Cancel
       </a>
     </div>

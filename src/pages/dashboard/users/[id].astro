@@ -32,57 +32,53 @@ const socialFields = ['facebook', 'instagram', 'twitter', 'whatsapp', 'telegram'
 
 <DashboardLayout title={`Edit ${target.fullname || target.email} | Lostpeople Dashboard`}>
   <div class="max-w-xl" data-user-id={id} data-is-self={String(isSelf)} data-can-list={String(Astro.locals.user?.role === 'admin')}>
-    <div class="mb-stack-lg">
-      <a
-        href="/dashboard/users"
-        class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors no-underline mb-4"
-      >
-        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+    <div class="mb-8">
+      <a href="/dashboard/users" class="lp-back">
+        <span class="material-symbols-outlined" style="font-size:0.875rem">arrow_back</span>
         Users
       </a>
-      <h1 class="font-headline-lg text-headline-lg text-primary">{target.fullname || target.name || target.email}</h1>
-      <p class="font-meta-italic text-meta-italic text-secondary mt-1">{target.email}</p>
+      <h1 class="font-display text-2xl text-ink">{target.fullname || target.name || target.email}</h1>
+      <p class="text-sm text-ink-muted italic mt-1">{target.email}</p>
     </div>
 
     <!-- Role + status -->
-    <section class="border border-border-subtle p-stack-md mb-stack-lg">
-      <h2 class="font-headline-md text-body-md text-primary mb-stack-sm">Role &amp; access</h2>
+    <section class="border border-dust rounded-lg p-5 mb-5">
+      <h2 class="font-ui text-sm text-ink mb-3">Role &amp; access</h2>
       <div class="flex items-center gap-4 flex-wrap">
         <div>
-          <label for="role" class="font-label-sm text-label-sm text-secondary block mb-1">Role</label>
+          <label for="role" class="font-ui text-xs text-ink-muted block mb-1">Role</label>
           <select id="role" disabled={isSelf}
-            class="px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors disabled:opacity-50">
+            class="px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors disabled:opacity-50">
             <option value="user" selected={target.role !== 'admin'}>user</option>
             <option value="admin" selected={target.role === 'admin'}>admin</option>
           </select>
-          {isSelf && <p class="font-label-sm text-label-sm text-secondary italic mt-1">You can't change your own role.</p>}
+          {isSelf && <p class="font-ui text-xs text-ink-muted italic mt-1">You can't change your own role.</p>}
         </div>
         {!isSelf && (
           <div class="flex items-end gap-2">
             <button id="ban-btn"
-              class="px-4 py-2 border border-border-subtle font-label-sm text-label-sm text-secondary hover:text-primary hover:border-primary transition-colors cursor-pointer bg-transparent">
+              class="lp-btn-ghost">
               {target.banned ? 'Unban user' : 'Ban user'}
             </button>
           </div>
         )}
       </div>
-      <div id="role-status" class="font-label-sm text-label-sm mt-2 hidden"></div>
+      <div id="role-status" class="font-ui text-xs mt-2 hidden"></div>
     </section>
 
     {!isSelf && (
-      <section class="border border-border-subtle p-stack-md mb-stack-lg">
-        <h2 class="font-headline-md text-body-md text-primary mb-1">Reset password</h2>
-        <p class="font-meta-italic text-meta-italic text-secondary mb-stack-sm">
+      <section class="border border-dust rounded-lg p-5 mb-5">
+        <h2 class="font-ui text-sm text-ink mb-1">Reset password</h2>
+        <p class="text-sm text-ink-muted italic mb-3">
           Set a new password for this user. They can change it later from their account.
         </p>
         <div class="flex items-end gap-2 flex-wrap">
           <div>
-            <label for="new-password" class="font-label-sm text-label-sm text-secondary block mb-1">New password</label>
+            <label for="new-password" class="font-ui text-xs text-ink-muted block mb-1">New password</label>
             <input type="password" id="new-password" minlength="8" autocomplete="new-password"
-              class="px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+              class="px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors" />
           </div>
-          <button id="reset-pw-btn" type="button"
-            class="px-4 py-2 border border-border-subtle font-label-sm text-label-sm text-secondary hover:text-primary hover:border-primary transition-colors cursor-pointer bg-transparent">
+          <button id="reset-pw-btn" type="button" class="lp-btn-ghost">
             Set password
           </button>
         </div>
@@ -90,49 +86,48 @@ const socialFields = ['facebook', 'instagram', 'twitter', 'whatsapp', 'telegram'
     )}
 
     <!-- Profile -->
-    <form id="profile-form" class="flex flex-col gap-stack-md">
-      <h2 class="font-headline-md text-body-md text-primary">Profile</h2>
+    <form id="profile-form" class="flex flex-col gap-5">
+      <h2 class="font-display text-base text-ink">Profile</h2>
       <div>
-        <label for="fullname" class="font-label-sm text-label-sm text-secondary block mb-1">Full name</label>
+        <label for="fullname" class="font-ui text-xs text-ink-muted block mb-1">Full name</label>
         <input type="text" id="fullname" value={target.fullname || ''} minlength="5"
-          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+          class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors" />
       </div>
       <div>
-        <label for="username" class="font-label-sm text-label-sm text-secondary block mb-1">Username</label>
+        <label for="username" class="font-ui text-xs text-ink-muted block mb-1">Username</label>
         <input type="text" id="username" value={target.username || ''}
-          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+          class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors" />
       </div>
       <ImageUpload name="image" label="Profile photo" value={target.image || ''} />
       <div>
-        <label for="bio" class="font-label-sm text-label-sm text-secondary block mb-1">Bio</label>
+        <label for="bio" class="font-ui text-xs text-ink-muted block mb-1">Bio</label>
         <textarea id="bio" rows="3" maxlength="400"
-          class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors">{target.bio || ''}</textarea>
+          class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors">{target.bio || ''}</textarea>
       </div>
 
-      <fieldset class="border border-border-subtle p-stack-md">
-        <legend class="font-label-sm text-label-sm text-secondary px-2">Social media</legend>
-        <div class="flex flex-col gap-stack-sm">
+      <fieldset class="border border-dust rounded-lg p-5">
+        <legend class="font-ui text-xs text-ink-muted px-2">Social media</legend>
+        <div class="flex flex-col gap-3">
           {socialFields.map((key) => (
             <div>
-              <label for={`social-${key}`} class="font-label-sm text-label-sm text-secondary block mb-1 capitalize">{key}</label>
+              <label for={`social-${key}`} class="font-ui text-xs text-ink-muted block mb-1 capitalize">{key}</label>
               <input type="text" id={`social-${key}`} data-social={key} value={social[key] || ''}
-                class="w-full px-3 py-2 border border-border-subtle bg-transparent text-primary font-body-md focus:outline-none focus:border-primary transition-colors" />
+                class="w-full px-3 py-2 border border-dust bg-parchment text-ink-body text-base rounded-lg focus:outline-none focus:border-accent transition-colors" />
             </div>
           ))}
         </div>
       </fieldset>
 
-      <div id="error-message" class="text-red-600 font-label-sm text-label-sm hidden"></div>
-      <div id="success-message" class="text-green-700 font-label-sm text-label-sm hidden">Profile saved.</div>
+      <div id="error-message" class="text-red-600 font-ui text-xs hidden"></div>
+      <div id="success-message" class="text-green-700 font-ui text-xs hidden">Profile saved.</div>
 
       <div class="flex items-center justify-between">
-        <button type="submit" id="save-btn"
-          class="px-6 py-3 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors cursor-pointer border-0">
+        <button type="submit" id="save-btn" class="lp-btn-primary">
           Save profile
         </button>
         {!isSelf && (
           <button type="button" id="delete-btn"
-            class="font-label-sm text-label-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer bg-transparent border-0">
+            class="font-ui text-xs text-red-600 hover:text-red-800 transition-colors cursor-pointer bg-transparent border-0">
             Delete user
           </button>
         )}

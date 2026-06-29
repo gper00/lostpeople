@@ -1,5 +1,5 @@
 ---
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import PostItem from '@/components/blog/PostItem.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
@@ -14,29 +14,29 @@ const posts = await Post.find({ status: 'published', tags: decodedTag })
   .lean();
 ---
 
-<BlogLayout
+<ListLayout
   title={`#${decodedTag} | Lostpeople`}
   description={`Posts tagged with ${decodedTag}`}
   keywords={decodedTag}
 >
   <div class="mb-10">
-    <a href="/tags" class="inline-flex items-center gap-2 font-label-sm text-label-sm text-secondary hover:text-primary transition-colors mb-4 group no-underline">
-      <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_left_alt</span>
-      ALL TAGS
+    <a href="/tags" class="lp-back">
+      <span class="material-symbols-outlined" style="font-size:0.875rem">arrow_back</span>
+      Tags
     </a>
-    <h1 class="font-display-lg text-[36px] text-primary mb-1 font-bold">
+    <h1 class="font-display text-3xl text-ink mb-1 font-bold">
       #{decodedTag}
     </h1>
-    <p class="font-meta-italic text-meta-italic text-secondary">
+    <p class="text-sm text-ink-muted italic">
       {posts.length} post{posts.length !== 1 ? 's' : ''}
     </p>
   </div>
 
   {posts.length > 0 ? (
-    <div class="flex flex-col">
+    <div class="lp-post-list">
       {posts.map((post) => <PostItem post={post} />)}
     </div>
   ) : (
-    <p class="font-meta-italic text-meta-italic text-secondary">No posts with this tag.</p>
+    <p class="text-sm text-ink-muted italic">No posts with this tag.</p>
   )}
-</BlogLayout>
+</ListLayout>

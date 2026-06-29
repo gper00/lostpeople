@@ -22,9 +22,9 @@ const navItems = [
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="min-h-screen bg-background">
+  <div class="min-h-screen bg-ink">
     <!-- Top bar -->
-    <header class="fixed top-0 left-0 right-0 h-16 border-b border-border-subtle bg-background z-50 flex items-center justify-between px-4 md:px-6">
+    <header class="fixed top-0 left-0 right-0 h-16 border-b border-dust bg-paper z-50 flex items-center justify-between px-4 md:px-6">
       <div class="flex items-center gap-2">
         <!-- Hamburger (mobile only) -->
         <button
@@ -32,22 +32,22 @@ const navItems = [
           aria-label="Open navigation"
           aria-expanded="false"
           aria-controls="dashboard-sidebar"
-          class="md:hidden -ml-1 p-2 text-primary hover:bg-primary/5 transition-colors cursor-pointer bg-transparent border-0"
+          class="md:hidden -ml-1 p-2 text-ink hover:bg-parchment transition-colors cursor-pointer bg-transparent border-0"
         >
           <span class="material-symbols-outlined text-[24px]">menu</span>
         </button>
-        <a href="/" class="font-display-lg text-headline-md italic text-primary no-underline">
+        <a href="/" class="font-brand text-xl text-ink no-underline">
           Lostpeople
         </a>
       </div>
 
       <div class="flex items-center gap-4">
-        <span class="font-label-sm text-label-sm text-secondary hidden sm:inline">
+        <span class="font-ui text-xs text-ink-muted hidden sm:inline">
           {user?.name || user?.email || 'Admin'}
         </span>
         <button
           id="logout-btn"
-          class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors cursor-pointer bg-transparent border-0"
+          class="font-ui text-xs text-ink-muted hover:text-ink transition-colors cursor-pointer bg-transparent border-0"
         >
           Sign Out
         </button>
@@ -57,14 +57,14 @@ const navItems = [
     <!-- Mobile backdrop -->
     <div
       id="nav-backdrop"
-      class="fixed inset-0 top-16 bg-primary/30 z-30 opacity-0 pointer-events-none transition-opacity md:hidden"
+      class="fixed inset-0 top-16 bg-ink/30 z-30 opacity-0 pointer-events-none transition-opacity md:hidden"
     ></div>
 
     <div class="flex pt-16">
       <!-- Sidebar / mobile drawer -->
       <aside
         id="dashboard-sidebar"
-        class="fixed left-0 top-16 bottom-0 w-60 border-r border-border-subtle bg-background z-40 -translate-x-full transition-transform duration-200 md:translate-x-0"
+        class="fixed left-0 top-16 bottom-0 w-60 border-r border-dust bg-paper z-40 -translate-x-full transition-transform duration-200 md:translate-x-0"
       >
         <nav class="flex flex-col gap-1 p-4">
           {navItems.map(({ href, label, icon }) => (
@@ -72,10 +72,10 @@ const navItems = [
               href={href}
               data-nav-link
               class:list={[
-                'flex items-center gap-3 px-3 py-2 font-label-sm text-label-sm transition-colors no-underline',
+                'flex items-center gap-3 px-3 py-2 font-ui text-xs transition-colors no-underline rounded-lg',
                 currentPath === href || (href !== '/dashboard' && currentPath.startsWith(href))
-                  ? 'text-primary bg-accent-highlight/10 border-l-2 border-accent-highlight'
-                  : 'text-secondary hover:text-primary hover:bg-primary/5',
+                  ? 'text-accent-dark bg-accent-soft border-l-2 border-accent'
+                  : 'text-ink-muted hover:text-ink hover:bg-parchment',
               ]}
             >
               <span class="material-symbols-outlined text-[18px]">{icon}</span>
@@ -84,8 +84,8 @@ const navItems = [
           ))}
         </nav>
 
-        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-border-subtle">
-          <a href="/" data-nav-link class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center gap-2 no-underline">
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-dust">
+          <a href="/" data-nav-link class="font-ui text-xs text-ink-muted hover:text-ink transition-colors flex items-center gap-2 no-underline">
             <span class="material-symbols-outlined text-[16px]">arrow_back</span>
             View Site
           </a>

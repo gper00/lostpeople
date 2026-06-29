@@ -32,3 +32,10 @@ pnpm-debug.log*
 backup/
 ss/
 PROGRESS.md
+
+
+AGENTS.md
+CLAUDE.md
+codemap.md
+docs
+reference

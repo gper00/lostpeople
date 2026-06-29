@@ -21,16 +21,16 @@ try {
 ---
 
 <DashboardLayout title="Users | Lostpeople Dashboard">
-  <div class="flex items-center justify-between mb-stack-lg">
+  <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="font-headline-lg text-headline-lg text-primary mb-2">Users</h1>
-      <p class="font-meta-italic text-meta-italic text-secondary">
+      <h1 class="font-display text-2xl text-ink mb-2">Users</h1>
+      <p class="text-sm text-ink-muted italic">
         {users.length} user{users.length !== 1 ? 's' : ''}
       </p>
     </div>
     <a
       href="/dashboard/users/create"
-      class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors no-underline"
+      class="lp-btn-primary"
     >
       <span class="material-symbols-outlined text-[16px]">person_add</span>
       New User
@@ -38,41 +38,41 @@ try {
   </div>
 
   {users.length > 0 ? (
-    <div class="border border-border-subtle divide-y divide-border-subtle">
+    <div class="border border-dust rounded-lg divide-y divide-dust overflow-hidden">
       {users.map((u) => (
-        <div class="relative flex items-center justify-between gap-3 px-stack-md py-stack-sm hover:bg-primary/5 transition-colors">
+        <div class="relative flex items-center justify-between gap-3 px-5 py-3 hover:bg-parchment transition-colors">
           <div class="flex items-center gap-3 min-w-0">
             {u.image ? (
-              <img src={u.image} alt={u.fullname} class="w-9 h-9 object-cover shrink-0" />
+              <img src={u.image} alt={u.fullname} class="w-9 h-9 object-cover rounded-full shrink-0" />
             ) : (
-              <div class="w-9 h-9 bg-primary/10 flex items-center justify-center shrink-0 font-headline-md text-secondary">
+              <div class="w-9 h-9 rounded-full bg-parchment flex items-center justify-center shrink-0 border border-dust font-ui text-xs text-ink-muted">
                 {(u.fullname || u.email || '?').charAt(0).toUpperCase()}
               </div>
             )}
             <div class="min-w-0">
               <a
                 href={`/dashboard/users/${u._id}`}
-                class="font-headline-md text-body-md text-primary hover:text-secondary transition-colors no-underline block truncate before:absolute before:inset-0 before:content-['']"
+                class="font-ui text-sm text-ink hover:text-ink-muted transition-colors no-underline block truncate before:absolute before:inset-0 before:content-['']"
               >
                 {u.fullname || u.name || '(no name)'}
                 {String(u._id) === currentUserId && (
-                  <span class="font-label-sm text-label-sm text-secondary italic"> · you</span>
+                  <span class="font-ui text-xs text-ink-muted italic"> · you</span>
                 )}
               </a>
-              <span class="font-label-sm text-label-sm text-secondary block truncate">
+              <span class="font-ui text-xs text-ink-muted block truncate">
                 {u.email}
               </span>
             </div>
           </div>
           <div class="relative z-10 flex items-center gap-2 shrink-0">
             <span class:list={[
-              'px-2 py-0.5 text-[11px] uppercase tracking-wider',
-              u.role === 'admin' ? 'bg-accent-highlight/30 text-primary' : 'bg-gray-100 text-gray-800',
+              'px-2 py-0.5 text-[11px] uppercase tracking-wider rounded',
+              u.role === 'admin' ? 'bg-accent-soft text-accent-dark' : 'bg-gray-100 text-gray-800',
             ]}>
               {u.role || 'user'}
             </span>
             {u.banned && (
-              <span class="px-2 py-0.5 text-[11px] uppercase tracking-wider bg-red-100 text-red-800">
+              <span class="px-2 py-0.5 text-[11px] uppercase tracking-wider rounded bg-red-100 text-red-800">
                 banned
               </span>
             )}
@@ -80,13 +80,13 @@ try {
               href={`/dashboard/users/${u._id}`}
               title="Edit user"
               aria-label="Edit user"
-              class="p-2 text-secondary hover:text-primary hover:bg-primary/10 transition-colors no-underline flex items-center"
+              class="p-2 text-ink-muted hover:text-ink hover:bg-parchment transition-colors no-underline flex items-center rounded"
             >
               <span class="material-symbols-outlined text-[18px]">edit</span>
             </a>
             {String(u._id) !== currentUserId && (
               <button
-                class="delete-user-btn p-2 text-secondary hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 flex items-center"
+                class="delete-user-btn p-2 text-ink-muted hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 flex items-center rounded"
                 data-id={String(u._id)}
                 data-name={u.fullname || u.email}
                 title="Delete user"
@@ -100,8 +100,8 @@ try {
       ))}
     </div>
   ) : (
-    <div class="border border-border-subtle p-stack-lg text-center">
-      <p class="font-meta-italic text-meta-italic text-secondary">No users found.</p>
+    <div class="border border-dust rounded-lg p-6 text-center">
+      <p class="text-sm text-ink-muted italic">No users found.</p>
     </div>
   )}
 </DashboardLayout>

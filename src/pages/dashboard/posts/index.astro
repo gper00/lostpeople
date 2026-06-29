@@ -22,16 +22,16 @@ try {
 ---
 
 <DashboardLayout title="Posts | Lostpeople Dashboard">
-  <div class="flex items-center justify-between mb-stack-lg">
+  <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="font-headline-lg text-headline-lg text-primary mb-2">Posts</h1>
-      <p class="font-meta-italic text-meta-italic text-secondary">
+      <h1 class="font-display text-2xl text-ink mb-2">Posts</h1>
+      <p class="text-sm text-ink-muted italic">
         {posts.length} post{posts.length !== 1 ? 's' : ''}
       </p>
     </div>
     <a
       href="/dashboard/posts/create"
-      class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-background font-label-sm text-label-sm tracking-wider uppercase hover:bg-on-surface-variant transition-colors no-underline"
+      class="lp-btn-primary"
     >
       <span class="material-symbols-outlined text-[16px]">add</span>
       New Post
@@ -39,18 +39,18 @@ try {
   </div>
 
   {posts.length > 0 ? (
-    <div class="border border-border-subtle divide-y divide-border-subtle">
+    <div class="border border-dust rounded-lg divide-y divide-dust overflow-hidden">
       {posts.map((post) => (
-        <div class="relative flex items-center justify-between gap-3 px-stack-md py-stack-sm hover:bg-primary/5 transition-colors">
+        <div class="relative flex items-center justify-between gap-3 px-5 py-3 hover:bg-parchment transition-colors">
           <div class="flex-1 min-w-0">
             <a
               href={`/dashboard/posts/${post._id}`}
-              class="font-headline-md text-body-md text-primary hover:text-secondary transition-colors no-underline block truncate before:absolute before:inset-0 before:content-['']"
+              class="font-ui text-sm text-ink hover:text-ink-muted transition-colors no-underline block truncate before:absolute before:inset-0 before:content-['']"
             >
               {post.title}
             </a>
             <div class="flex items-center gap-3 mt-1">
-              <span class="font-label-sm text-label-sm text-secondary">
+              <span class="font-ui text-xs text-ink-muted">
                 {new Date(post.createdAt).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
@@ -58,7 +58,7 @@ try {
                 })}
               </span>
               <span class:list={[
-                'px-2 py-0.5 text-[11px] uppercase tracking-wider',
+                'px-2 py-0.5 text-[11px] uppercase tracking-wider rounded',
                 post.status === 'published'
                   ? 'bg-green-100 text-green-800'
                   : post.status === 'draft'
@@ -68,15 +68,15 @@ try {
                 {post.status}
               </span>
               {post.category && (
-                <span class="font-label-sm text-label-sm text-secondary hidden sm:inline">
+                <span class="font-ui text-xs text-ink-muted hidden sm:inline">
                   {post.category}
                 </span>
               )}
-              <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary" title="Views">
+              <span class="inline-flex items-center gap-1 font-ui text-xs text-ink-muted" title="Views">
                 <span class="material-symbols-outlined text-[14px]">visibility</span>
                 {post.viewsCount || 0}
               </span>
-              <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary" title="Likes">
+              <span class="inline-flex items-center gap-1 font-ui text-xs text-ink-muted" title="Likes">
                 <span class="material-symbols-outlined text-[14px]">favorite</span>
                 {post.likesCount || 0}
               </span>
@@ -90,7 +90,7 @@ try {
                 rel="noopener"
                 title="View live post"
                 aria-label="View live post"
-                class="p-2 text-secondary hover:text-primary hover:bg-primary/10 transition-colors no-underline flex items-center"
+                class="p-2 text-ink-muted hover:text-ink hover:bg-parchment transition-colors no-underline flex items-center rounded"
               >
                 <span class="material-symbols-outlined text-[18px]">open_in_new</span>
               </a>
@@ -99,12 +99,12 @@ try {
               href={`/dashboard/posts/${post._id}`}
               title="Edit post"
               aria-label="Edit post"
-              class="p-2 text-secondary hover:text-primary hover:bg-primary/10 transition-colors no-underline flex items-center"
+              class="p-2 text-ink-muted hover:text-ink hover:bg-parchment transition-colors no-underline flex items-center rounded"
             >
               <span class="material-symbols-outlined text-[18px]">edit</span>
             </a>
             <button
-              class="delete-btn p-2 text-secondary hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 flex items-center"
+              class="delete-btn p-2 text-ink-muted hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 flex items-center rounded"
               data-id={post._id}
               data-title={post.title}
               title="Delete post"
@@ -117,13 +117,13 @@ try {
       ))}
     </div>
   ) : (
-    <div class="border border-border-subtle p-stack-lg text-center">
-      <p class="font-meta-italic text-meta-italic text-secondary mb-stack-sm">
+    <div class="border border-dust rounded-lg p-6 text-center">
+      <p class="text-sm text-ink-muted italic mb-3">
         No posts yet
       </p>
       <a
         href="/dashboard/posts/create"
-        class="font-label-sm text-label-sm text-primary hover:text-secondary transition-colors no-underline"
+        class="font-ui text-xs text-ink-muted hover:text-ink transition-colors no-underline"
       >
         Create your first post →
       </a>

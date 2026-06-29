@@ -36,20 +36,23 @@ const navLinks = [
 
     if (!menuBtn || !closeBtn || !nav) return;
 
+    var n = nav;
+
     function toggle() {
-      nav.classList.toggle('open');
-      nav.setAttribute('aria-hidden', nav.classList.contains('open') ? 'false' : 'true');
+      n.classList.toggle('open');
+      n.setAttribute('aria-hidden', n.classList.contains('open') ? 'false' : 'true');
     }
     function closeNav() {
-      nav.classList.remove('open');
-      nav.setAttribute('aria-hidden', 'true');
+      n.classList.remove('open');
+      n.setAttribute('aria-hidden', 'true');
     }
 
     menuBtn.addEventListener('click', toggle);
     closeBtn.addEventListener('click', closeNav);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', (e) => {
-      if (nav.classList.contains('open') && !nav.contains(e.target) && e.target !== menuBtn) closeNav();
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target instanceof Node && n.classList.contains('open') && !n.contains(target) && target !== menuBtn) closeNav();
     });
 
     // Theme toggles

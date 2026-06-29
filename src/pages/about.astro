@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 
-import BlogLayout from '@/layouts/BlogLayout.astro';
+import ListLayout from '@/layouts/ListLayout.astro';
 import SocialLinks from '@/components/shared/SocialLinks.astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
@@ -24,13 +24,13 @@ try {
 }
 ---
 
-<BlogLayout title="About | Lostpeople" description="Tentang Lostpeople">
+<ListLayout title="About | Lostpeople" description="Tentang Lostpeople">
   <article>
-    <header class="mb-stack-lg">
-      <h1 class="font-display-lg text-display-lg text-primary mb-stack-sm">
+    <header class="mb-8">
+      <h1 class="font-display text-3xl text-ink mb-2">
         About
       </h1>
-      <div class="w-full h-px bg-border-subtle"></div>
+      <div class="w-full h-px bg-dust"></div>
     </header>
 
     <div class="prose prose-lg">
@@ -53,9 +53,9 @@ try {
     </div>
 
     <!-- Tim Kami -->
-    <section class="mt-stack-lg">
-      <div class="w-full h-px bg-border-subtle mb-stack-lg"></div>
-      <h2 class="font-headline-md text-headline-md text-primary font-bold mb-stack-md">
+    <section class="mt-10">
+      <div class="w-full h-px bg-dust mb-6"></div>
+      <h2 class="font-display text-xl text-ink font-bold mb-6">
         Tim Kami
       </h2>
 
@@ -65,7 +65,7 @@ try {
             const displayName = author.fullname || author.username || 'Unknown';
             const initial = displayName.charAt(0).toUpperCase();
             return (
-              <div class="border border-border-subtle p-stack-md flex items-start gap-4">
+              <div class="border border-dust p-6 flex items-start gap-4 rounded-lg">
                 <a href={`/authors/${author.username}`} class="shrink-0 no-underline">
                   {author.image ? (
                     <img
@@ -74,20 +74,20 @@ try {
                       class="w-16 h-16 object-cover rounded-full"
                     />
                   ) : (
-                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span class="font-display-lg text-xl text-primary">{initial}</span>
+                    <div class="w-16 h-16 rounded-full bg-parchment flex items-center justify-center border border-dust">
+                      <span class="font-display text-xl text-ink">{initial}</span>
                     </div>
                   )}
                 </a>
                 <div class="min-w-0 flex-1">
                   <a
                     href={`/authors/${author.username}`}
-                    class="font-headline-md text-headline-md text-primary font-bold hover:text-secondary transition-colors no-underline"
+                    class="font-display text-xl text-ink font-bold hover:text-ink-muted transition-colors no-underline"
                   >
                     {displayName}
                   </a>
                   {author.bio && (
-                    <p class="text-sm text-secondary mt-1 leading-relaxed line-clamp-2">{author.bio}</p>
+                    <p class="text-sm text-ink-muted mt-1 leading-relaxed line-clamp-2">{author.bio}</p>
                   )}
                   <SocialLinks social={author.socialMedia} class="mt-2" />
                 </div>
@@ -96,8 +96,8 @@ try {
           })}
         </div>
       ) : (
-        <p class="text-secondary text-sm italic">Belum ada penulis.</p>
+        <p class="text-ink-muted text-sm italic">Belum ada penulis.</p>
       )}
     </section>
   </article>
-</BlogLayout>
+</ListLayout>
