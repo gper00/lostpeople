@@ -7,7 +7,56 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
+<!-- Desktop sidebar -->
 <aside class="lp-sidebar">
+  <div class="lp-sidebar__top">
+    <a href="/" class="lp-sidebar__logo">Lostpeople</a>
+    <span class="lp-sidebar__tagline">Revive the beauty of typography</span>
+    <hr class="lp-sidebar__divider" />
+    <nav class="lp-sidebar__nav">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={['text-ink-muted', currentPath === href && 'text-accent']}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+    <div class="lp-sidebar__actions">
+      <a href="/search" aria-label="Cari">
+        <span class="material-symbols-outlined" style="font-size:1.1rem">search</span>
+      </a>
+      <button id="sidebar-theme-toggle" class="lp-nav__icon material-symbols-outlined" aria-label="Toggle dark mode" style="font-size:1.1rem; background:none; border:none; padding:0; cursor:pointer;">
+        dark_mode
+      </button>
+    </div>
+  </div>
+  <div class="lp-sidebar__footer">
+    <a href="/rss.xml" class="text-ink-ghost hover:text-accent">RSS</a>
+    {' / '}
+    <a href="https://github.com/gper00" class="text-ink-ghost hover:text-accent" target="_blank">GitHub</a>
+    {' / '}
+    <a href="mailto:hi@lostpeople" class="text-ink-ghost hover:text-accent">Email</a>
+    <br />© 2025–2026 Lostpeople.<br />Powered by Astro and Retypeset.
+  </div>
+</aside>
+
+<!-- Hamburger button (mobile only) -->
+<div class="lp-hamburger-wrapper">
+  <button id="lp-hamburger" class="lp-hamburger" aria-label="Buka menu">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+</div>
+
+<!-- Mobile drawer overlay -->
+<div id="lp-drawer-overlay" class="lp-drawer-overlay" aria-hidden="true"></div>
+
+<!-- Mobile drawer panel -->
+<div id="lp-drawer" class="lp-drawer" aria-hidden="true">
+  <button id="lp-drawer-close" class="lp-drawer__close" aria-label="Tutup menu">
+    <span class="material-symbols-outlined">close</span>
+  </button>
   <a href="/" class="lp-sidebar__logo">Lostpeople</a>
   <span class="lp-sidebar__tagline">Revive the beauty of typography</span>
   <hr class="lp-sidebar__divider" />
@@ -25,11 +74,11 @@ const currentPath = Astro.url.pathname;
     <a href="/search" aria-label="Cari">
       <span class="material-symbols-outlined" style="font-size:1.1rem">search</span>
     </a>
-    <button id="sidebar-theme-toggle" class="lp-nav__icon material-symbols-outlined" aria-label="Toggle dark mode" style="font-size:1.1rem; background:none; border:none; padding:0; cursor:pointer;">
+    <button id="drawer-theme-toggle" class="material-symbols-outlined" aria-label="Toggle dark mode" style="font-size:1.1rem; background:none; border:none; padding:0; cursor:pointer; color:var(--color-ink-faint);">
       dark_mode
     </button>
   </div>
-  <div class="lp-sidebar__footer">
+  <div class="lp-sidebar__footer" style="padding-top:2rem;">
     <a href="/rss.xml" class="text-ink-ghost hover:text-accent">RSS</a>
     {' / '}
     <a href="https://github.com/gper00" class="text-ink-ghost hover:text-accent" target="_blank">GitHub</a>
@@ -37,17 +86,59 @@ const currentPath = Astro.url.pathname;
     <a href="mailto:hi@lostpeople" class="text-ink-ghost hover:text-accent">Email</a>
     <br />© 2025–2026 Lostpeople.<br />Powered by Astro and Retypeset.
   </div>
-</aside>
+</div>
 
 <script>
-  function initSidebarToggle() {
-    const themeToggle = document.getElementById('sidebar-theme-toggle');
-    themeToggle?.addEventListener('click', () => {
+  function initSidebar() {
+    // --- Desktop theme toggle ---
+    const sidebarToggle = document.getElementById('sidebar-theme-toggle');
+    sidebarToggle?.addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.dataset.theme === 'dark';
+      html.dataset.theme = isDark ? 'light' : 'dark';
+      localStorage.setItem('lp-theme', html.dataset.theme);
+    });
+
+    // --- Mobile drawer ---
+    const hamburger = document.getElementById('lp-hamburger');
+    const drawer = document.getElementById('lp-drawer');
+    const overlay = document.getElementById('lp-drawer-overlay');
+    const closeBtn = document.getElementById('lp-drawer-close');
+
+    function openDrawer() {
+      drawer?.classList.add('open');
+      overlay?.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      drawer?.setAttribute('aria-hidden', 'false');
+      overlay?.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeDrawer() {
+      drawer?.classList.remove('open');
+      overlay?.classList.remove('open');
+      document.body.style.overflow = '';
+      drawer?.setAttribute('aria-hidden', 'true');
+      overlay?.setAttribute('aria-hidden', 'true');
+    }
+
+    hamburger?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    overlay?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDrawer(); });
+
+    // Close on nav link tap
+    drawer?.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', closeDrawer);
+    });
+
+    // --- Drawer theme toggle ---
+    const drawerToggle = document.getElementById('drawer-theme-toggle');
+    drawerToggle?.addEventListener('click', () => {
       const html = document.documentElement;
       const isDark = html.dataset.theme === 'dark';
       html.dataset.theme = isDark ? 'light' : 'dark';
       localStorage.setItem('lp-theme', html.dataset.theme);
     });
   }
-  document.addEventListener('astro:page-load', initSidebarToggle);
+  document.addEventListener('astro:page-load', initSidebar);
 </script>

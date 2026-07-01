@@ -156,7 +156,7 @@ export default function Comments({ postId }: Props) {
             onChange={(e) => setGuestName(e.target.value)}
             placeholder="Your name"
             maxLength={60}
-            className="lp-comments__input mb-2"
+            className="lp-comments__input lp-comments__input--name mb-2"
           />
         )}
         <textarea

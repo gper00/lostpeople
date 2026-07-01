@@ -40,7 +40,7 @@
   --color-accent-dark: #7a4a30;   /* accent text on light bg */
 
   /* — Typography — */
-  --font-brand:    'Pinyon Script', cursive;      /* logo only */
+  --font-brand:    'Playfair Display', Georgia, serif;      /* logo only */
   --font-display:  'Playfair Display', Georgia, serif; /* H1–H3, pull quotes */
   --font-body:     'Source Serif 4', Georgia, serif;   /* prose */
   --font-ui:       ui-sans-serif, system-ui, sans-serif; /* nav, meta, tags */
@@ -187,36 +187,109 @@
     --color-accent-soft: #2e1e16;
     --color-accent-dark: #e8b090;
   }
+}
 
-  /* Dark mode prose overrides for @tailwindcss/typography */
-  [data-theme="dark"] .prose {
-    --tw-prose-body:       var(--color-ink-body);
-    --tw-prose-headings:   var(--color-ink);
-    --tw-prose-lead:       var(--color-ink-muted);
-    --tw-prose-links:      var(--color-accent-dark);
-    --tw-prose-bold:       var(--color-ink);
-    --tw-prose-counters:   var(--color-ink-faint);
-    --tw-prose-bullets:    var(--color-ash);
-    --tw-prose-hr:         var(--color-dust);
-    --tw-prose-quotes:     var(--color-ink-muted);
-    --tw-prose-quote-borders: var(--color-accent);
-    --tw-prose-captions:   var(--color-ink-faint);
-    --tw-prose-code:       var(--color-ink);
-    --tw-prose-pre-code:   var(--color-ink-body);
-    --tw-prose-pre-bg:     var(--color-parchment);
-    --tw-prose-th-borders: var(--color-dust);
-    --tw-prose-td-borders: var(--color-dust);
+/* Dark mode prose overrides for @tailwindcss/typography */
+[data-theme="dark"] .prose {
+  --tw-prose-body:           var(--color-ink-body);
+  --tw-prose-headings:       var(--color-ink);
+  --tw-prose-lead:           var(--color-ink-muted);
+  --tw-prose-links:          var(--color-accent);
+  --tw-prose-bold:           var(--color-ink);
+  --tw-prose-counters:       var(--color-ink-faint);
+  --tw-prose-bullets:        var(--color-ash);
+  --tw-prose-hr:             var(--color-dust);
+  --tw-prose-quotes:         var(--color-ink-muted);
+  --tw-prose-quote-borders:  var(--color-accent);
+  --tw-prose-captions:       var(--color-ink-faint);
+  --tw-prose-kbd:            var(--color-ink);
+  --tw-prose-kbd-shadows:    0 0 0 transparent;
+  --tw-prose-code:           var(--color-ink);
+  --tw-prose-pre-code:       var(--color-ink-body);
+  --tw-prose-pre-bg:         var(--color-parchment);
+  --tw-prose-th-borders:     var(--color-ash);
+  --tw-prose-td-borders:     var(--color-dust);
+}
+@media (prefers-color-scheme: dark) {
+  .prose {
+    --tw-prose-body:           var(--color-ink-body);
+    --tw-prose-headings:       var(--color-ink);
+    --tw-prose-lead:           var(--color-ink-muted);
+    --tw-prose-links:          var(--color-accent);
+    --tw-prose-bold:           var(--color-ink);
+    --tw-prose-counters:       var(--color-ink-faint);
+    --tw-prose-bullets:        var(--color-ash);
+    --tw-prose-hr:             var(--color-dust);
+    --tw-prose-quotes:         var(--color-ink-muted);
+    --tw-prose-quote-borders:  var(--color-accent);
+    --tw-prose-captions:       var(--color-ink-faint);
+    --tw-prose-kbd:            var(--color-ink);
+    --tw-prose-kbd-shadows:    0 0 0 transparent;
+    --tw-prose-code:           var(--color-ink);
+    --tw-prose-pre-code:       var(--color-ink-body);
+    --tw-prose-pre-bg:         var(--color-parchment);
+    --tw-prose-th-borders:     var(--color-ash);
+    --tw-prose-td-borders:     var(--color-dust);
+  }
+}
+
+  /* Element-level overrides for dark mode prose */
+  [data-theme="dark"] .prose strong {
+    color: var(--color-ink);
+  }
+
+  [data-theme="dark"] .prose a {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .prose ul > li::marker,
+  [data-theme="dark"] .prose ol > li::marker {
+    color: var(--color-ink-faint);
+  }
+
+  [data-theme="dark"] .prose blockquote {
+    color: var(--color-ink-muted);
+    border-left-color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .prose h2,
+  [data-theme="dark"] .prose h3,
+  [data-theme="dark"] .prose h4 {
+    color: var(--color-ink);
+  }
+
+  [data-theme="dark"] .prose code {
+    color: var(--color-ink);
+    background: var(--color-parchment);
+  }
+
+  [data-theme="dark"] .prose pre {
+    background: var(--color-parchment);
+    border-color: var(--color-dust);
+  }
+
+  [data-theme="dark"] .prose thead th {
+    color: var(--color-ink);
+    border-bottom-color: var(--color-ash);
+  }
+
+  [data-theme="dark"] .prose tbody td {
+    border-bottom-color: var(--color-dust);
+  }
+
+  [data-theme="dark"] .prose figure figcaption {
+    color: var(--color-ink-faint);
   }
 
   /* Cover image dark mode — gentle desaturation so bright images don't scream */
   [data-theme="dark"] .lp-cover img {
     filter: brightness(0.85) saturate(0.9);
   }
-}
 
 
 /* ------------------------------------------------------------
-   4. LAYOUT PRIMITIVES
+    4. LAYOUT PRIMITIVES
    ------------------------------------------------------------ */
 @layer components {
 
@@ -238,12 +311,12 @@
   }
 
   .lp-main    { grid-area: main; padding: 2.5rem 2.5rem 3rem 0; border-right: 0.5px solid var(--color-dust); }
-  .lp-sidebar { grid-area: sidebar; padding: 2.5rem 0 3rem 1.75rem; }
+  .lp-sidebar { grid-area: sidebar; padding: 2.5rem 0 3rem 1.75rem; position: sticky; top: 0; align-self: start; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
 
   @media (max-width: 640px) {
     .lp-layout { grid-template-columns: 1fr; grid-template-areas: "main" "sidebar"; }
     .lp-main    { border-right: none; border-bottom: 0.5px solid var(--color-dust); padding-inline: 0; }
-    .lp-sidebar { padding-inline: 0; }
+    .lp-sidebar { display: none; }
   }
 }
 
@@ -268,6 +341,7 @@
     color: var(--color-ink);
     line-height: 1;
     letter-spacing: 0.01em;
+    font-style: italic;
   }
 
   /* Desktop nav links */
@@ -370,10 +444,11 @@
 
   .lp-sidebar__logo {
     font-family: var(--font-brand);
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     color: var(--color-ink);
     display: block;
     margin-bottom: 0.25rem;
+    font-style: italic;
   }
 
   .lp-sidebar__tagline {
@@ -399,7 +474,6 @@
 
   .lp-sidebar__nav a {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: 0.9375rem;
     color: var(--color-ink-muted);
     transition: color 0.15s;
@@ -414,7 +488,7 @@
   }
 
   .lp-sidebar__footer {
-    margin-top: 2rem;
+    margin-top: auto;
     font-family: var(--font-ui);
     font-size: var(--text-xs);
     color: var(--color-ink-ghost);
@@ -424,11 +498,110 @@
 
 
 /* ------------------------------------------------------------
-   8. POST HEADER (detail page)
+   8. MOBILE SIDEBAR DRAWER
    ------------------------------------------------------------ */
 @layer components {
 
-  /* Back link */
+  .lp-hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 30;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-ink-faint);
+    padding: 0;
+  }
+
+  @media (max-width: 639px) {
+    .lp-hamburger { display: flex; align-items: center; }
+  }
+
+  .lp-drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.3);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .lp-drawer-overlay.open {
+    display: block;
+    opacity: 1;
+  }
+
+  .lp-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 72vw;
+    max-width: 280px;
+    height: 100dvh;
+    background: var(--color-paper);
+    border-left: 0.5px solid var(--color-dust);
+    z-index: 50;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+  }
+  .lp-drawer.open {
+    transform: translateX(0);
+  }
+
+  .lp-drawer__close {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-ink-faint);
+    margin-bottom: 1.5rem;
+    padding: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   9. TAG HEADER (detail page)
+   ------------------------------------------------------------ */
+@layer components {
+
+  .lp-tag-header {
+    margin-bottom: 2rem;
+  }
+
+  .lp-tag-header__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-top: 0.5px solid var(--color-dust);
+    border-bottom: 0.5px solid var(--color-dust);
+    margin-top: 0.75rem;
+  }
+
+  .lp-tag-header__name {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-ink);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    margin: 0;
+  }
+
+  .lp-tag-header__count {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--color-ink-ghost);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Back link (used in tag header, post detail) */
   .lp-back {
     display: inline-flex;
     align-items: center;
@@ -436,11 +609,16 @@
     font-family: var(--font-ui);
     font-size: var(--text-xs);
     color: var(--color-ink-ghost);
-    margin-bottom: 1.5rem;
     transition: color 0.15s;
     letter-spacing: var(--tracking-wide);
   }
   .lp-back:hover { color: var(--color-ink-muted); }
+}
+
+/* ------------------------------------------------------------
+   10. POST HEADER (detail page)
+   ------------------------------------------------------------ */
+@layer components {
 
   /* Category tag pill */
   .lp-tag {
@@ -529,9 +707,8 @@
    9. PROSE / ARTICLE BODY
       Extends @tailwindcss/typography (.prose) with custom tokens
    ------------------------------------------------------------ */
-@layer components {
 
-  /* Prose base overrides */
+/* Prose base overrides */
   .prose {
     --tw-prose-body:       var(--color-ink-body);
     --tw-prose-headings:   var(--color-ink);
@@ -551,7 +728,7 @@
     --tw-prose-td-borders: var(--color-dust);
 
     font-family: var(--font-body);
-    font-size: var(--text-base);
+    font-size: 0.875rem;
     line-height: var(--leading-prose);
     max-width: 66ch;
   }
@@ -580,6 +757,40 @@
     margin-bottom: 1.25rem;
   }
 
+  /* Bold / strong */
+  .prose strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  /* Lists */
+  .prose ul > li::marker,
+  .prose ol > li::marker {
+    color: var(--color-ink-faint);
+  }
+
+  .prose ul > li,
+  .prose ol > li {
+    color: var(--color-ink-body);
+  }
+
+  .prose li {
+    margin-bottom: 0.25rem;
+  }
+
+  .prose li + li {
+    margin-top: 0.25rem;
+  }
+
+  /* Ordered list numbering style */
+  .prose ol {
+    padding-left: 1.5rem;
+  }
+
+  .prose ul {
+    padding-left: 1.5rem;
+  }
+
   /* Links */
   .prose a {
     color: var(--color-accent-dark);
@@ -596,7 +807,7 @@
     padding: 0.625rem 0 0.625rem 1.125rem;
     margin: 1.75rem 0;
     font-style: italic;
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     color: var(--color-accent-dark);
     background: transparent;
   }
@@ -636,7 +847,6 @@
     border-radius: var(--radius-base);
     margin-inline: auto;
   }
-}
 
 
 /* ------------------------------------------------------------
@@ -664,8 +874,23 @@
 
   .lp-post-footer {
     margin-top: 2rem;
-    padding-top: 1.25rem;
+  }
+
+  .lp-footer-divider {
+    border: none;
     border-top: 0.5px solid var(--color-dust);
+    margin: 1rem 0;
+  }
+
+  /* Share button label text — hide on mobile */
+  .lp-share__label-text {
+    display: inline;
+  }
+
+  @media (max-width: 640px) {
+    .lp-share__label-text {
+      display: none;
+    }
   }
 
   /* Tag chips */
@@ -727,59 +952,8 @@
 
 
 /* ------------------------------------------------------------
-   12. AUTHOR BOX
+   12. (removed — author card now uses Tailwind utilities in [slug].astro)
    ------------------------------------------------------------ */
-@layer components {
-
-  .lp-author {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 0.5px solid var(--color-dust);
-  }
-
-  .lp-author__avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 1.5px solid var(--color-dust);
-  }
-
-  .lp-author__name {
-    font-family: var(--font-display);
-    font-size: var(--text-base);
-    font-weight: 600;
-    color: var(--color-ink);
-    margin-bottom: 0.125rem;
-    display: block;
-  }
-
-  .lp-author__bio {
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--color-ink-faint);
-    font-style: italic;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
-  }
-
-  .lp-author__links {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  .lp-author__link {
-    font-family: var(--font-ui);
-    font-size: var(--text-xs);
-    color: var(--color-ink-ghost);
-    transition: color 0.15s;
-  }
-  .lp-author__link:hover { color: var(--color-accent); }
-}
 
 
 /* ------------------------------------------------------------
@@ -872,8 +1046,12 @@
 
   .lp-tag-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .lp-tag-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   .lp-tag-card {
@@ -1127,9 +1305,8 @@
 @layer components {
 
   .lp-comments {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 0.5px solid var(--color-dust);
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
   }
 
   .lp-comments__title {
@@ -1157,6 +1334,11 @@
   }
   .lp-comments__input:focus { border-color: var(--color-accent); }
   .lp-comments__input::placeholder { color: var(--color-ink-ghost); }
+
+  .lp-comments__input--name {
+    min-height: auto;
+    padding: 0.45rem 0.75rem;
+  }
 
   /* Submit button */
   .lp-btn-primary {

@@ -73,10 +73,10 @@ export default function PostInteractions({ postId, initialLikes = 0 }: Props) {
       onClick={toggleLike}
       disabled={busy}
       aria-pressed={liked}
-      className={`inline-flex items-center gap-2 px-4 py-2 border transition-colors cursor-pointer text-sm ${
+      className={`inline-flex items-center gap-2 px-4 py-2 border transition-colors cursor-pointer text-sm rounded-full ${
         liked
-          ? 'text-red-600 border-red-600/40 bg-red-600/5'
-          : 'text-secondary border-border-subtle hover:text-primary hover:border-primary'
+          ? 'text-accent border-accent/40 bg-accent-soft'
+          : 'text-ink-faint border-dust hover:text-accent hover:border-accent'
       }`}
       title={liked ? 'Unlike' : 'Like this post'}
     >

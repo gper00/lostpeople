@@ -19,17 +19,12 @@ const posts = await Post.find({ status: 'published', tags: decodedTag })
   description={`Posts tagged with ${decodedTag}`}
   keywords={decodedTag}
 >
-  <div class="mb-10">
-    <a href="/tags" class="lp-back">
-      <span class="material-symbols-outlined" style="font-size:0.875rem">arrow_back</span>
-      Tags
-    </a>
-    <h1 class="font-display text-3xl text-ink mb-1 font-bold">
-      #{decodedTag}
-    </h1>
-    <p class="text-sm text-ink-muted italic">
-      {posts.length} post{posts.length !== 1 ? 's' : ''}
-    </p>
+  <div class="lp-tag-header">
+    <a href="/tags" class="lp-back">← Tags</a>
+    <div class="lp-tag-header__row">
+      <h1 class="lp-tag-header__name">{decodedTag}</h1>
+      <span class="lp-tag-header__count">{posts.length} post{posts.length !== 1 ? 's' : ''}</span>
+    </div>
   </div>
 
   {posts.length > 0 ? (

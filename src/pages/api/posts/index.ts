@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { connectDB } from '@/lib/db';
 import Post from '@/models/Post';
+import '@/models/User';
 import { auth } from '@/lib/auth';
 import { generateUniqueSlug } from '@/lib/slug';
 import { postLimiter, getClientIp } from '@/lib/rate-limit';
